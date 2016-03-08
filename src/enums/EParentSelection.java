@@ -1,0 +1,5 @@
+package enums;
+
+public enum EParentSelection{
+    FITNESS_PROPORTIONATE, SIGMA_SCALING, TOURNAMENT_SELECTION, UNIFORM_SELECTION
+}
