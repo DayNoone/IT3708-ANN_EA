@@ -1,3 +1,7 @@
+import enums.EAdultSelection;
+import enums.EParentSelection;
+import enums.EPoblemSelection;
+import enums.ESurprisingSequenceMode;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -5,10 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import project2.enums.EAdultSelection;
-import project2.enums.EParentSelection;
-import project2.enums.EPoblemSelection;
-import project2.enums.ESurprisingSequenceMode;
+
 
 import java.util.List;
 

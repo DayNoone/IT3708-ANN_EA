@@ -1,7 +1,7 @@
-import project2.enums.EAdultSelection;
-import project2.enums.EParentSelection;
-import project2.enums.EPoblemSelection;
-import project2.enums.ESurprisingSequenceMode;
+import enums.EAdultSelection;
+import enums.EParentSelection;
+import enums.EPoblemSelection;
+import enums.ESurprisingSequenceMode;
 
 /**
  * Created by markus on 18.02.2016.

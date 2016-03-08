@@ -1,4 +1,5 @@
-import project2.enums.ESurprisingSequenceMode;
+
+import enums.ESurprisingSequenceMode;
 
 import java.util.HashMap;
 import java.util.HashSet;
