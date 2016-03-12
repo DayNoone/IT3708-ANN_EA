@@ -72,6 +72,9 @@ public class GUIController {
         mainClass = main;
         BorderPane mainPane = new BorderPane();
 
+        GridPane boardGrid = getBoardGridPane();
+        mainPane.setCenter(boardGrid);
+
         GridPane gridPane = getChartsAndConsoleGridPane();
         mainPane.setRight(gridPane);
 
@@ -81,6 +84,11 @@ public class GUIController {
         updateVisibilities();
 
         return mainPane;
+    }
+
+    private GridPane getBoardGridPane() {
+        Board board = new Board();
+        return board.drawGrid();
     }
 
     private VBox getControlPanelVBox() {

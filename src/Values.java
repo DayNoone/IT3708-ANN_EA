@@ -8,6 +8,7 @@ import enums.ESurprisingSequenceMode;
  */
 public class Values {
 
+    public static final int BOARD_SIZE = 15;
     public static int GENERATION_PRINT_THROTTLE = 1;
     public static boolean UPDATE_CHARTS = true;
 
