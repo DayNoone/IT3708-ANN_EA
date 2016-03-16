@@ -5,11 +5,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
 public class Board {
-    BoardElement[][] board = new BoardElement[Values.BOARD_SIZE][Values.BOARD_SIZE];
+    BoardElement[][] board = new BoardElement[Values.FLATLAND_BOARD_SIZE][Values.FLATLAND_BOARD_SIZE];
 
     public Board(){
-        for(int y = 0; y < Values.BOARD_SIZE; y++){
-            for(int x = 0; x < Values.BOARD_SIZE; x++){
+        for(int y = 0; y < Values.FLATLAND_BOARD_SIZE; y++){
+            for(int x = 0; x < Values.FLATLAND_BOARD_SIZE; x++){
                 board[y][x] = BoardElement.EMPTY;
             }
         }
@@ -30,8 +30,8 @@ public class Board {
 
     public GridPane drawGrid() {
         GridPane boardGrid = new GridPane();
-        for(int y = 0; y < Values.BOARD_SIZE; y++){
-            for(int x = 0; x < Values.BOARD_SIZE; x++){
+        for(int y = 0; y < Values.FLATLAND_BOARD_SIZE; y++){
+            for(int x = 0; x < Values.FLATLAND_BOARD_SIZE; x++){
                 HBox box = new HBox();
                 box.setStyle("-fx-border-color: black;");
                 String imgPath;

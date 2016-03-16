@@ -1,7 +1,6 @@
 import enums.EAdultSelection;
 import enums.EParentSelection;
-import enums.EPoblemSelection;
-import enums.ESurprisingSequenceMode;
+import enums.EProblemSelection;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -22,34 +21,24 @@ public class GUIController {
     NumberAxis xAxis = new NumberAxis(0, Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES - 1, 2);
     NumberAxis yAxis = new NumberAxis(0, 1, 0.1);
 
-    //    final NumberAxis yAxis = new NumberAxis();
-//    LineChart<Number, Number> populationFitnessLineChart = new LineChart<>(new NumberAxis(), new NumberAxis());
     LineChart<Number, Number> populationFitnessLineChart = new LineChart<>(xAxis, yAxis);
     final NumberAxis xAxis2 = new NumberAxis();
     final NumberAxis yAxis2 = new NumberAxis(0, 1, 0.1);
 
-    //    final NumberAxis yAxis2 = new NumberAxis();
     final LineChart<Number, Number> maxFitnessLineChart = new LineChart<>(xAxis2, yAxis2);
     final NumberAxis xAxis3 = new NumberAxis();
     final NumberAxis yAxis3 = new NumberAxis(0, 1, 0.1);
 
-    //    final NumberAxis yAxis3 = new NumberAxis();
     final LineChart<Number, Number> avarageFitnessLineChart = new LineChart<>(xAxis3, yAxis3);
     final NumberAxis xAxis4 = new NumberAxis();
     final NumberAxis yAxis4 = new NumberAxis();
     final LineChart<Number, Number> stdFitnessLineChart = new LineChart<>(xAxis4, yAxis4);
 
-    //Population fitness linechart
     XYChart.Series<Number, Number> populationSeries;
-
-    //Max fitness linechart
     XYChart.Series<Number, Number> maxFitnessSeries;
-
-    //Avarage fitness linechart
     XYChart.Series<Number, Number> avgSeries;
-
-    //Standard deviating fitness linechart
     XYChart.Series<Number, Number> stdSeries;
+
     private TextArea consoleTextArea;
 
     // Fields needed to calculate FPS
@@ -57,11 +46,7 @@ public class GUIController {
     private int frameTimeIndex = 0;
     private boolean arrayFilled = false;
     private Main mainClass;
-    private Label lolzThresLabel;
-    private TextField lolzThresTextField;
-    private Label surpriseLabel;
-    private TextField surpriseTextField;
-    private HBox surpriseHBox;
+
     private TextField adultSizeTextField;
     private TextField tournamentGroupSize;
     private TextField tournamentEpsilon;
@@ -81,7 +66,12 @@ public class GUIController {
         VBox controlPanelVBox = getControlPanelVBox();
         mainPane.setLeft(controlPanelVBox);
 
-        updateVisibilities();
+        consoleTextArea = new TextArea();
+        consoleTextArea.setEditable(false);
+
+        mainPane.setBottom(consoleTextArea);
+
+        updateProblemSpesificGUIElementVisibilities();
 
         return mainPane;
     }
@@ -179,7 +169,7 @@ public class GUIController {
         parentSelectionComboBox.getItems().setAll(EParentSelection.values());
         parentSelectionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             Values.PARENT_SELECTION = newValue;
-            updateVisibilities();
+            updateProblemSpesificGUIElementVisibilities();
         });
         vBox.getChildren().add(parentSelectionComboBox);
 
@@ -260,12 +250,12 @@ public class GUIController {
         problemLabel.setFont(new Font(15));
 
         addLabel(vBox, "Select problem");
-        ComboBox<EPoblemSelection> problemSelectionComboBox = new ComboBox<>();
+        ComboBox<EProblemSelection> problemSelectionComboBox = new ComboBox<>();
         problemSelectionComboBox.setValue(Values.SELECTED_PROBLEM);
-        problemSelectionComboBox.getItems().setAll(EPoblemSelection.values());
+        problemSelectionComboBox.getItems().setAll(EProblemSelection.values());
         problemSelectionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             Values.SELECTED_PROBLEM = newValue;
-            updateVisibilities();
+            updateProblemSpesificGUIElementVisibilities();
         });
         vBox.getChildren().add(problemSelectionComboBox);
 
@@ -283,99 +273,11 @@ public class GUIController {
         });
         vBox.getChildren().add(problemSizeTextField);
 
-        lolzThresLabel = addLabel(vBox, "Threshold");
-
-        lolzThresTextField = new TextField();
-        lolzThresTextField.setText(String.valueOf(Values.LOLZ_THRESHOLD));
-        lolzThresTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            int newInt;
-            try{
-                newInt = Integer.parseInt(newValue);
-            }catch (Exception E){
-                newInt = Integer.parseInt(oldValue);
-            }
-            Values.LOLZ_THRESHOLD = newInt;
-        });
-        vBox.getChildren().add(lolzThresTextField);
-
-
-        surpriseLabel = addLabel(vBox, "Symbol size");
-
-        surpriseTextField = new TextField();
-        surpriseTextField.setText(String.valueOf(Values.SURPRISING_SYMBOL_SIZE));
-        surpriseTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            int newInt;
-            try{
-                newInt = Integer.parseInt(newValue);
-            }catch (Exception E){
-                newInt = Integer.parseInt(oldValue);
-            }
-            Values.SURPRISING_SYMBOL_SIZE = newInt;
-        });
-        vBox.getChildren().add(surpriseTextField);
-
-        surpriseHBox = new HBox();
-        final ToggleGroup group = new ToggleGroup();
-
-        RadioButton localRadioButton = new RadioButton("Local");
-        localRadioButton.setToggleGroup(group);
-        localRadioButton.setUserData(ESurprisingSequenceMode.Local);
-
-        RadioButton globalRadioButton = new RadioButton("Global");
-        globalRadioButton.setToggleGroup(group);
-        globalRadioButton.setUserData(ESurprisingSequenceMode.Global);
-        if (Values.SURPRISING_MODE == ESurprisingSequenceMode.Global){
-            globalRadioButton.setSelected(true);
-        }else {
-            localRadioButton.setSelected(true);
-        }
-
-        group.selectedToggleProperty().addListener((observableValue, old_toggle, new_toggle) -> {
-            if (group.getSelectedToggle() != null) {
-                if (group.getSelectedToggle().getUserData().equals(ESurprisingSequenceMode.Local)){
-                    Values.SURPRISING_MODE = ESurprisingSequenceMode.Local;
-                }else if (group.getSelectedToggle().getUserData().equals(ESurprisingSequenceMode.Global)) {
-                    Values.SURPRISING_MODE = ESurprisingSequenceMode.Global;
-                }
-            }
-        });
-        surpriseHBox.getChildren().add(localRadioButton);
-        surpriseHBox.getChildren().add(globalRadioButton);
-        vBox.getChildren().add(surpriseHBox);
 
     }
 
-    private void updateVisibilities() {
-        if (Values.SELECTED_PROBLEM == EPoblemSelection.LOLZ){
-            lolzThresLabel.setVisible(true);
-            lolzThresTextField.setVisible(true);
-        }else{
-            lolzThresLabel.setVisible(false);
-            lolzThresTextField.setVisible(false);
-        }
-        if (Values.SELECTED_PROBLEM == EPoblemSelection.SURPRISING_SEQUENCES){
-            surpriseLabel.setVisible(true);
-            surpriseTextField.setVisible(true);
-            surpriseHBox.setVisible(true);
-        }
-        else{
-            surpriseLabel.setVisible(false);
-            surpriseTextField.setVisible(false);
-            surpriseHBox.setVisible(false);
+    private void updateProblemSpesificGUIElementVisibilities() {
 
-        }
-        if (Values.PARENT_SELECTION == EParentSelection.TOURNAMENT_SELECTION){
-            tournamentEpsilon.setVisible(true);
-            tournamentEpsilonLabel.setVisible(true);
-            tournamentGroupSize.setVisible(true);
-            tournamentGroupSizeLabel.setVisible(true);
-        }
-        else{
-            tournamentEpsilon.setVisible(false);
-            tournamentEpsilonLabel.setVisible(false);
-            tournamentGroupSize.setVisible(false);
-            tournamentGroupSizeLabel.setVisible(false);
-        }
     }
 
     private Label addLabel(VBox vBox, String s) {
@@ -389,7 +291,7 @@ public class GUIController {
 
         populationFitnessLineChart.setTitle("Population fitness");
         populationFitnessLineChart.setLegendVisible(false);
-        populationFitnessLineChart.setPrefSize(600, 300);
+        populationFitnessLineChart.setPrefSize(500, 300);
         populationFitnessLineChart.setCreateSymbols(false);
         populationSeries = new XYChart.Series<>();
         populationFitnessLineChart.setAnimated(false);
@@ -397,7 +299,7 @@ public class GUIController {
         gridPane.add(populationFitnessLineChart, 0, 0);
 
         maxFitnessLineChart.setTitle("Best fitness");
-        maxFitnessLineChart.setPrefSize(600, 300);
+        maxFitnessLineChart.setPrefSize(500, 300);
         maxFitnessLineChart.setAnimated(false);
         maxFitnessLineChart.setLegendVisible(false);
         maxFitnessLineChart.setCreateSymbols(false);
@@ -408,7 +310,7 @@ public class GUIController {
         gridPane.add(maxFitnessLineChart, 1, 0);
 
         avarageFitnessLineChart.setTitle("Avarage fitness");
-        avarageFitnessLineChart.setPrefSize(600, 300);
+        avarageFitnessLineChart.setPrefSize(500, 300);
         avarageFitnessLineChart.setAnimated(false);
         avarageFitnessLineChart.setLegendVisible(false);
         avarageFitnessLineChart.setCreateSymbols(false);
@@ -420,7 +322,7 @@ public class GUIController {
 
 
         stdFitnessLineChart.setTitle("Standard deviation fitness");
-        stdFitnessLineChart.setPrefSize(600, 300);
+        stdFitnessLineChart.setPrefSize(500, 300);
         stdFitnessLineChart.setAnimated(false);
         stdFitnessLineChart.setLegendVisible(false);
         stdFitnessLineChart.setCreateSymbols(false);
@@ -430,11 +332,7 @@ public class GUIController {
         gridPane.add(stdFitnessLineChart, 1, 1);
 
 
-        consoleTextArea = new TextArea();
-        consoleTextArea.setEditable(false);
-        consoleTextArea.setPrefSize(1200, 200);
 
-        gridPane.add(consoleTextArea, 0, 2, 2, 1);
         return gridPane;
     }
 
@@ -492,11 +390,11 @@ public class GUIController {
     private Button getPauseSimulationButton() {
         Button restartButton = new Button("Pause simulation");
         restartButton.setOnAction(event -> {
-            if (mainClass.simualtionPaused) {
+            if (mainClass.simulationPaused) {
                 restartButton.setText("Pause simulation");
-                mainClass.simualtionPaused = false;
+                mainClass.simulationPaused = false;
             } else {
-                mainClass.simualtionPaused = true;
+                mainClass.simulationPaused = true;
                 restartButton.setText("Start simulation");
             }
         });

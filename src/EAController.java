@@ -16,17 +16,14 @@ public class EAController {
 
         AbstractHypothesis initialObject = null;
         switch (Values.SELECTED_PROBLEM){
-            case ONEMAX:
-                initialObject = new OneMaxHypothesis(Values.NUMBER_OF_BITS_IN_PROBLEM);
+            case FLATLAND:
+                initialObject = new FlatlandHypothesis();
                 break;
-            case LOLZ:
-                initialObject = new LOLZHypothesis(Values.NUMBER_OF_BITS_IN_PROBLEM);
-                break;
-            case SURPRISING_SEQUENCES:
-                initialObject = new SurprisingSequencesHypothesis(Values.NUMBER_OF_BITS_IN_PROBLEM);
+            case TRACKER:
+//                initialObject = new TrackerHypothesis();
                 break;
             default:
-                initialObject = new OneMaxHypothesis(Values.NUMBER_OF_BITS_IN_PROBLEM);
+                initialObject = null;
         }
 
         population = generateInitialPopulation(initialObject, Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);

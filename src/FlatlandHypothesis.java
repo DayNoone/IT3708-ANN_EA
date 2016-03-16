@@ -1,18 +1,18 @@
 /**
- * Created by markus on 18.02.2016.
+ * Created by markus on 16.03.2016.
  */
-public class OneMaxHypothesis extends AbstractHypothesis {
+public class FlatlandHypothesis extends AbstractHypothesis {
     private int numberOfBits;
 
-    public OneMaxHypothesis(int numberOfBits) {
-        this.numberOfBits = numberOfBits;
+    public FlatlandHypothesis() {
+        this.numberOfBits = Values.NUMBER_OF_BITS_IN_PROBLEM;
 
         this.setGenotype(new int[numberOfBits]);
         this.phenotype = new int[numberOfBits];
 
     }
 
-    public OneMaxHypothesis(int[] newGenotype) {
+    public FlatlandHypothesis(int[] newGenotype) {
         this.numberOfBits = newGenotype.length;
         this.genotype = newGenotype;
         this.phenotype = new int[numberOfBits];
@@ -32,9 +32,6 @@ public class OneMaxHypothesis extends AbstractHypothesis {
         int[] phenotype1 = this.phenotype;
         for (int i = 0; i < phenotype1.length; i++) {
             int aPhenotype = phenotype1[i];
-//            if (aPhenotype == Values.RANDOM_ONEMAX[i]) {
-//                sumOfOnes += 1;
-//            }
             if (aPhenotype == 1) {
                 sumOfOnes += 1;
             }
@@ -45,12 +42,12 @@ public class OneMaxHypothesis extends AbstractHypothesis {
     @Override
     public AbstractHypothesis instantiateNewChileWithGenoType(int[] genotype) {
 
-        return new OneMaxHypothesis(genotype);
+        return new FlatlandHypothesis(genotype);
     }
 
     @Override
     public AbstractHypothesis instantiateNewChild() {
-        return new OneMaxHypothesis(numberOfBits);
+        return new FlatlandHypothesis();
     }
 
     @Override
@@ -68,5 +65,4 @@ public class OneMaxHypothesis extends AbstractHypothesis {
         }
 
     }
-
 }

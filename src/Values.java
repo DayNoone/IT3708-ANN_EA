@@ -1,20 +1,18 @@
 import enums.EAdultSelection;
 import enums.EParentSelection;
-import enums.EPoblemSelection;
-import enums.ESurprisingSequenceMode;
+import enums.EProblemSelection;
 
 /**
  * Created by markus on 18.02.2016.
  */
 public class Values {
 
-    public static final int BOARD_SIZE = 15;
+    public static final int FLATLAND_BOARD_SIZE = 10;
+
     public static int GENERATION_PRINT_THROTTLE = 1;
     public static boolean UPDATE_CHARTS = true;
 
-    public static int[] RANDOM_ONEMAX;
-
-    public static EPoblemSelection SELECTED_PROBLEM = EPoblemSelection.ONEMAX;
+    public static EProblemSelection SELECTED_PROBLEM = EProblemSelection.FLATLAND;
 
     public static int TOURNAMENT_SELECTION_GROUP_SIZE = 5;
     public static double TOURNAMENT_SELECTION_EPSILON = 0.5;
@@ -33,11 +31,5 @@ public class Values {
 
 
     public static int NUMBER_OF_BITS_IN_PROBLEM = 10;
-
-    public static int LOLZ_THRESHOLD = 21;
-
-    public static int SURPRISING_SYMBOL_SIZE= 3;
-
-    public static ESurprisingSequenceMode SURPRISING_MODE = ESurprisingSequenceMode.Global;
 
 }

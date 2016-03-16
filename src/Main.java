@@ -4,23 +4,17 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.util.Random;
-
 public class Main extends Application {
 
 
-    AnimationTimer mainloop;
+    AnimationTimer mainLoop;
     private int generation;
-
-    private Random random = new Random();
-
 
     private boolean solutionFound;
     private GUIController guiController;
     private EAController eaController;
     private boolean shouldRestart;
-    private Pane pane;
-    public boolean simualtionPaused;
+    public boolean simulationPaused;
     private long startTime;
 
 
@@ -32,9 +26,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         guiController = new GUIController();
 
-        pane = guiController.generateGUI(this);
+        Pane pane = guiController.generateGUI(this);
 
-        Scene scene = new Scene(pane, 1400, 800);
+        Scene scene = new Scene(pane);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -48,15 +42,11 @@ public class Main extends Application {
         generation = 0;
         solutionFound = false;
         startTime = System.currentTimeMillis();
-        Values.RANDOM_ONEMAX = new int[Values.NUMBER_OF_BITS_IN_PROBLEM];
-        for (int i = 0; i < Values.RANDOM_ONEMAX.length; i++) {
-            Values.RANDOM_ONEMAX[i] = random.nextInt(2);
-        }
 
-        mainloop = new AnimationTimer() {
+        mainLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (!simualtionPaused) {
+                if (!simulationPaused) {
 
                     if (shouldRestart){
                         startTime = System.currentTimeMillis();
@@ -101,7 +91,7 @@ public class Main extends Application {
 
             }
         };
-        mainloop.start();
+        mainLoop.start();
     }
 
     private void updateGUI(long now, Stage primaryStage) {
@@ -109,7 +99,7 @@ public class Main extends Application {
         double avgFitness = eaController.calculateAvarageFitness(eaController.getPopulation());
         AbstractHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
         guiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(), avgFitness, eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness), generation, bestHypothesis.getPhenotypeString());
-//        guiController.updateFPS(now, primaryStage);
+        guiController.updateFPS(now, primaryStage);
     }
 
     public void restartAlgorithm() {
