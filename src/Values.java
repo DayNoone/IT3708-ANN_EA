@@ -7,10 +7,11 @@ import enums.EProblemSelection;
  */
 public class Values {
 
-    public static final int FLATLAND_BOARD_SIZE = 10;
+    /**
 
-    public static int GENERATION_PRINT_THROTTLE = 1;
-    public static boolean UPDATE_CHARTS = true;
+        EA VALUES
+
+     **/
 
     public static EProblemSelection SELECTED_PROBLEM = EProblemSelection.FLATLAND;
 
@@ -31,5 +32,30 @@ public class Values {
 
 
     public static int NUMBER_OF_BITS_IN_PROBLEM = 10;
+
+    //GUI
+    public static int GENERATION_PRINT_THROTTLE = 1;
+    public static boolean UPDATE_CHARTS = true;
+
+
+    /**
+
+        ANN VALUES
+
+     **/
+
+    public static int ANN_INPUT_NODES = 6;
+    public static int ANN_OUTPUT_NODES = 3;
+
+    public static int[] ANN_NODES_IN_HIDDEN_LAYERS = new int[]{5, 5};
+
+    /**
+
+        FLATLAND VALUES
+
+     **/
+
+    public static final int FLATLAND_BOARD_SIZE = 10;
+    public static final int FLATLAND_GENOTYPE_RANGE = 10; // 0 - range
 
 }
