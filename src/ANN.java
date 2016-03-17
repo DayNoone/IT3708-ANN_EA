@@ -15,6 +15,7 @@ public class ANN {
     private double[] outputLayerNodeValues;
 
     public ANN() {
+
         initializeAnn();
     }
 
@@ -99,24 +100,5 @@ public class ANN {
         }
         numWeights += Values.ANN_NODES_IN_HIDDEN_LAYERS[Values.ANN_NODES_IN_HIDDEN_LAYERS.length - 1] * Values.ANN_OUTPUT_NODES;
         setNumberOfWeights(numWeights);
-    }
-
-    public static void main(String[] args){
-        ANN ann = new ANN();
-        ann.initializeAnn();
-        int numWieghts = ann.getNumberOfWeights();
-        double[] networkWeights = new double[numWieghts];
-        for (int i = 0; i < networkWeights.length; i++) {
-            networkWeights[i] = 1;
-        }
-        ann.setNetworkWeights(networkWeights);
-        ArrayList<BoardElement> inputValues = new ArrayList<>();
-        inputValues.add(BoardElement.FOOD);
-        inputValues.add(BoardElement.FOOD);
-        inputValues.add(BoardElement.FOOD);
-        inputValues.add(BoardElement.FOOD);
-        inputValues.add(BoardElement.FOOD);
-        inputValues.add(BoardElement.FOOD);
-        ann.getMove(inputValues);
     }
 }

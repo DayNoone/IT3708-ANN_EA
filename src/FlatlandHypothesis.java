@@ -25,15 +25,48 @@ public class FlatlandHypothesis extends AbstractHypothesis {
 
     @Override
     public void calculateFitness() {
-        double sumOfOnes = 0.0;
-        int[] phenotype1 = this.phenotype;
-        for (int i = 0; i < phenotype1.length; i++) {
-            int aPhenotype = phenotype1[i];
-            if (aPhenotype == 1) {
-                sumOfOnes += 1;
+        Values.BOARD.resetBoard();
+
+        for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
+            double[] outputLayer = Values.ANN.getMove(Values.BOARD.getSensors());
+
+            int highestIndex = findHighestIndex(outputLayer);
+
+            if (highestIndex == 0){
+                Values.BOARD.moveForeward();
+            }else if (highestIndex == 1){
+                Values.BOARD.moveLeft();
+            }
+            else if (highestIndex == 2){
+                Values.BOARD.moveRight();
             }
         }
-        setFitness(sumOfOnes / Values.ANN.getNumberOfWeights());
+
+        //TODO: Calcualte fitness
+
+//        double sumOfOnes = 0.0;
+//        int[] phenotype1 = this.phenotype;
+//        for (int i = 0; i < phenotype1.length; i++) {
+//            int aPhenotype = phenotype1[i];
+//            if (aPhenotype == 1) {
+//                sumOfOnes += 1;
+//            }
+//        }
+//        setFitness(sumOfOnes / Values.ANN.getNumberOfWeights());
+
+
+    }
+
+    private int findHighestIndex(double[] outputLayer) {
+        int highestIndex = 0;
+        double highestValue = outputLayer[0];
+        for (int i = 1; i < outputLayer.length; i++) {
+            if(outputLayer[i] > highestValue){
+                highestIndex = i;
+                highestValue = outputLayer[i];
+            }
+        }
+        return highestIndex;
     }
 
     @Override
@@ -47,18 +80,17 @@ public class FlatlandHypothesis extends AbstractHypothesis {
     }
 
     @Override
-    public void mutate() {
-        if (random.nextDouble() < 0.01) {
+    void mutate() {
+        if (random.nextDouble() < Values.MUTATION_PROBABILITY) {
             for (int i = 0; i < this.getGenotype().length; i++) {
-                this.getGenotype()[i] = this.getGenotype()[i] == 0 ? 1 : 0;
+                this.getGenotype()[i] = random.nextInt(Values.FLATLAND_GENOTYPE_RANGE);
             }
         } else {
             for (int i = 0; i < this.getGenotype().length; i++) {
                 if (random.nextDouble() < Values.MUTATION_PROBABILITY) {
-                    this.getGenotype()[i] = this.getGenotype()[i] == 0 ? 1 : 0;
+                    this.getGenotype()[i] = random.nextInt(Values.FLATLAND_GENOTYPE_RANGE);
                 }
             }
         }
-
     }
 }
