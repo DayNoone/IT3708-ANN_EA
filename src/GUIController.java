@@ -75,7 +75,6 @@ public class GUIController {
 
         return mainPane;
     }
-
     private GridPane getBoardGridPane() {
         Board board = new Board();
         return board.drawGrid();
