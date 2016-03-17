@@ -15,6 +15,11 @@ public class Board {
     static ArrayList<Pair<Integer, Integer>> coordinates = new ArrayList<>();
     static Random random = new Random();
 
+    private int foodEaten, poisonEaten;
+
+    private BoardElement[][] intialBoardState;
+    private Pair<Integer, Integer> intialAgentCoordinate;
+
     public Board(){
         for(int y = 0; y < Values.FLATLAND_BOARD_SIZE; y++){
             for(int x = 0; x < Values.FLATLAND_BOARD_SIZE; x++){
@@ -29,12 +34,29 @@ public class Board {
         fillFood();
         fillPoison();
         fillAgent();
+        //TODO CHECK IF COPIED
+        intialBoardState = board;
+        intialAgentCoordinate = agentCoordinate;
         getSensors();
     }
 
+    public void resetBoard(){
+        foodEaten = 0;
+        poisonEaten = 0;
+        board = intialBoardState;
+        agentCoordinate = intialAgentCoordinate;
+    }
+
     public void moveForeward(){
-        agentCoordinate.setElement1((agentCoordinate.getElement1()+colDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE);
+        agentCoordinate.setElement1((agentCoordinate.getElement1() + colDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE);
         agentCoordinate.setElement2((agentCoordinate.getElement2() + rowDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE);
+        BoardElement boardElement = board[agentCoordinate.getElement2()][agentCoordinate.getElement1()];
+        if(boardElement == BoardElement.FOOD) {
+            foodEaten++;
+        } else if (boardElement == BoardElement.POISON){
+            poisonEaten++;
+        }
+        board[agentCoordinate.getElement2()][agentCoordinate.getElement1()] = BoardElement.AGENT;
     }
     public void moveRight(){
         direction++;
@@ -80,6 +102,14 @@ public class Board {
             sensors.add(board[(agentCoordinate.getElement2() + rowDirection[sensorDirection] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE][(agentCoordinate.getElement1() + colDirection[sensorDirection] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE]);
         }
         return sensors;
+    }
+
+    public void setFoodEaten(int foodEaten) {
+        this.foodEaten = foodEaten;
+    }
+
+    public void setPoisonEaten(int poisonEaten) {
+        this.poisonEaten = poisonEaten;
     }
 
     public void drawGrid(GridPane boardGrid) {
