@@ -53,12 +53,15 @@ public class GUIController {
     private Label tournamentGroupSizeLabel;
     private Label tournamentEpsilonLabel;
 
+    private GridPane boardGrid;
+
     public Pane generateGUI(Main main) {
         mainClass = main;
         BorderPane mainPane = new BorderPane();
 
-        GridPane boardGrid = getBoardGridPane();
+        boardGrid = new GridPane();
         mainPane.setCenter(boardGrid);
+        Values.BOARD.drawGrid(boardGrid);
 
         GridPane gridPane = getChartsAndConsoleGridPane();
         mainPane.setRight(gridPane);
@@ -74,10 +77,6 @@ public class GUIController {
         updateProblemSpesificGUIElementVisibilities();
 
         return mainPane;
-    }
-    private GridPane getBoardGridPane() {
-        Board board = new Board();
-        return board.drawGrid();
     }
 
     private VBox getControlPanelVBox() {
@@ -423,6 +422,10 @@ public class GUIController {
         consoleTextArea.appendText("\n");
         consoleTextArea.appendText("\n");
 
+
+    }
+
+    public void updateBoard() {
 
     }
 }

@@ -82,8 +82,7 @@ public class Board {
         return sensors;
     }
 
-    public GridPane drawGrid() {
-        GridPane boardGrid = new GridPane();
+    public void drawGrid(GridPane boardGrid) {
         for(int y = 0; y < Values.FLATLAND_BOARD_SIZE; y++){
             for(int x = 0; x < Values.FLATLAND_BOARD_SIZE; x++){
                 HBox box = new HBox();
@@ -111,6 +110,5 @@ public class Board {
                 boardGrid.add(box, x, y);
             }
         }
-        return boardGrid;
     }
 }

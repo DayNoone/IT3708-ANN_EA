@@ -58,4 +58,7 @@ public class Values {
     public static final int FLATLAND_BOARD_SIZE = 10;
     public static final int FLATLAND_GENOTYPE_RANGE = 10; // 0 - range
 
+    public static Board BOARD;
+    public static ANN ANN;
+
 }

@@ -2,27 +2,24 @@
  * Created by markus on 16.03.2016.
  */
 public class FlatlandHypothesis extends AbstractHypothesis {
-    private int numberOfBits;
 
     public FlatlandHypothesis() {
-        this.numberOfBits = Values.NUMBER_OF_BITS_IN_PROBLEM;
 
-        this.setGenotype(new int[numberOfBits]);
-        this.phenotype = new int[numberOfBits];
+        this.setGenotype(new int[Values.ANN.getNumberOfWeights()]);
+        this.phenotype = new int[Values.ANN.getNumberOfWeights()];
 
     }
 
     public FlatlandHypothesis(int[] newGenotype) {
-        this.numberOfBits = newGenotype.length;
         this.genotype = newGenotype;
-        this.phenotype = new int[numberOfBits];
+        this.phenotype = new int[Values.ANN.getNumberOfWeights()];
     }
 
     @Override
     void initiateRandomGenotype() {
-        for (int i = 0; i < numberOfBits; i++) {
-            int randomOneOrZero = random.nextInt(2);
-            getGenotype()[i] = randomOneOrZero;
+        for (int i = 0; i < Values.ANN.getNumberOfWeights(); i++) {
+            int randomGenotypeInt = random.nextInt(Values.FLATLAND_GENOTYPE_RANGE);
+            getGenotype()[i] = randomGenotypeInt;
         }
     }
 
@@ -36,12 +33,11 @@ public class FlatlandHypothesis extends AbstractHypothesis {
                 sumOfOnes += 1;
             }
         }
-        setFitness(sumOfOnes / numberOfBits);
+        setFitness(sumOfOnes / Values.ANN.getNumberOfWeights());
     }
 
     @Override
     public AbstractHypothesis instantiateNewChileWithGenoType(int[] genotype) {
-
         return new FlatlandHypothesis(genotype);
     }
 

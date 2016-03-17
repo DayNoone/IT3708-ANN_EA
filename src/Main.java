@@ -26,6 +26,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         guiController = new GUIController();
 
+        Values.BOARD = new Board();
+        Values.ANN = new ANN();
+
         Pane pane = guiController.generateGUI(this);
 
         Scene scene = new Scene(pane);
@@ -100,6 +103,7 @@ public class Main extends Application {
         AbstractHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
         guiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(), avgFitness, eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness), generation, bestHypothesis.getPhenotypeString());
         guiController.updateFPS(now, primaryStage);
+        guiController.updateBoard();
     }
 
     public void restartAlgorithm() {
