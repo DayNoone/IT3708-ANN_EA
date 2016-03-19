@@ -70,7 +70,7 @@ public class Board {
     }
 
     private void fillFood() {
-        int foodCount = (Values.FLATLAND_BOARD_SIZE*Values.FLATLAND_BOARD_SIZE) / 3;
+        int foodCount = Values.FLATLAND_MAX_FOOD_COUNT;
         while (foodCount > 0) {
             fillElement(BoardElement.FOOD);
             foodCount--;

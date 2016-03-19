@@ -6,13 +6,24 @@ public class FlatlandHypothesis extends AbstractHypothesis {
     public FlatlandHypothesis() {
 
         this.setGenotype(new int[Values.ANN.getNumberOfWeights()]);
-        this.phenotype = new int[Values.ANN.getNumberOfWeights()];
+        initiateRandomGenotype();
+        generatePhenotype();
 
     }
 
     public FlatlandHypothesis(int[] newGenotype) {
         this.genotype = newGenotype;
-        this.phenotype = new int[Values.ANN.getNumberOfWeights()];
+        generatePhenotype();
+    }
+
+    @Override
+    void generatePhenotype() {
+        this.phenotype = new double[this.genotype.length];
+        for (int i = 0; i < this.phenotype.length; i++) {
+            int tempGEnoVal = this.genotype[i];
+            double tempPhenotypeValue = 1.0 * tempGEnoVal / Values.FLATLAND_GENOTYPE_RANGE;
+            this.phenotype[i] = tempPhenotypeValue;
+        }
     }
 
     @Override
@@ -26,6 +37,7 @@ public class FlatlandHypothesis extends AbstractHypothesis {
     @Override
     public void calculateFitness() {
         Values.BOARD.resetBoard();
+        Values.ANN.setNetworkWeights(this.phenotype);
 
         for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
             double[] outputLayer = Values.ANN.getMove(Values.BOARD.getSensors());
@@ -42,7 +54,8 @@ public class FlatlandHypothesis extends AbstractHypothesis {
             }
         }
 
-        this.setFitness((Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / Values.BOARD.getFoodEaten());
+        double fitness = (1.0 * Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / Values.FLATLAND_MAX_FOOD_COUNT;
+        this.setFitness(fitness);
 
         //TODO: Calcualte fitness
 

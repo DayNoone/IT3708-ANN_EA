@@ -40,7 +40,6 @@ public class EAController {
         List<AbstractHypothesis> initialPopulation = new ArrayList<>();
         for (int i = 0; i < sizeOfGeneration; i++) {
             AbstractHypothesis hypothesis = initialObject.instantiateNewChild();
-            hypothesis.initiateRandomGenotype();
             initialPopulation.add(hypothesis);
         }
         return initialPopulation;

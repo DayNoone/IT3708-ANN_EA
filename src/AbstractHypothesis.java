@@ -7,14 +7,12 @@ public abstract class AbstractHypothesis {
 
     protected Random random = new Random();
     protected int[] genotype;
-    protected int[] phenotype;
+    protected double[] phenotype;
     protected double fitness;
     protected double exceptedValue;
 
 
-    void generatePhenotype(){
-        this.phenotype = this.genotype;
-    }
+    abstract void generatePhenotype();
 
     abstract void initiateRandomGenotype();
 
@@ -28,7 +26,7 @@ public abstract class AbstractHypothesis {
 
     String getPhenotypeString() {
         String phenoTypeString = "";
-        for (int aPhenotype : this.phenotype) {
+        for (double aPhenotype : this.phenotype) {
             phenoTypeString += String.valueOf(aPhenotype);
         }
         return phenoTypeString;
@@ -64,7 +62,7 @@ public abstract class AbstractHypothesis {
         this.genotype = genotype;
     }
 
-    int[] getPhenotype() {
+    double[] getPhenotype() {
 
         return phenotype;
     }
