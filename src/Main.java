@@ -103,7 +103,7 @@ public class Main extends Application {
         AbstractHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
 
         guiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(), avgFitness, eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness), generation, bestHypothesis.getPhenotypeString());
-        guiController.updateFPS(now, primaryStage);
+//        guiController.updateFPS(now, primaryStage);
         guiController.drawMovement(bestHypothesis);
     }
 

@@ -37,7 +37,6 @@ public class Values {
     public static int GENERATION_PRINT_THROTTLE = 1;
     public static boolean UPDATE_CHARTS = true;
 
-
     /**
 
         ANN VALUES
@@ -61,7 +60,7 @@ public class Values {
 
     public static final int FLATLAND_MAX_FOOD_COUNT = (Values.FLATLAND_BOARD_SIZE * Values.FLATLAND_BOARD_SIZE) / 3;
 
-    public static final int POISON_PENALTY = 1;
+    public static final int POISON_PENALTY = 4;
 
     public static Board BOARD;
     public static ANN ANN;

@@ -17,7 +17,8 @@ public class Board {
     static ArrayList<Pair<Integer, Integer>> coordinates = new ArrayList<>();
     static Random random = new Random();
 
-    private int foodEaten, poisonEaten;
+    private int foodEaten = 0;
+    private int poisonEaten = 0;
 
     private BoardElement[][] initialBoardState;
     private Pair<Integer, Integer> intialAgentCoordinate;
@@ -37,8 +38,9 @@ public class Board {
         fillFood();
         fillPoison();
         fillAgent();
-        initialBoardState = new BoardElement[board.length][];
-        System.arraycopy( board, 0, initialBoardState, 0, board.length );
+
+        initialBoardState = deepCopyBoardElementMatrix(board);
+
         intialAgentCoordinate = new Pair<>(agentCoordinate.getElement1(), agentCoordinate.getElement2());
         getSensors();
     }
@@ -46,10 +48,7 @@ public class Board {
     public void resetBoard(){
         foodEaten = 0;
         poisonEaten = 0;
-        for (int i = 0; i < initialBoardState.length; i++) {
-            System.arraycopy(initialBoardState[i], 0, board[i], 0, initialBoardState[i].length);
-        }
-        printBoard();
+        board = deepCopyBoardElementMatrix(initialBoardState);
         agentCoordinate = new Pair<>(intialAgentCoordinate.getElement1(), intialAgentCoordinate.getElement2());
     }
 
@@ -57,11 +56,11 @@ public class Board {
         board[agentCoordinate.getElement2()][agentCoordinate.getElement1()] = BoardElement.EMPTY;
         int newXPos = (agentCoordinate.getElement1() + colDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE;
         int newYPos = (agentCoordinate.getElement2() + rowDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE;
-        BoardElement boardElement = board[newXPos][newYPos];
+        BoardElement boardElement = board[newYPos][newXPos];
         agentCoordinate.setElement1(newXPos);
         agentCoordinate.setElement2(newYPos);
         if(boardElement == BoardElement.FOOD) {
-            foodEaten++;
+            foodEaten += 1;
         } else if (boardElement == BoardElement.POISON){
             poisonEaten++;
         }
@@ -95,13 +94,13 @@ public class Board {
     }
 
     private void fillAgent() {
-        fillElement(BoardElement.AGENT);
+        agentCoordinate = fillElement(BoardElement.AGENT);
     }
 
-    private void fillElement(BoardElement element) {
+    private Pair<Integer, Integer> fillElement(BoardElement element) {
         Pair<Integer, Integer> coordinate = coordinates.remove(random.nextInt(coordinates.size()));
-        agentCoordinate = coordinate;
         board[coordinate.getElement2()][coordinate.getElement1()] = element;
+        return coordinate;
     }
 
     public ArrayList<BoardElement> getSensors(){
@@ -130,13 +129,6 @@ public class Board {
         return sensors;
     }
 
-    public void setFoodEaten(int foodEaten) {
-        this.foodEaten = foodEaten;
-    }
-
-    public void setPoisonEaten(int poisonEaten) {
-        this.poisonEaten = poisonEaten;
-    }
 
     public int getFoodEaten() {
         return foodEaten;
@@ -184,5 +176,15 @@ public class Board {
             System.out.println(Arrays.toString(board[j]));
         }
         System.out.println("");
+    }
+
+    private static BoardElement[][] deepCopyBoardElementMatrix(BoardElement[][] input) {
+        if (input == null)
+            return null;
+        BoardElement[][] result = new BoardElement[input.length][];
+        for (int r = 0; r < input.length; r++) {
+            result[r] = input[r].clone();
+        }
+        return result;
     }
 }

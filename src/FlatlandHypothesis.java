@@ -59,7 +59,9 @@ public class FlatlandHypothesis extends AbstractHypothesis {
         }
 
 
-        double fitness = (1.0 * Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / Values.FLATLAND_MAX_FOOD_COUNT;
+
+        int flatlandMaxFoodCount = Values.FLATLAND_MAX_FOOD_COUNT;
+        double fitness = (1.0 * Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / flatlandMaxFoodCount;
         double max = Math.max(0, fitness);
         this.setFitness(max);
     }
