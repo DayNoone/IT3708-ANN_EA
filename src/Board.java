@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class Board {
@@ -48,6 +49,7 @@ public class Board {
     }
 
     public void moveForeward(){
+        board[agentCoordinate.getElement2()][agentCoordinate.getElement1()] = BoardElement.EMPTY;
         agentCoordinate.setElement1((agentCoordinate.getElement1() + colDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE);
         agentCoordinate.setElement2((agentCoordinate.getElement2() + rowDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE);
         BoardElement boardElement = board[agentCoordinate.getElement2()][agentCoordinate.getElement1()];
@@ -96,10 +98,27 @@ public class Board {
     }
 
     public ArrayList<BoardElement> getSensors(){
-        ArrayList<BoardElement> sensors = new ArrayList<>();
+        ArrayList<BoardElement> elements = new ArrayList<>();
         for(int i = -1; i < 2; i++){
             int sensorDirection = (direction + i + 4) % 4;
-            sensors.add(board[(agentCoordinate.getElement2() + rowDirection[sensorDirection] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE][(agentCoordinate.getElement1() + colDirection[sensorDirection] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE]);
+            elements.add(board[(agentCoordinate.getElement2() + rowDirection[sensorDirection] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE][(agentCoordinate.getElement1() + colDirection[sensorDirection] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE]);
+        }
+        Collections.swap(elements, 0, 1);
+        ArrayList<BoardElement> sensors = new ArrayList<>();
+        for (int j = 0; j < elements.size()*2; j++){
+            if(j < elements.size()){
+                if(elements.get(j) == BoardElement.FOOD){
+                    sensors.add(elements.get(j));
+                } else {
+                    sensors.add(BoardElement.EMPTY);
+                }
+            } else {
+                if(elements.get(j-elements.size()) == BoardElement.POISON){
+                    sensors.add(elements.get(j-elements.size()));
+                } else {
+                    sensors.add(BoardElement.EMPTY);
+                }
+            }
         }
         return sensors;
     }
