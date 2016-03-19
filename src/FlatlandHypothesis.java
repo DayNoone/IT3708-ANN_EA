@@ -1,3 +1,7 @@
+import enums.BoardElement;
+
+import java.util.ArrayList;
+
 /**
  * Created by markus on 16.03.2016.
  */
@@ -40,7 +44,8 @@ public class FlatlandHypothesis extends AbstractHypothesis {
         Values.ANN.setNetworkWeights(this.phenotype);
 
         for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
-            double[] outputLayer = Values.ANN.getMove(Values.BOARD.getSensors());
+            ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
+            double[] outputLayer = Values.ANN.getMove(sensorValues);
 
             int highestIndex = findHighestIndex(outputLayer);
 
@@ -56,20 +61,6 @@ public class FlatlandHypothesis extends AbstractHypothesis {
 
         double fitness = (1.0 * Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / Values.FLATLAND_MAX_FOOD_COUNT;
         this.setFitness(fitness);
-
-        //TODO: Calcualte fitness
-
-//        double sumOfOnes = 0.0;
-//        int[] phenotype1 = this.phenotype;
-//        for (int i = 0; i < phenotype1.length; i++) {
-//            int aPhenotype = phenotype1[i];
-//            if (aPhenotype == 1) {
-//                sumOfOnes += 1;
-//            }
-//        }
-//        setFitness(sumOfOnes / Values.ANN.getNumberOfWeights());
-
-
     }
 
     private int findHighestIndex(double[] outputLayer) {

@@ -18,10 +18,11 @@ public class Board {
 
     private int foodEaten, poisonEaten;
 
-    private BoardElement[][] intialBoardState;
+    private BoardElement[][] initialBoardState;
     private Pair<Integer, Integer> intialAgentCoordinate;
 
     public Board(){
+
         for(int y = 0; y < Values.FLATLAND_BOARD_SIZE; y++){
             for(int x = 0; x < Values.FLATLAND_BOARD_SIZE; x++){
                 board[y][x] = BoardElement.EMPTY;
@@ -35,24 +36,28 @@ public class Board {
         fillFood();
         fillPoison();
         fillAgent();
-        //TODO CHECK IF COPIED
-        intialBoardState = board;
-        intialAgentCoordinate = agentCoordinate;
+        initialBoardState = new BoardElement[board.length][];
+        System.arraycopy( board, 0, initialBoardState, 0, board.length );
+        intialAgentCoordinate = new Pair<>(agentCoordinate.getElement1(), agentCoordinate.getElement2());
         getSensors();
     }
 
     public void resetBoard(){
         foodEaten = 0;
         poisonEaten = 0;
-        board = intialBoardState;
-        agentCoordinate = intialAgentCoordinate;
+        for (int i = 0; i < initialBoardState.length; i++) {
+            System.arraycopy(initialBoardState[i], 0, board[i], 0, initialBoardState[i].length);
+        }
+        agentCoordinate = new Pair<>(intialAgentCoordinate.getElement1(), intialAgentCoordinate.getElement2());
     }
 
     public void moveForeward(){
+        int newXPos = (agentCoordinate.getElement1() + colDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE;
+        int newYPos = (agentCoordinate.getElement2() + rowDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE;
+        BoardElement boardElement = board[newXPos][newYPos];
+        agentCoordinate.setElement1(newXPos);
+        agentCoordinate.setElement2(newYPos);
         board[agentCoordinate.getElement2()][agentCoordinate.getElement1()] = BoardElement.EMPTY;
-        agentCoordinate.setElement1((agentCoordinate.getElement1() + colDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE);
-        agentCoordinate.setElement2((agentCoordinate.getElement2() + rowDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE);
-        BoardElement boardElement = board[agentCoordinate.getElement2()][agentCoordinate.getElement1()];
         if(boardElement == BoardElement.FOOD) {
             foodEaten++;
         } else if (boardElement == BoardElement.POISON){
