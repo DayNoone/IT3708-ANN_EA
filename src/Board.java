@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -48,22 +49,23 @@ public class Board {
         for (int i = 0; i < initialBoardState.length; i++) {
             System.arraycopy(initialBoardState[i], 0, board[i], 0, initialBoardState[i].length);
         }
+        printBoard();
         agentCoordinate = new Pair<>(intialAgentCoordinate.getElement1(), intialAgentCoordinate.getElement2());
     }
 
     public void moveForeward(){
+        board[agentCoordinate.getElement2()][agentCoordinate.getElement1()] = BoardElement.EMPTY;
         int newXPos = (agentCoordinate.getElement1() + colDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE;
         int newYPos = (agentCoordinate.getElement2() + rowDirection[direction] + Values.FLATLAND_BOARD_SIZE) % Values.FLATLAND_BOARD_SIZE;
         BoardElement boardElement = board[newXPos][newYPos];
         agentCoordinate.setElement1(newXPos);
         agentCoordinate.setElement2(newYPos);
-        board[agentCoordinate.getElement2()][agentCoordinate.getElement1()] = BoardElement.EMPTY;
         if(boardElement == BoardElement.FOOD) {
             foodEaten++;
         } else if (boardElement == BoardElement.POISON){
             poisonEaten++;
         }
-        board[agentCoordinate.getElement2()][agentCoordinate.getElement1()] = BoardElement.AGENT;
+        board[newYPos][newXPos] = BoardElement.AGENT;
     }
     public void moveRight(){
         direction++;
@@ -144,7 +146,9 @@ public class Board {
         return poisonEaten;
     }
 
-    public void drawGrid(GridPane boardGrid) {
+    public GridPane getBoardGridPane() {
+        GridPane gridPane = new GridPane();
+
         for(int y = 0; y < Values.FLATLAND_BOARD_SIZE; y++){
             for(int x = 0; x < Values.FLATLAND_BOARD_SIZE; x++){
                 HBox box = new HBox();
@@ -169,8 +173,16 @@ public class Board {
                 }
                 ImageView img = new ImageView(new Image(imgPath));
                 box.getChildren().add(img);
-                boardGrid.add(box, x, y);
+                gridPane.add(box, x, y);
             }
         }
+        return gridPane;
+    }
+
+    public void printBoard(){
+        for (int j = 0; j < board.length; j++) {
+            System.out.println(Arrays.toString(board[j]));
+        }
+        System.out.println("");
     }
 }

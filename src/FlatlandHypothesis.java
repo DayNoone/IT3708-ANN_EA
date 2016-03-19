@@ -45,9 +45,8 @@ public class FlatlandHypothesis extends AbstractHypothesis {
 
         for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
             ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
-            double[] outputLayer = Values.ANN.getMove(sensorValues);
 
-            int highestIndex = findHighestIndex(outputLayer);
+            int highestIndex = Values.ANN.getMove(sensorValues);
 
             if (highestIndex == 0){
                 Values.BOARD.moveForeward();
@@ -59,21 +58,12 @@ public class FlatlandHypothesis extends AbstractHypothesis {
             }
         }
 
+
         double fitness = (1.0 * Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / Values.FLATLAND_MAX_FOOD_COUNT;
-        this.setFitness(fitness);
+        double max = Math.max(0, fitness);
+        this.setFitness(max);
     }
 
-    private int findHighestIndex(double[] outputLayer) {
-        int highestIndex = 0;
-        double highestValue = outputLayer[0];
-        for (int i = 1; i < outputLayer.length; i++) {
-            if(outputLayer[i] > highestValue){
-                highestIndex = i;
-                highestValue = outputLayer[i];
-            }
-        }
-        return highestIndex;
-    }
 
     @Override
     public AbstractHypothesis instantiateNewChileWithGenoType(int[] genotype) {

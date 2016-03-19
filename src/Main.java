@@ -101,9 +101,10 @@ public class Main extends Application {
 
         double avgFitness = eaController.calculateAvarageFitness(eaController.getPopulation());
         AbstractHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
+
         guiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(), avgFitness, eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness), generation, bestHypothesis.getPhenotypeString());
         guiController.updateFPS(now, primaryStage);
-        guiController.updateBoard();
+        guiController.drawMovement(bestHypothesis);
     }
 
     public void restartAlgorithm() {

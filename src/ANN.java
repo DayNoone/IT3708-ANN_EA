@@ -9,6 +9,7 @@ public class ANN {
 
     private double[] networkWeights;
     private int numberOfWeights;
+    private int weightCounter = 0;
 
     private double[] inputLayerNodeValues;
     private double[][] hiddenLayers;
@@ -33,7 +34,7 @@ public class ANN {
         calcLengthOfGenotype();
     }
 
-    public double[] getMove(ArrayList<BoardElement> inputValues){
+    public int getMove(ArrayList<BoardElement> inputValues){
         initiateInputLayer(inputValues);
 
         for (int hiddenLayerCounter = 0; hiddenLayerCounter < hiddenLayers.length; hiddenLayerCounter++) {
@@ -46,7 +47,22 @@ public class ANN {
             }
         }
         updateLayerNodes(outputLayerNodeValues, hiddenLayers[hiddenLayers.length-1]);
-        return outputLayerNodeValues;
+
+
+        int highestIndex = findHighestIndex(outputLayerNodeValues);
+        return highestIndex;
+    }
+
+    private int findHighestIndex(double[] outputLayer) {
+        int highestIndex = 0;
+        double highestValue = outputLayer[0];
+        for (int i = 1; i < outputLayer.length; i++) {
+            if (outputLayer[i] > highestValue) {
+                highestIndex = i;
+                highestValue = outputLayer[i];
+            }
+        }
+        return highestIndex;
     }
 
     private void updateLayerNodes(double[] currentLayer, double[] previousLayer){
@@ -54,17 +70,18 @@ public class ANN {
 
             double totalValue = 0;
             for (int previousLayerNodeCounter = 0; previousLayerNodeCounter < previousLayer.length; previousLayerNodeCounter++) {
-                totalValue += previousLayer[previousLayerNodeCounter] * networkWeights[previousLayerNodeCounter];
+                totalValue += previousLayer[previousLayerNodeCounter] * networkWeights[weightCounter++];
             }
 
             currentLayer[currentLayerNodeCounter] = activationFunction(totalValue);
         }
+        weightCounter = 0;
     }
 
     private double activationFunction(double totalValue) {
-        if (totalValue > 1){
-            totalValue = 1;
-        }
+//        if (totalValue > 1){
+//            totalValue = 1;
+//        }
         return Math.max(0, totalValue);
     }
 
@@ -81,7 +98,8 @@ public class ANN {
 
 
     public void setNetworkWeights(double[] networkWeights) {
-        this.networkWeights = networkWeights;
+        this.networkWeights = new double[networkWeights.length];
+        System.arraycopy(networkWeights, 0, this.networkWeights, 0, networkWeights.length);
     }
 
     public int getNumberOfWeights() {
@@ -91,6 +109,7 @@ public class ANN {
     public void setNumberOfWeights(int numberOfWeights) {
         this.numberOfWeights = numberOfWeights;
     }
+
 
     private void calcLengthOfGenotype(){
         int numWeights = 0;

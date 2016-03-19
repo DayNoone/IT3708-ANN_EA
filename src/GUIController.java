@@ -1,3 +1,4 @@
+import enums.BoardElement;
 import enums.EAdultSelection;
 import enums.EParentSelection;
 import enums.EProblemSelection;
@@ -10,6 +11,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -54,14 +57,14 @@ public class GUIController {
     private Label tournamentEpsilonLabel;
 
     private GridPane boardGrid;
+    private BorderPane mainPane;
 
     public Pane generateGUI(Main main) {
         mainClass = main;
-        BorderPane mainPane = new BorderPane();
+        mainPane = new BorderPane();
 
-        boardGrid = new GridPane();
-        mainPane.setCenter(boardGrid);
-        Values.BOARD.drawGrid(boardGrid);
+        GridPane boardGridPane = Values.BOARD.getBoardGridPane();
+        mainPane.setCenter(boardGridPane);
 
         GridPane gridPane = getChartsAndConsoleGridPane();
         mainPane.setRight(gridPane);
@@ -425,7 +428,42 @@ public class GUIController {
 
     }
 
-    public void updateBoard() {
+    public void drawMovement(AbstractHypothesis bestHypothesis) {
+
+        Values.BOARD.resetBoard();
+        Values.ANN.setNetworkWeights(bestHypothesis.phenotype);
+
+        for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
+            ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
+            int highestIndex = Values.ANN.getMove(sensorValues);
+
+            if (highestIndex == 0){
+                Values.BOARD.moveForeward();
+            }else if (highestIndex == 1){
+                Values.BOARD.moveLeft();
+            }
+            else if (highestIndex == 2){
+                Values.BOARD.moveRight();
+            }
+
+//            GridPane prevGridPane = (GridPane) mainPane.getCenter();
+//            mainPane.getChildren().remove(prevGridPane);
+//
+//
+//            GridPane boardGridPane = Values.BOARD.getBoardGridPane();
+//            mainPane.setCenter(boardGridPane);
+//
+//
+//
+//            try {
+//                Thread.sleep(50);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
+        }
+
+
 
     }
 }
