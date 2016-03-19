@@ -42,6 +42,8 @@ public class FlatlandHypothesis extends AbstractHypothesis {
             }
         }
 
+        this.setFitness((Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / Values.BOARD.getFoodEaten());
+
         //TODO: Calcualte fitness
 
 //        double sumOfOnes = 0.0;

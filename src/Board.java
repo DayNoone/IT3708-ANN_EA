@@ -112,6 +112,14 @@ public class Board {
         this.poisonEaten = poisonEaten;
     }
 
+    public int getFoodEaten() {
+        return foodEaten;
+    }
+
+    public int getPoisonEaten() {
+        return poisonEaten;
+    }
+
     public void drawGrid(GridPane boardGrid) {
         for(int y = 0; y < Values.FLATLAND_BOARD_SIZE; y++){
             for(int x = 0; x < Values.FLATLAND_BOARD_SIZE; x++){
