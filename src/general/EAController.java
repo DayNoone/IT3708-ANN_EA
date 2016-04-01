@@ -2,6 +2,7 @@ package general;
 
 import project3.Board;
 import project3.FlatlandHypothesis;
+import project4.BeerTrackerHypothesis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class EAController {
                 initialObject = new FlatlandHypothesis();
                 break;
             case TRACKER:
-//                initialObject = new TrackerHypothesis();
+                initialObject = new BeerTrackerHypothesis();
                 break;
             default:
                 initialObject = null;

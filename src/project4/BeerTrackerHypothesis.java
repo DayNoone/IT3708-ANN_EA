@@ -44,30 +44,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     @Override
     public void calculateFitness() {
-        Values.BOARD.resetBoard();
-        Values.ANN.setNetworkWeights(this.phenotype);
-
-        for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
-            ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
-
-            int highestIndex = Values.ANN.getMove(sensorValues);
-
-            if (highestIndex == 0){
-                Values.BOARD.moveForeward();
-            }else if (highestIndex == 1){
-                Values.BOARD.moveLeft();
-            }
-            else if (highestIndex == 2){
-                Values.BOARD.moveRight();
-            }
-        }
-
-
-
-        int flatlandMaxFoodCount = Values.FLATLAND_MAX_FOOD_COUNT;
-        double fitness = (1.0 * Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / flatlandMaxFoodCount;
-        double max = Math.max(0, fitness);
-        this.setFitness(max);
+        // TODO: Rewrite for BeerTracker
     }
 
 

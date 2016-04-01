@@ -5,12 +5,16 @@ import enums.EParentSelection;
 import enums.EProblemSelection;
 import project3.Board;
 import project4.CTRNN;
+import project4.BeerWorld;
 
 /**
  * Created by markus on 18.02.2016.
  */
 public class Values {
 
+    public static final int BEERWORLD_BOARD_HEIGHT = 15;
+    public static final int BEERWORLD_BOARD_WIDTH = 30;
+    public static BeerWorld BEERWORLD;
     /**
 
         EA VALUES

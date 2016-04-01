@@ -436,7 +436,7 @@ public class P4GUIController {
 
     }
 
-    public void drawMovement(int numberOfMoves) {
+    /*public void drawMovement(int numberOfMoves) {
 
 
         ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
@@ -458,7 +458,7 @@ public class P4GUIController {
 
         updateBoardValues(numberOfMoves);
 
-    }
+    }*/
 
     private void updateBoardValues(int numberOfMoves) {
         iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
@@ -470,7 +470,7 @@ public class P4GUIController {
 
     private VBox getCenterGUI(int numberOfMoves) {
         boardVBox = new VBox();
-        boardGridPane = Values.BOARD.generateBoardGridPane();
+        boardGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
         boardVBox.getChildren().add(boardGridPane);
 
         HBox iterationsHBox = new HBox();
@@ -479,20 +479,6 @@ public class P4GUIController {
         iterationsHBox.getChildren().add(new Label("Iterations:\t"));
         iterationsHBox.getChildren().add(iterationsLabel);
         boardVBox.getChildren().add(iterationsHBox);
-
-        HBox foodEatenHBox = new HBox();
-        foodEatenLabel = new Label();
-        foodEatenLabel.setText(String.valueOf(Values.BOARD.getFoodEaten()));
-        foodEatenHBox.getChildren().add(new Label("Food eaten:\t"));
-        foodEatenHBox.getChildren().add(foodEatenLabel);
-        boardVBox.getChildren().add(foodEatenHBox);
-
-        HBox poisonEatenHBox = new HBox();
-        poisonEatenLabel = new Label();
-        poisonEatenLabel.setText( String.valueOf(Values.BOARD.getPoisonEaten()));
-        poisonEatenHBox.getChildren().add(new Label("Poison eaten:\t"));
-        poisonEatenHBox.getChildren().add(poisonEatenLabel);
-        boardVBox.getChildren().add(poisonEatenHBox);
 
         addLabel(boardVBox, "Sleep duration");
         TextField sleepDurationTextField = new TextField();

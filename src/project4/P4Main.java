@@ -10,7 +10,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import project3.Board;
 
 public class P4Main extends Application {
 
@@ -37,22 +36,21 @@ public class P4Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Values.ANN_INPUT_NODES = 5;
         Values.ANN_OUTPUT_NODES = 2;
+        Values.SELECTED_PROBLEM = EProblemSelection.TRACKER;
 
         Values.CTRNN = new CTRNN();
 
-//        p4GuiController = new P4GUIController();
-//
-//        Values.BOARD = new Board();
-//        Values.ANN = new ANN();
-//
-//        Pane pane = p4GuiController.generateGUI(this);
-//
-//        Scene scene = new Scene(pane);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//
-//        // run generation loop
-//        startEvolutionaryAlgorithmLoop(primaryStage);
+        Values.BEERWORLD = new BeerWorld();
+        Values.ANN = new ANN();
+
+        Pane pane = p4GuiController.generateGUI(this);
+
+        Scene scene = new Scene(pane);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // run generation loop
+        startEvolutionaryAlgorithmLoop(primaryStage);
     }
 
     private void startEvolutionaryAlgorithmLoop(Stage primaryStage) {
@@ -83,7 +81,7 @@ public class P4Main extends Application {
 
                         if (now - lastUpdate >= Values.FLATLAND_SLEEP_DURATION * 1000000) { // 20_000_000 = 20ms
                             lastUpdate = now;
-                            p4GuiController.drawMovement(numberOfMoves);
+                            //p4GuiController.drawMovement(numberOfMoves);
                             numberOfMoves++;
                         }
 
@@ -118,11 +116,6 @@ public class P4Main extends Application {
                             eaController.generateNewPopulation();
                         }
 
-                        if (Values.FLATLAND_DYNAMIC){
-                            Values.BOARD = new Board();
-                        }
-
-                        Values.BOARD.resetBoard();
                         Values.ANN.setNetworkWeights(bestHypothesis.getPhenotype());
 
                     }
