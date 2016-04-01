@@ -16,6 +16,8 @@ public class Main extends Application {
     private boolean shouldRestart;
     public boolean simulationPaused;
     private long startTime;
+    private AbstractHypothesis bestHypothesis;
+    private int numberOfMoves;
 
 
     public static void main(String[] args) {
@@ -45,6 +47,7 @@ public class Main extends Application {
         generation = 0;
         solutionFound = false;
         startTime = System.currentTimeMillis();
+        numberOfMoves = 60;
 
         mainLoop = new AnimationTimer() {
             @Override
@@ -62,36 +65,51 @@ public class Main extends Application {
                         shouldRestart = false;
                     }
 
-
-                    if (!solutionFound) {
-                        generation += 1;
-
-                        eaController.generatePhenotypes();
-
-                        solutionFound = eaController.testAndUpdateFitnessOfPhenotypes();
-
-                        guiController.updateFPS(now, primaryStage);
-                        if (generation % Values.GENERATION_PRINT_THROTTLE == 0){
-                            updateGUI(now, primaryStage);
+                    if (numberOfMoves < Values.FLATLAND_ITERATIONS){
+                            guiController.drawMovement(bestHypothesis);
+                            numberOfMoves++;
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        if (solutionFound) {
-                            solutionFound = true;
-                            guiController.appendTextToConsole("\nSolution found!\n");
-                            updateGUI(now, primaryStage);
-                            long endTime = System.currentTimeMillis();
-                            long milliseconds = endTime - startTime;
-                            int minutes = (int) ((milliseconds / (1000*60)) % 60);
-                            int seconds = (int) (milliseconds / 1000) % 60 ;
-                            guiController.appendTextToConsole("\nTook " + minutes + " minutes and " + seconds + " seconds.");
-                        }
-                        eaController.adultSelection();
-                        eaController.parentSelection();
 
-                        eaController.generateNewPopulation();
+                    }else{
+                        numberOfMoves = 0;
+
+                        if (!solutionFound) {
+                            generation += 1;
+
+                            eaController.generatePhenotypes();
+
+                            solutionFound = eaController.testAndUpdateFitnessOfPhenotypes();
+
+                            guiController.updateFPS(now, primaryStage);
+                            if (generation % Values.GENERATION_PRINT_THROTTLE == 0){
+                                updateGUI(now, primaryStage);
+                            }
+
+                            if (solutionFound) {
+                                solutionFound = true;
+                                guiController.appendTextToConsole("\nSolution found!\n");
+                                updateGUI(now, primaryStage);
+                                long endTime = System.currentTimeMillis();
+                                long milliseconds = endTime - startTime;
+                                int minutes = (int) ((milliseconds / (1000*60)) % 60);
+                                int seconds = (int) (milliseconds / 1000) % 60 ;
+                                guiController.appendTextToConsole("\nTook " + minutes + " minutes and " + seconds + " seconds.");
+                            }
+                            eaController.adultSelection();
+                            eaController.parentSelection();
+
+                            eaController.generateNewPopulation();
+                        }
+
+                        Values.BOARD.resetBoard();
+                        Values.ANN.setNetworkWeights(bestHypothesis.phenotype);
+
                     }
                 }
-
-
             }
         };
         mainLoop.start();
@@ -100,11 +118,11 @@ public class Main extends Application {
     private void updateGUI(long now, Stage primaryStage) {
 
         double avgFitness = eaController.calculateAvarageFitness(eaController.getPopulation());
-        AbstractHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
+        bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
 
         guiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(), avgFitness, eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness), generation, bestHypothesis.getPhenotypeString());
 //        guiController.updateFPS(now, primaryStage);
-        guiController.drawMovement(bestHypothesis);
+//        guiController.drawMovement(bestHypothesis);
     }
 
     public void restartAlgorithm() {

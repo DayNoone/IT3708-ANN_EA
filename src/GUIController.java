@@ -7,6 +7,8 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -430,10 +432,7 @@ public class GUIController {
 
     public void drawMovement(AbstractHypothesis bestHypothesis) {
 
-        Values.BOARD.resetBoard();
-        Values.ANN.setNetworkWeights(bestHypothesis.phenotype);
 
-        for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
             ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
             int highestIndex = Values.ANN.getMove(sensorValues);
 
@@ -441,23 +440,23 @@ public class GUIController {
                 Values.BOARD.moveForeward();
             }else if (highestIndex == 1){
                 Values.BOARD.moveLeft();
+
             }
             else if (highestIndex == 2){
                 Values.BOARD.moveRight();
+
             }
+
 
             System.out.println("Best food eaten:" + Values.BOARD.getFoodEaten());
             System.out.println("Best poison eaten:" + Values.BOARD.getPoisonEaten());
+
 
             Object center = mainPane.getCenter();
             mainPane.getChildren().remove(center);
 
             GridPane boardGridPane = Values.BOARD.getBoardGridPane();
             mainPane.setCenter(boardGridPane);
-
-        }
-
-
 
     }
 }
