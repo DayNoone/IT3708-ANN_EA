@@ -20,14 +20,9 @@ public class BeerWorld {
     private static Random random = new Random();
 
     public BeerWorld(){
-        //trackerXPos = Values.BEERWORLD_BOARD_WIDTH / 2;
-        trackerXPos = 5;
+        trackerXPos = Values.BEERWORLD_BOARD_WIDTH / 2;
+        spawnObject();
 
-        objectXPos = 6;
-        objectYPos = Values.BEERWORLD_BOARD_HEIGHT-2;
-        objectSize = 4;
-
-        playTimestep(0);
         System.out.println(captured + " " + avoided);
     }
 
@@ -41,7 +36,7 @@ public class BeerWorld {
         // Tracker move is -1 for one move left and 2 for two moves right
         if (++objectYPos == Values.BEERWORLD_BOARD_HEIGHT-1) {
             checkCollision();
-            //spawnObject();
+            spawnObject();
         }
 
 
