@@ -1,5 +1,6 @@
 package project4;
 
+import enums.EProblemSelection;
 import general.ANN;
 import general.AbstractHypothesis;
 import general.EAController;
@@ -9,7 +10,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import project3.Board;
 
 public class P4Main extends Application {
 
@@ -36,10 +36,11 @@ public class P4Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Values.ANN_INPUT_NODES = 5;
         Values.ANN_OUTPUT_NODES = 2;
+        Values.SELECTED_PROBLEM = EProblemSelection.TRACKER;
 
         p4GuiController = new P4GUIController();
 
-        Values.BOARD = new Board();
+        Values.BEERWORLD = new BeerWorld();
         Values.ANN = new ANN();
 
         Pane pane = p4GuiController.generateGUI(this);
@@ -80,7 +81,7 @@ public class P4Main extends Application {
 
                         if (now - lastUpdate >= Values.FLATLAND_SLEEP_DURATION * 1000000) { // 20_000_000 = 20ms
                             lastUpdate = now;
-                            p4GuiController.drawMovement(numberOfMoves);
+                            //p4GuiController.drawMovement(numberOfMoves);
                             numberOfMoves++;
                         }
 
@@ -115,11 +116,6 @@ public class P4Main extends Application {
                             eaController.generateNewPopulation();
                         }
 
-                        if (Values.FLATLAND_DYNAMIC){
-                            Values.BOARD = new Board();
-                        }
-
-                        Values.BOARD.resetBoard();
                         Values.ANN.setNetworkWeights(bestHypothesis.getPhenotype());
 
                     }
