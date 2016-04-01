@@ -68,7 +68,7 @@ public class Main extends Application {
 
                     if (numberOfMoves < Values.FLATLAND_ITERATIONS){
 
-                        if (now - lastUpdate >= 10_000_000) { // 20_000_000 = 20ms
+                        if (now - lastUpdate >= Values.FLATLAND_SLEEP_DURATION * 1000000) { // 20_000_000 = 20ms
                             lastUpdate = now;
                             guiController.drawMovement(numberOfMoves);
                             numberOfMoves++;
