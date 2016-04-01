@@ -57,6 +57,7 @@ public class Values {
     public static final int FLATLAND_BOARD_SIZE = 10;
     public static final int FLATLAND_GENOTYPE_RANGE = 10; // 0 - range
     public static final int FLATLAND_ITERATIONS = 60;
+    public static int FLATLAND_SLEEP_DURATION = 20;
 
     public static boolean FLATLAND_DYNAMIC = true;
 
