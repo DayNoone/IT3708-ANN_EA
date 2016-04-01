@@ -4,6 +4,7 @@ import enums.EAdultSelection;
 import enums.EParentSelection;
 import enums.EProblemSelection;
 import project3.Board;
+import project4.CTRNN;
 
 /**
  * Created by markus on 18.02.2016.
@@ -49,7 +50,7 @@ public class Values {
     public static int ANN_INPUT_NODES = 6;
     public static int ANN_OUTPUT_NODES = 3;
 
-    public static int[] ANN_NODES_IN_HIDDEN_LAYERS = new int[]{5, 5};
+    public static int[] ANN_NODES_IN_HIDDEN_LAYERS = new int[]{2};
 
     /**
 
@@ -70,5 +71,6 @@ public class Values {
 
     public static Board BOARD;
     public static general.ANN ANN;
+    public static project4.CTRNN CTRNN;
 
 }

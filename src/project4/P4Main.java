@@ -1,5 +1,6 @@
 package project4;
 
+import enums.EProblemSelection;
 import general.ANN;
 import general.AbstractHypothesis;
 import general.EAController;
@@ -37,19 +38,21 @@ public class P4Main extends Application {
         Values.ANN_INPUT_NODES = 5;
         Values.ANN_OUTPUT_NODES = 2;
 
-        p4GuiController = new P4GUIController();
+        Values.CTRNN = new CTRNN();
 
-        Values.BOARD = new Board();
-        Values.ANN = new ANN();
-
-        Pane pane = p4GuiController.generateGUI(this);
-
-        Scene scene = new Scene(pane);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        // run generation loop
-        startEvolutionaryAlgorithmLoop(primaryStage);
+//        p4GuiController = new P4GUIController();
+//
+//        Values.BOARD = new Board();
+//        Values.ANN = new ANN();
+//
+//        Pane pane = p4GuiController.generateGUI(this);
+//
+//        Scene scene = new Scene(pane);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
+//
+//        // run generation loop
+//        startEvolutionaryAlgorithmLoop(primaryStage);
     }
 
     private void startEvolutionaryAlgorithmLoop(Stage primaryStage) {
