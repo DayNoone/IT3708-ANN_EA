@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Random;
 
 public class Board {
+    private final Image agentImage, foodImage, poisonImage, emptyImage;
     BoardElement[][] board = new BoardElement[Values.FLATLAND_BOARD_SIZE][Values.FLATLAND_BOARD_SIZE];
     Pair<Integer, Integer> agentCoordinate;
     int direction; // 0: North, 1: East, 2: South, 3: West
@@ -32,6 +33,10 @@ public class Board {
             }
         }
         initBoard();
+        agentImage = new Image("res/agent.PNG");
+        foodImage = new Image("res/food.PNG");
+        poisonImage = new Image("res/poison.PNG");
+        emptyImage = new Image("res/empty.PNG");
     }
 
     private void initBoard() {
@@ -145,26 +150,26 @@ public class Board {
             for(int x = 0; x < Values.FLATLAND_BOARD_SIZE; x++){
                 HBox box = new HBox();
                 box.setStyle("-fx-border-color: black;");
-                String imgPath;
+                Image img;
                 switch (board[y][x]){
                     case AGENT:
-                        imgPath = "res/agent.PNG";
+                        img = agentImage;
                         break;
                     case FOOD:
-                        imgPath = "res/food.PNG";
+                        img = foodImage;
                         break;
                     case POISON:
-                        imgPath = "res/poison.PNG";
+                        img = poisonImage;
                         break;
                     case EMPTY:
-                        imgPath = "res/empty.PNG";
+                        img = emptyImage;
                         break;
                     default:
-                        imgPath = "res/empty.PNG";
+                        img = emptyImage;
                         break;
                 }
-                ImageView img = new ImageView(new Image(imgPath));
-                box.getChildren().add(img);
+                ImageView imgView = new ImageView(img);
+                box.getChildren().add(imgView);
                 gridPane.add(box, x, y);
             }
         }

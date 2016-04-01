@@ -448,18 +448,12 @@ public class GUIController {
 
             System.out.println("Best food eaten:" + Values.BOARD.getFoodEaten());
             System.out.println("Best poison eaten:" + Values.BOARD.getPoisonEaten());
-//            GridPane prevGridPane = (GridPane) mainPane.getCenter();
-//            mainPane.getChildren().remove(prevGridPane);
-//
-//
-//            GridPane boardGridPane = Values.BOARD.getBoardGridPane();
-//            mainPane.setCenter(boardGridPane);
 
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            Object center = mainPane.getCenter();
+            mainPane.getChildren().remove(center);
+
+            GridPane boardGridPane = Values.BOARD.getBoardGridPane();
+            mainPane.setCenter(boardGridPane);
 
         }
 
