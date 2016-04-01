@@ -18,6 +18,7 @@ public class Main extends Application {
     private long startTime;
     private AbstractHypothesis bestHypothesis;
     private int numberOfMoves;
+    private long lastUpdate;
 
 
     public static void main(String[] args) {
@@ -66,12 +67,11 @@ public class Main extends Application {
                     }
 
                     if (numberOfMoves < Values.FLATLAND_ITERATIONS){
-                            guiController.drawMovement(bestHypothesis);
+
+                        if (now - lastUpdate >= 20_000_000) { // 20_000_000 = 20ms
+                            lastUpdate = now;
+                            guiController.drawMovement(numberOfMoves);
                             numberOfMoves++;
-                        try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
                         }
 
                     }else{

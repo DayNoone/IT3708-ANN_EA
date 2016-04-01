@@ -53,8 +53,7 @@ public class EAController {
             newPopulation.addAll(generateNewChildren(pair.getElement1(), pair.getElement2()));
         }
 
-        int numberOfElites = (int) (population.size() * 0.05);
-        for (int i = 0; i < numberOfElites; i++) {
+        for (int i = 0; i < Values.NUMBER_OF_ELITES; i++) {
             AbstractHypothesis elite = findHypothesisWithBestFitness(population);
             population.remove(elite);
             newPopulation.add(elite);

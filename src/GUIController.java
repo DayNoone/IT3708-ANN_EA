@@ -7,14 +7,11 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -58,17 +55,17 @@ public class GUIController {
     private Label tournamentGroupSizeLabel;
     private Label tournamentEpsilonLabel;
 
-    private GridPane boardGrid;
     private BorderPane mainPane;
 
     public Pane generateGUI(Main main) {
         mainClass = main;
         mainPane = new BorderPane();
 
-        GridPane boardGridPane = Values.BOARD.getBoardGridPane();
-        mainPane.setCenter(boardGridPane);
+        VBox boardVBox = getCenterGUI(0);
 
-        GridPane gridPane = getChartsAndConsoleGridPane();
+        mainPane.setCenter(boardVBox);
+
+        GridPane gridPane = getCharts();
         mainPane.setRight(gridPane);
 
         VBox controlPanelVBox = getControlPanelVBox();
@@ -82,6 +79,33 @@ public class GUIController {
         updateProblemSpesificGUIElementVisibilities();
 
         return mainPane;
+    }
+
+    private VBox getCenterGUI(int numberOfMoves) {
+        VBox boardVBox = new VBox();
+        GridPane boardGridPane = Values.BOARD.getBoardGridPane();
+        boardVBox.getChildren().add(boardGridPane);
+
+        HBox iterationsHBox = new HBox();
+        Label iterationsLabel = new Label();
+        iterationsLabel.setText("Iterations:\t" + String.valueOf(numberOfMoves + 1));
+        iterationsHBox.getChildren().add(iterationsLabel);
+        boardVBox.getChildren().add(iterationsHBox);
+
+        HBox foodEatenHBox = new HBox();
+        Label foodEatenLabel = new Label();
+        foodEatenLabel.setText("Food eaten:\t" + String.valueOf(Values.BOARD.getFoodEaten()));
+        foodEatenHBox.getChildren().add(foodEatenLabel);
+        boardVBox.getChildren().add(foodEatenHBox);
+
+        HBox poisonEatenHBox = new HBox();
+        Label poisonEatenLabel = new Label();
+        poisonEatenLabel.setText("Poison eaten:\t" + String.valueOf(Values.BOARD.getPoisonEaten()));
+        poisonEatenHBox.getChildren().add(poisonEatenLabel);
+        boardVBox.getChildren().add(poisonEatenHBox);
+
+
+        return boardVBox;
     }
 
     private VBox getControlPanelVBox() {
@@ -289,7 +313,7 @@ public class GUIController {
         return label;
     }
 
-    private GridPane getChartsAndConsoleGridPane() {
+    private GridPane getCharts() {
         GridPane gridPane = new GridPane();
 
         populationFitnessLineChart.setTitle("Population fitness");
@@ -339,7 +363,7 @@ public class GUIController {
         return gridPane;
     }
 
-    public void updateLineCharts(List<AbstractHypothesis> population, double maxFitness, double avgFitness, double stdFitness, int generation, String phenoTypeString) {
+    void updateLineCharts(List<AbstractHypothesis> population, double maxFitness, double avgFitness, double stdFitness, int generation, String phenoTypeString) {
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
             populationFitnessLineChart.getData().retainAll();
@@ -364,11 +388,11 @@ public class GUIController {
 
     }
 
-    public void appendTextToConsole(String s) {
+    void appendTextToConsole(String s) {
         consoleTextArea.appendText(s);
     }
 
-    public void updateFPS(long now, Stage primaryStage) {
+    void updateFPS(long now, Stage primaryStage) {
         String fpsString = getFPSString(now);
         primaryStage.setTitle(fpsString);
     }
@@ -427,10 +451,9 @@ public class GUIController {
         consoleTextArea.appendText("\n");
         consoleTextArea.appendText("\n");
 
-
     }
 
-    public void drawMovement(AbstractHypothesis bestHypothesis) {
+    public void drawMovement(int numberOfMoves) {
 
 
             ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
@@ -444,19 +467,15 @@ public class GUIController {
             }
             else if (highestIndex == 2){
                 Values.BOARD.moveRight();
-
             }
 
 
-            System.out.println("Best food eaten:" + Values.BOARD.getFoodEaten());
-            System.out.println("Best poison eaten:" + Values.BOARD.getPoisonEaten());
 
 
             Object center = mainPane.getCenter();
             mainPane.getChildren().remove(center);
 
-            GridPane boardGridPane = Values.BOARD.getBoardGridPane();
-            mainPane.setCenter(boardGridPane);
+            mainPane.setCenter(getCenterGUI(numberOfMoves));
 
     }
 }
