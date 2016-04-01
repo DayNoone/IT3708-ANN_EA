@@ -68,7 +68,7 @@ public class Main extends Application {
 
                     if (numberOfMoves < Values.FLATLAND_ITERATIONS){
 
-                        if (now - lastUpdate >= 20_000_000) { // 20_000_000 = 20ms
+                        if (now - lastUpdate >= 10_000_000) { // 20_000_000 = 20ms
                             lastUpdate = now;
                             guiController.drawMovement(numberOfMoves);
                             numberOfMoves++;
@@ -103,6 +103,10 @@ public class Main extends Application {
                             eaController.parentSelection();
 
                             eaController.generateNewPopulation();
+                        }
+
+                        if (Values.FLATLAND_DYNAMIC){
+                            Values.BOARD = new Board();
                         }
 
                         Values.BOARD.resetBoard();
