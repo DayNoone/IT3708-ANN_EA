@@ -104,6 +104,18 @@ public class GUIController {
         poisonEatenHBox.getChildren().add(poisonEatenLabel);
         boardVBox.getChildren().add(poisonEatenHBox);
 
+        addLabel(boardVBox, "Sleep duration");
+        TextField sleepDurationTextField = new TextField();
+        sleepDurationTextField.setText(String.valueOf(Values.FLATLAND_SLEEP_DURATION));
+        sleepDurationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try{
+                Values.FLATLAND_SLEEP_DURATION = Integer.parseInt(newValue);
+            }catch (Exception E){
+                Values.FLATLAND_SLEEP_DURATION = Integer.parseInt(oldValue);
+            }
+        });
+        boardVBox.getChildren().add(sleepDurationTextField);
+
 
         return boardVBox;
     }
