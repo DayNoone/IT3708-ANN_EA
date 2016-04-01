@@ -58,7 +58,7 @@ public class Values {
     public static final int FLATLAND_GENOTYPE_RANGE = 10; // 0 - range
     public static final int FLATLAND_ITERATIONS = 60;
 
-    public static final boolean FLATLAND_DYNAMIC = true;
+    public static boolean FLATLAND_DYNAMIC = true;
 
     public static final int FLATLAND_MAX_FOOD_COUNT = (Values.FLATLAND_BOARD_SIZE * Values.FLATLAND_BOARD_SIZE) / 3;
 

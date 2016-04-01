@@ -105,6 +105,14 @@ public class GUIController {
         boardVBox.getChildren().add(poisonEatenHBox);
 
 
+        CheckBox dynamicCheckBox = new CheckBox("Dynamic board");
+        dynamicCheckBox.setOnAction(event -> {
+            Values.FLATLAND_DYNAMIC = dynamicCheckBox.isSelected();
+
+        });
+        dynamicCheckBox.setSelected(Values.FLATLAND_DYNAMIC);
+        boardVBox.getChildren().add(dynamicCheckBox);
+
         return boardVBox;
     }
 
