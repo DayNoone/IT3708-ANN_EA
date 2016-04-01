@@ -2,16 +2,19 @@ import enums.BoardElement;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
 public class Board {
-    private final Image agentImage, foodImage, poisonImage, emptyImage;
+    private final ImageView agentImage;
+    private final Image foodImage, poisonImage, emptyImage;
     BoardElement[][] board = new BoardElement[Values.FLATLAND_BOARD_SIZE][Values.FLATLAND_BOARD_SIZE];
     Pair<Integer, Integer> agentCoordinate;
+
+
+
     int direction; // 0: North, 1: East, 2: South, 3: West
     int[] colDirection = {0, 1, 0, -1};
     int[] rowDirection = {-1, 0, 1, 0};
@@ -33,7 +36,7 @@ public class Board {
             }
         }
         initBoard();
-        agentImage = new Image("res/agent.PNG");
+        agentImage = new ImageView(new Image("res/agent.PNG"));
         foodImage = new Image("res/food.PNG");
         poisonImage = new Image("res/poison.PNG");
         emptyImage = new Image("res/empty.PNG");
@@ -148,31 +151,36 @@ public class Board {
 
         for(int y = 0; y < Values.FLATLAND_BOARD_SIZE; y++){
             for(int x = 0; x < Values.FLATLAND_BOARD_SIZE; x++){
-                HBox box = new HBox();
-                box.setStyle("-fx-border-color: black;");
                 Image img;
                 switch (board[y][x]){
                     case AGENT:
-                        img = agentImage;
+                        agentImage.setRotate(direction * 90);
+                        gridPane.add(agentImage, x, y);
                         break;
                     case FOOD:
                         img = foodImage;
+                        ImageView imgView = new ImageView(img);
+                        gridPane.add(imgView, x, y);
                         break;
                     case POISON:
                         img = poisonImage;
+                        ImageView imgView1 = new ImageView(img);
+                        gridPane.add(imgView1, x, y);
                         break;
                     case EMPTY:
                         img = emptyImage;
+                        ImageView imgView2 = new ImageView(img);
+                        gridPane.add(imgView2, x, y);
                         break;
                     default:
                         img = emptyImage;
+                        ImageView imgView3 = new ImageView(img);
+                        gridPane.add(imgView3, x, y);
                         break;
                 }
-                ImageView imgView = new ImageView(img);
-                box.getChildren().add(imgView);
-                gridPane.add(box, x, y);
             }
         }
+        gridPane.setGridLinesVisible(true);
         return gridPane;
     }
 
