@@ -1,6 +1,9 @@
+package general;
+
 import enums.EAdultSelection;
 import enums.EParentSelection;
 import enums.EProblemSelection;
+import project3.Board;
 
 /**
  * Created by markus on 18.02.2016.
@@ -25,7 +28,7 @@ public class Values {
     public static int POPULATION_SIZE = 60;
     public static int MAX_ADULT_SIZE = POPULATION_SIZE / 2;
     public static int MAX_PARENT_SIZE = POPULATION_SIZE / 2;
-    public static int NUMBER_OF_ELITES = (int) (POPULATION_SIZE * 0.05);
+    public static int NUMBER_OF_ELITES = (int) (POPULATION_SIZE * 0.1);
 
     public static EAdultSelection ADULT_SELECTION = EAdultSelection.GENERATION_MIXING;
     public static EParentSelection PARENT_SELECTION = EParentSelection.SIGMA_SCALING;
@@ -39,7 +42,7 @@ public class Values {
 
     /**
 
-        ANN VALUES
+        general.ANN VALUES
 
      **/
 
@@ -59,13 +62,13 @@ public class Values {
     public static final int FLATLAND_ITERATIONS = 60;
     public static int FLATLAND_SLEEP_DURATION = 20;
 
-    public static boolean FLATLAND_DYNAMIC = true;
+    public static boolean FLATLAND_DYNAMIC = false;
 
     public static final int FLATLAND_MAX_FOOD_COUNT = (Values.FLATLAND_BOARD_SIZE * Values.FLATLAND_BOARD_SIZE) / 3;
 
-    public static final int POISON_PENALTY = 10;
+    public static final int POISON_PENALTY = 3;
 
     public static Board BOARD;
-    public static ANN ANN;
+    public static general.ANN ANN;
 
 }

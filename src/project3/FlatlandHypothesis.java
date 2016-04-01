@@ -1,4 +1,8 @@
+package project3;
+
 import enums.BoardElement;
+import general.AbstractHypothesis;
+import general.Values;
 
 import java.util.ArrayList;
 
@@ -21,7 +25,7 @@ public class FlatlandHypothesis extends AbstractHypothesis {
     }
 
     @Override
-    void generatePhenotype() {
+    public void generatePhenotype() {
         this.phenotype = new double[this.genotype.length];
         for (int i = 0; i < this.phenotype.length; i++) {
             int tempGEnoVal = this.genotype[i];
@@ -31,7 +35,7 @@ public class FlatlandHypothesis extends AbstractHypothesis {
     }
 
     @Override
-    void initiateRandomGenotype() {
+    public void initiateRandomGenotype() {
         for (int i = 0; i < Values.ANN.getNumberOfWeights(); i++) {
             int randomGenotypeInt = random.nextInt(Values.FLATLAND_GENOTYPE_RANGE);
             getGenotype()[i] = randomGenotypeInt;
@@ -78,7 +82,7 @@ public class FlatlandHypothesis extends AbstractHypothesis {
     }
 
     @Override
-    void mutate() {
+    public void mutate() {
         if (random.nextDouble() < Values.MUTATION_PROBABILITY) {
             for (int i = 0; i < this.getGenotype().length; i++) {
                 this.getGenotype()[i] = random.nextInt(Values.FLATLAND_GENOTYPE_RANGE);

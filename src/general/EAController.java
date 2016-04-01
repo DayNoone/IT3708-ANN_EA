@@ -1,3 +1,8 @@
+package general;
+
+import project3.Board;
+import project3.FlatlandHypothesis;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

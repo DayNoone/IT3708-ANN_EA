@@ -1,17 +1,24 @@
+package project3;
+
+import general.ANN;
+import general.AbstractHypothesis;
+import general.EAController;
+import general.Values;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import project3.Board;
 
-public class Main extends Application {
+public class P3Main extends Application {
 
 
     AnimationTimer mainLoop;
     private int generation;
 
     private boolean solutionFound;
-    private GUIController guiController;
+    private P3GUIController p3GuiController;
     private EAController eaController;
     private boolean shouldRestart;
     public boolean simulationPaused;
@@ -27,12 +34,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        guiController = new GUIController();
+        Values.ANN_INPUT_NODES = 6;
+        Values.ANN_OUTPUT_NODES = 3;
+        p3GuiController = new P3GUIController();
 
         Values.BOARD = new Board();
         Values.ANN = new ANN();
 
-        Pane pane = guiController.generateGUI(this);
+        Pane pane = p3GuiController.generateGUI(this);
 
         Scene scene = new Scene(pane);
         primaryStage.setScene(scene);
@@ -61,7 +70,7 @@ public class Main extends Application {
                         generation = 0;
                         solutionFound = false;
 
-                        guiController.clearGUI();
+                        p3GuiController.clearGUI();
 
                         shouldRestart = false;
                     }
@@ -70,7 +79,7 @@ public class Main extends Application {
 
                         if (now - lastUpdate >= Values.FLATLAND_SLEEP_DURATION * 1000000) { // 20_000_000 = 20ms
                             lastUpdate = now;
-                            guiController.drawMovement(numberOfMoves);
+                            p3GuiController.drawMovement(numberOfMoves);
                             numberOfMoves++;
                         }
 
@@ -84,20 +93,20 @@ public class Main extends Application {
 
                             solutionFound = eaController.testAndUpdateFitnessOfPhenotypes();
 
-                            guiController.updateFPS(now, primaryStage);
+                            p3GuiController.updateFPS(now, primaryStage);
                             if (generation % Values.GENERATION_PRINT_THROTTLE == 0){
                                 updateGUI(now, primaryStage);
                             }
 
                             if (solutionFound) {
                                 solutionFound = true;
-                                guiController.appendTextToConsole("\nSolution found!\n");
+                                p3GuiController.appendTextToConsole("\nSolution found!\n");
                                 updateGUI(now, primaryStage);
                                 long endTime = System.currentTimeMillis();
                                 long milliseconds = endTime - startTime;
                                 int minutes = (int) ((milliseconds / (1000*60)) % 60);
                                 int seconds = (int) (milliseconds / 1000) % 60 ;
-                                guiController.appendTextToConsole("\nTook " + minutes + " minutes and " + seconds + " seconds.");
+                                p3GuiController.appendTextToConsole("\nTook " + minutes + " minutes and " + seconds + " seconds.");
                             }
                             eaController.adultSelection();
                             eaController.parentSelection();
@@ -110,7 +119,7 @@ public class Main extends Application {
                         }
 
                         Values.BOARD.resetBoard();
-                        Values.ANN.setNetworkWeights(bestHypothesis.phenotype);
+                        Values.ANN.setNetworkWeights(bestHypothesis.getPhenotype());
 
                     }
                 }
@@ -124,9 +133,9 @@ public class Main extends Application {
         double avgFitness = eaController.calculateAvarageFitness(eaController.getPopulation());
         bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
 
-        guiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(), avgFitness, eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness), generation, bestHypothesis.getPhenotypeString());
-//        guiController.updateFPS(now, primaryStage);
-//        guiController.drawMovement(bestHypothesis);
+        p3GuiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(), avgFitness, eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness), generation, bestHypothesis.getPhenotypeString());
+//        p3GuiController.updateFPS(now, primaryStage);
+//        p3GuiController.drawMovement(bestHypothesis);
     }
 
     public void restartAlgorithm() {

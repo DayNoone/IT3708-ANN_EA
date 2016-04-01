@@ -1,7 +1,11 @@
+package project3;
+
 import enums.BoardElement;
 import enums.EAdultSelection;
 import enums.EParentSelection;
 import enums.EProblemSelection;
+import general.AbstractHypothesis;
+import general.Values;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -18,7 +22,7 @@ import java.util.List;
  * Created by markus on 21.02.2016.
  */
 @SuppressWarnings("unchecked")
-public class GUIController {
+public class P3GUIController {
 
     NumberAxis xAxis = new NumberAxis(0, Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES - 1, 2);
     NumberAxis yAxis = new NumberAxis(0, 1, 0.1);
@@ -47,7 +51,7 @@ public class GUIController {
     private final long[] frameTimes = new long[100];
     private int frameTimeIndex = 0;
     private boolean arrayFilled = false;
-    private Main mainClass;
+    private P3Main p3MainClass;
 
     private TextField adultSizeTextField;
     private TextField tournamentGroupSize;
@@ -56,9 +60,14 @@ public class GUIController {
     private Label tournamentEpsilonLabel;
 
     private BorderPane mainPane;
+    private GridPane boardGridPane;
+    private VBox boardVBox;
+    private Label iterationsLabel;
+    private Label poisonEatenLabel;
+    private Label foodEatenLabel;
 
-    public Pane generateGUI(Main main) {
-        mainClass = main;
+    public Pane generateGUI(P3Main p3Main) {
+        p3MainClass = p3Main;
         mainPane = new BorderPane();
 
         VBox boardVBox = getCenterGUI(0);
@@ -81,52 +90,7 @@ public class GUIController {
         return mainPane;
     }
 
-    private VBox getCenterGUI(int numberOfMoves) {
-        VBox boardVBox = new VBox();
-        GridPane boardGridPane = Values.BOARD.getBoardGridPane();
-        boardVBox.getChildren().add(boardGridPane);
 
-        HBox iterationsHBox = new HBox();
-        Label iterationsLabel = new Label();
-        iterationsLabel.setText("Iterations:\t" + String.valueOf(numberOfMoves + 1));
-        iterationsHBox.getChildren().add(iterationsLabel);
-        boardVBox.getChildren().add(iterationsHBox);
-
-        HBox foodEatenHBox = new HBox();
-        Label foodEatenLabel = new Label();
-        foodEatenLabel.setText("Food eaten:\t" + String.valueOf(Values.BOARD.getFoodEaten()));
-        foodEatenHBox.getChildren().add(foodEatenLabel);
-        boardVBox.getChildren().add(foodEatenHBox);
-
-        HBox poisonEatenHBox = new HBox();
-        Label poisonEatenLabel = new Label();
-        poisonEatenLabel.setText("Poison eaten:\t" + String.valueOf(Values.BOARD.getPoisonEaten()));
-        poisonEatenHBox.getChildren().add(poisonEatenLabel);
-        boardVBox.getChildren().add(poisonEatenHBox);
-
-        addLabel(boardVBox, "Sleep duration");
-        TextField sleepDurationTextField = new TextField();
-        sleepDurationTextField.setText(String.valueOf(Values.FLATLAND_SLEEP_DURATION));
-        sleepDurationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            try{
-                Values.FLATLAND_SLEEP_DURATION = Integer.parseInt(newValue);
-            }catch (Exception E){
-                Values.FLATLAND_SLEEP_DURATION = Integer.parseInt(oldValue);
-            }
-        });
-        boardVBox.getChildren().add(sleepDurationTextField);
-
-
-        CheckBox dynamicCheckBox = new CheckBox("Dynamic board");
-        dynamicCheckBox.setOnAction(event -> {
-            Values.FLATLAND_DYNAMIC = dynamicCheckBox.isSelected();
-
-        });
-        dynamicCheckBox.setSelected(Values.FLATLAND_DYNAMIC);
-        boardVBox.getChildren().add(dynamicCheckBox);
-
-        return boardVBox;
-    }
 
     private VBox getControlPanelVBox() {
         VBox vBox = new VBox();
@@ -281,7 +245,7 @@ public class GUIController {
     private void generateProblemSpesificGUI(VBox vBox) {
         HBox buttonHBox = new HBox();
         Button restartButton = new Button("New run");
-        restartButton.setOnAction(event -> mainClass.restartAlgorithm());
+        restartButton.setOnAction(event -> p3MainClass.restartAlgorithm());
         buttonHBox.getChildren().add(restartButton);
 
         Button pauseButton = getPauseSimulationButton();
@@ -437,11 +401,11 @@ public class GUIController {
     private Button getPauseSimulationButton() {
         Button restartButton = new Button("Pause simulation");
         restartButton.setOnAction(event -> {
-            if (mainClass.simulationPaused) {
+            if (p3MainClass.simulationPaused) {
                 restartButton.setText("Pause simulation");
-                mainClass.simulationPaused = false;
+                p3MainClass.simulationPaused = false;
             } else {
-                mainClass.simulationPaused = true;
+                p3MainClass.simulationPaused = true;
                 restartButton.setText("Start simulation");
             }
         });
@@ -476,26 +440,82 @@ public class GUIController {
     public void drawMovement(int numberOfMoves) {
 
 
-            ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
-            int highestIndex = Values.ANN.getMove(sensorValues);
+        ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
+        int highestIndex = Values.ANN.getMove(sensorValues);
 
-            if (highestIndex == 0){
-                Values.BOARD.moveForeward();
-            }else if (highestIndex == 1){
-                Values.BOARD.moveLeft();
+        if (highestIndex == 0){
+            Values.BOARD.moveForeward();
+        }else if (highestIndex == 1){
+            Values.BOARD.moveLeft();
 
+        }
+        else if (highestIndex == 2){
+            Values.BOARD.moveRight();
+        }
+
+        boardVBox.getChildren().remove(boardGridPane);
+        boardGridPane = Values.BOARD.generateBoardGridPane();
+        boardVBox.getChildren().add(boardGridPane);
+
+        updateBoardValues(numberOfMoves);
+
+    }
+
+    private void updateBoardValues(int numberOfMoves) {
+        iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
+        foodEatenLabel.setText(String.valueOf(Values.BOARD.getFoodEaten()));
+        poisonEatenLabel.setText( String.valueOf(Values.BOARD.getPoisonEaten()));
+
+
+    }
+
+    private VBox getCenterGUI(int numberOfMoves) {
+        boardVBox = new VBox();
+        boardGridPane = Values.BOARD.generateBoardGridPane();
+        boardVBox.getChildren().add(boardGridPane);
+
+        HBox iterationsHBox = new HBox();
+        iterationsLabel = new Label();
+        iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
+        iterationsHBox.getChildren().add(new Label("Iterations:\t"));
+        iterationsHBox.getChildren().add(iterationsLabel);
+        boardVBox.getChildren().add(iterationsHBox);
+
+        HBox foodEatenHBox = new HBox();
+        foodEatenLabel = new Label();
+        foodEatenLabel.setText(String.valueOf(Values.BOARD.getFoodEaten()));
+        foodEatenHBox.getChildren().add(new Label("Food eaten:\t"));
+        foodEatenHBox.getChildren().add(foodEatenLabel);
+        boardVBox.getChildren().add(foodEatenHBox);
+
+        HBox poisonEatenHBox = new HBox();
+        poisonEatenLabel = new Label();
+        poisonEatenLabel.setText( String.valueOf(Values.BOARD.getPoisonEaten()));
+        poisonEatenHBox.getChildren().add(new Label("Poison eaten:\t"));
+        poisonEatenHBox.getChildren().add(poisonEatenLabel);
+        boardVBox.getChildren().add(poisonEatenHBox);
+
+        addLabel(boardVBox, "Sleep duration");
+        TextField sleepDurationTextField = new TextField();
+        sleepDurationTextField.setText(String.valueOf(Values.FLATLAND_SLEEP_DURATION));
+        sleepDurationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try{
+                Values.FLATLAND_SLEEP_DURATION = Integer.parseInt(newValue);
+            }catch (Exception E){
+                Values.FLATLAND_SLEEP_DURATION = Integer.parseInt(oldValue);
             }
-            else if (highestIndex == 2){
-                Values.BOARD.moveRight();
-            }
+        });
+        boardVBox.getChildren().add(sleepDurationTextField);
 
 
+        CheckBox dynamicCheckBox = new CheckBox("Dynamic board");
+        dynamicCheckBox.setOnAction(event -> {
+            Values.FLATLAND_DYNAMIC = dynamicCheckBox.isSelected();
 
+        });
+        dynamicCheckBox.setSelected(Values.FLATLAND_DYNAMIC);
+        boardVBox.getChildren().add(dynamicCheckBox);
 
-            Object center = mainPane.getCenter();
-            mainPane.getChildren().remove(center);
-
-            mainPane.setCenter(getCenterGUI(numberOfMoves));
-
+        return boardVBox;
     }
 }

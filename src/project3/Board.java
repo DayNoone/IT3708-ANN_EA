@@ -1,4 +1,8 @@
+package project3;
+
 import enums.BoardElement;
+import general.Pair;
+import general.Values;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -146,7 +150,7 @@ public class Board {
         return poisonEaten;
     }
 
-    public GridPane getBoardGridPane() {
+    public GridPane generateBoardGridPane() {
         GridPane gridPane = new GridPane();
 
         for(int y = 0; y < Values.FLATLAND_BOARD_SIZE; y++){

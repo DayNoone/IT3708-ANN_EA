@@ -1,4 +1,7 @@
+package general;
+
 import enums.BoardElement;
+import general.Values;
 
 import java.util.ArrayList;
 
