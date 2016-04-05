@@ -220,7 +220,7 @@ public class CTRNN {
 //        }
     }
 
-    private void setValuesOfInputLayerNodes(double[] inputValues) {
+    private void setValuesOfInputLayerNodes(int[] inputValues) {
         for (int i = 0; i < inputLayerNodes.size(); i++) {
             Node node = inputLayerNodes.get(i);
             node.setValue(inputValues[i]);
