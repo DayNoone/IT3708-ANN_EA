@@ -137,7 +137,7 @@ public class CTRNN {
     }
 
 
-    public void setNetworValues(double[] phenotype){
+    public void setNetworkValues(double[] phenotype){
         int numNodeWeights = getNumberOfNormalNodeWeights();
         int numBiasWeights = getNumberOfBiasNodeWeights();
         int numGains = getNumberOfBiasNodeWeights();

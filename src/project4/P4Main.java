@@ -115,7 +115,7 @@ public class P4Main extends Application {
                             eaController.generateNewPopulation();
                         }
 
-                        Values.CTRANN.setNetworValues(bestHypothesis.getPhenotype());
+                        Values.CTRANN.setNetworkValues(bestHypothesis.getPhenotype());
 
                     }
                 }
