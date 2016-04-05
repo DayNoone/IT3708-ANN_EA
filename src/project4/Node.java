@@ -10,7 +10,9 @@ public class Node {
     private ENodeType type;
     private double gain;
     private double timeConstant;
-    private double value;
+    private double outputValue;
+    private double sValue;
+    private double yValue;
 
     public Node(ENodeType type) {
         this.type = type;
@@ -43,11 +45,27 @@ public class Node {
         return String.valueOf(this.type) + " " + super.toString();
     }
 
-    public double getValue() {
-        return value;
+    public double getOutputValue() {
+        return outputValue;
     }
 
-    public void setValue(double value) {
-        this.value = value;
+    public void setOutputValue(double outputValue) {
+        this.outputValue = outputValue;
+    }
+
+    public double getsValue() {
+        return sValue;
+    }
+
+    public void setsValue(double sValue) {
+        this.sValue = sValue;
+    }
+
+    public double getyValue() {
+        return yValue;
+    }
+
+    public void setyValue(double yValue) {
+        this.yValue = yValue;
     }
 }
