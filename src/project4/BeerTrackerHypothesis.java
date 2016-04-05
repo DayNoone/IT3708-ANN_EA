@@ -65,7 +65,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
     public void calculateFitness() {
         Values.CTRNN.setNetworkValues(this.phenotype);
 
-        for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
+        for (int i = 0; i < Values.BEERWORLD_ITERATIONS; i++) {
             int[] sensorValues = Values.BEERWORLD.getSensors();
 
             double[] moveValues = Values.CTRNN.getMove(sensorValues);
