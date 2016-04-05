@@ -62,8 +62,7 @@ public class P4GUIController {
     private GridPane beerWorldGridPane;
     private VBox beerWorldVBox;
     private Label iterationsLabel;
-    private Label poisonEatenLabel;
-    private Label foodEatenLabel;
+    private Label capturedLabel, avoidedLabel, failedCaptureLabel, failedAvoidedLabel;
 
     public Pane generateGUI(P4Main p4Main) {
         p4MainClass = p4Main;
@@ -439,7 +438,7 @@ public class P4GUIController {
     public void drawMovement(int numberOfMoves) {
         Values.CTRNN.resetNetwork();
 
-
+        Values.BEERWORLD.resetBoard();
         int[] sensorValues = Values.BEERWORLD.getSensors();
 
         double[] moveValues = Values.CTRNN.getMove(sensorValues);
@@ -470,6 +469,7 @@ public class P4GUIController {
 
         Values.BEERWORLD.playTimestep(move);
 
+
         beerWorldVBox.getChildren().remove(beerWorldGridPane);
         beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
         beerWorldVBox.getChildren().add(beerWorldGridPane);
@@ -479,7 +479,11 @@ public class P4GUIController {
     }
 
     private void updateBoardValues(int numberOfMoves) {
-        //iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
+        iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
+        capturedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided()));
+        avoidedLabel.setText(String.valueOf(Values.BEERWORLD.getCaptured()));
+        failedAvoidedLabel.setText(String.valueOf(Values.BEERWORLD.getFailedAvoid()));
+        failedCaptureLabel.setText(String.valueOf(Values.BEERWORLD.getFailedCapture()));
     }
 
     private VBox getCenterGUI(int numberOfMoves) {
@@ -489,10 +493,38 @@ public class P4GUIController {
 
         HBox iterationsHBox = new HBox();
         iterationsLabel = new Label();
-        iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
+        iterationsLabel.setText(String.valueOf(Values.BEERWORLD.getFallenObjects()));
         iterationsHBox.getChildren().add(new Label("Iterations:\t"));
         iterationsHBox.getChildren().add(iterationsLabel);
         beerWorldVBox.getChildren().add(iterationsHBox);
+
+        HBox captureHBox = new HBox();
+        capturedLabel = new Label();
+        capturedLabel.setText(String.valueOf(Values.BEERWORLD.getCaptured()));
+        captureHBox.getChildren().add(new Label("Captured:\t"));
+        captureHBox.getChildren().add(capturedLabel);
+        beerWorldVBox.getChildren().add(captureHBox);
+
+        HBox avoidedHBox = new HBox();
+        avoidedLabel = new Label();
+        avoidedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided()));
+        avoidedHBox.getChildren().add(new Label("Avoided:\t"));
+        avoidedHBox.getChildren().add(avoidedLabel);
+        beerWorldVBox.getChildren().add(avoidedHBox);
+
+        HBox failedCaptureHBox = new HBox();
+        failedCaptureLabel = new Label();
+        failedCaptureLabel.setText(String.valueOf(Values.BEERWORLD.getFailedCapture()));
+        failedCaptureHBox.getChildren().add(new Label("Failed to capture:\t"));
+        failedCaptureHBox.getChildren().add(failedCaptureLabel);
+        beerWorldVBox.getChildren().add(failedCaptureHBox);
+
+        HBox failedAvoidedHBox = new HBox();
+        failedAvoidedLabel = new Label();
+        failedAvoidedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided()));
+        failedAvoidedHBox.getChildren().add(new Label("Failed to avoid:\t"));
+        failedAvoidedHBox.getChildren().add(failedAvoidedLabel);
+        beerWorldVBox.getChildren().add(failedAvoidedHBox);
 
         addLabel(beerWorldVBox, "Sleep duration");
         TextField sleepDurationTextField = new TextField();

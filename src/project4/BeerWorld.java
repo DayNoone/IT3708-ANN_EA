@@ -20,11 +20,16 @@ public class BeerWorld {
     private static Random random = new Random();
 
     public BeerWorld(){
-        trackerXPos = Values.BEERWORLD_BOARD_WIDTH / 2;
+        trackerXPos = (Values.BEERWORLD_BOARD_WIDTH / 2) - 3;
         spawnObject();
+    }
 
-//        System.out.println(captured + " " + avoided);
-//        System.out.println(failedCapture + " " + failedAvoid);
+    public void resetBoard() {
+        fallenObjects = 0;
+        captured = 0;
+        avoided = 0;
+        failedCapture = 0;
+        failedAvoid = 0;
     }
 
     private void spawnObject(){

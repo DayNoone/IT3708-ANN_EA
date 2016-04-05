@@ -63,6 +63,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     @Override
     public void calculateFitness() {
+        Values.BEERWORLD.resetBoard();
         Values.CTRNN.resetNetwork();
         Values.CTRNN.setNetworkValues(this.phenotype);
 
