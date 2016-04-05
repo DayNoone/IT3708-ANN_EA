@@ -259,9 +259,12 @@ public class CTRNN {
     private void updateNodeValuesInLayer(List<Node> layer) {
         for (Node node : layer) {
             calculateNewSValue(node);
+
             double delta_y = (node.getsValue() - node.getYValue()) / node.getTimeConstant();
+
             double newY = node.getYValue() + delta_y;
             node.setyValue(newY);
+
             double newOutputValue = 1 / (1 + Math.exp(-node.getGain() * node.getYValue()));
             node.setOutputValue(newOutputValue);
         }

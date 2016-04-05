@@ -102,11 +102,18 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
         int beerWorldFallenObjects = Values.BEERWORLD.getFallenObjects();
         double fitness;
-        if (beerWorldFallenObjects != 0)
-            fitness = (1.0 * Values.BEERWORLD.getCaptured()
-                    + Values.BEERWORLD.getAvoided()
-                    - (Values.BEERWORLD.getFailedAvoid() * Values.BEERWORLD_FAILEDAVOID_PENALTY)
-                    - (Values.BEERWORLD.getFailedCapture() * Values.BEERWORLD_FAILEDCAPTURE_PENALTY)) / beerWorldFallenObjects;
+        if (beerWorldFallenObjects > 0) {
+            int captured = Values.BEERWORLD.getCaptured();
+            int avoided = Values.BEERWORLD.getAvoided();
+            int failedAvoid = Values.BEERWORLD.getFailedAvoid();
+            int failedCapture = Values.BEERWORLD.getFailedCapture();
+            fitness =
+                    (   1.0 *
+                        captured * Values.BEERWORLD_CAPTURE_PRIZE
+                    +   avoided * Values.BEERWORLD_AVOID_PRIZE
+                    -   (failedAvoid * Values.BEERWORLD_FAILEDAVOID_PENALTY)
+                    -   (failedCapture * Values.BEERWORLD_FAILEDCAPTURE_PENALTY));
+        }
         else {
             fitness = 0;
         }

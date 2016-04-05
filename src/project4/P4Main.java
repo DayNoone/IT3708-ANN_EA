@@ -60,7 +60,7 @@ public class P4Main extends Application {
         generation = 0;
         solutionFound = false;
         startTime = System.currentTimeMillis();
-        numberOfMoves = 60;
+        numberOfMoves = 600;
 
         mainLoop = new AnimationTimer() {
             @Override
@@ -78,7 +78,7 @@ public class P4Main extends Application {
                         shouldRestart = false;
                     }
 
-                    if (numberOfMoves < Values.BEERWORLD_ITERATIONS && generation > 0){
+                    if (numberOfMoves < Values.BEERWORLD_ITERATIONS && generation > 0 && Values.DRAW_MOVEMENT){
 
                         if (now - lastUpdate >= Values.FLATLAND_SLEEP_DURATION * 1000000) { // 20_000_000 = 20ms
                             lastUpdate = now;
@@ -116,7 +116,8 @@ public class P4Main extends Application {
 
                             eaController.generateNewPopulation();
                         }
-
+                        Values.BEERWORLD.resetBoard();
+                        Values.CTRNN.resetNetwork();
                         Values.CTRNN.setNetworkValues(bestHypothesis.getPhenotype());
 
                     }

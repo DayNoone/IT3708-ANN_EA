@@ -84,6 +84,8 @@ public class Values {
 
      **/
 
+    public static boolean DRAW_MOVEMENT = true;
+
     public static BeerWorld BEERWORLD;
 
     public static final int BEERWORLD_ITERATIONS = 600;
@@ -92,6 +94,11 @@ public class Values {
 
     public static final int BEERWORLD_BOARD_HEIGHT = 15;
     public static final int BEERWORLD_BOARD_WIDTH = 30;
+
     public static int BEERWORLD_FAILEDAVOID_PENALTY = 4;
-    public static int BEERWORLD_FAILEDCAPTURE_PENALTY = 2;
+    public static int BEERWORLD_FAILEDCAPTURE_PENALTY = 1;
+
+    public static final int BEERWORLD_CAPTURE_PRIZE = 1;
+    public static final int BEERWORLD_AVOID_PRIZE = 1;
+
 }

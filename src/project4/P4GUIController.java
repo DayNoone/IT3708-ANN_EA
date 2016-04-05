@@ -1,9 +1,7 @@
 package project4;
 
-import enums.BoardElement;
 import enums.EAdultSelection;
 import enums.EParentSelection;
-import enums.EProblemSelection;
 import general.AbstractHypothesis;
 import general.Values;
 import javafx.scene.chart.LineChart;
@@ -14,7 +12,6 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -227,12 +224,7 @@ public class P4GUIController {
 
         CheckBox updateCharts = new CheckBox("Update charts");
         updateCharts.setOnAction(event -> {
-            if (updateCharts.isSelected()){
-                Values.UPDATE_CHARTS = true;
-            }else{
-                Values.UPDATE_CHARTS = false;
-            }
-
+            Values.UPDATE_CHARTS = updateCharts.isSelected();
         });
         updateCharts.setSelected(Values.UPDATE_CHARTS);
         vBox.getChildren().add(updateCharts);
@@ -255,32 +247,6 @@ public class P4GUIController {
 
         vBox.getChildren().add(buttonHBox);
 
-        Label problemLabel = addLabel(vBox, "Problem Variables");
-        problemLabel.setFont(new Font(15));
-
-        addLabel(vBox, "Select problem");
-        ComboBox<EProblemSelection> problemSelectionComboBox = new ComboBox<>();
-        problemSelectionComboBox.setValue(Values.SELECTED_PROBLEM);
-        problemSelectionComboBox.getItems().setAll(EProblemSelection.values());
-        problemSelectionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Values.SELECTED_PROBLEM = newValue;
-            updateProblemSpesificGUIElementVisibilities();
-        });
-        vBox.getChildren().add(problemSelectionComboBox);
-
-        addLabel(vBox, "Problem Size");
-        TextField problemSizeTextField = new TextField();
-        problemSizeTextField.setText(String.valueOf(Values.NUMBER_OF_BITS_IN_PROBLEM));
-        problemSizeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            int newProblemSize;
-            try{
-                newProblemSize = Integer.parseInt(newValue);
-            }catch (Exception E){
-                newProblemSize = Integer.parseInt(oldValue);
-            }
-            Values.NUMBER_OF_BITS_IN_PROBLEM = newProblemSize;
-        });
-        vBox.getChildren().add(problemSizeTextField);
 
 
     }
@@ -436,49 +402,48 @@ public class P4GUIController {
     }
 
     public void drawMovement(int numberOfMoves) {
-        int[] sensorValues = Values.BEERWORLD.getSensors();
 
-        double[] moveValues = Values.CTRNN.getMove(sensorValues);
-        double moveValue = moveValues[1] - moveValues[0];
-        int move;
+            int[] sensorValues = Values.BEERWORLD.getSensors();
 
-        if (moveValue > 0.8){
-            move = 4;
-        } else if (moveValue > 0.6){
-            move = 3;
-        } else if (moveValue > 0.4){
-            move = 2;
-        } else if (moveValue > 0.2){
-            move = 1;
-        } else if (moveValue >= -0.2){
-            move = 0;
-        } else if (moveValue >= -0.4){
-            move = -1;
-        } else if (moveValue >= -0.6){
-            move = -2;
-        } else if (moveValue >= -0.8){
-            move = -3;
-        } else if (moveValue >= -1){
-            move = -4;
-        } else {
-            move = 0;
+            double[] moveValues = Values.CTRNN.getMove(sensorValues);
+            double moveValue = moveValues[1] - moveValues[0];
+            int move;
+
+            if (moveValue > 0.8) {
+                move = 4;
+            } else if (moveValue > 0.6) {
+                move = 3;
+            } else if (moveValue > 0.4) {
+                move = 2;
+            } else if (moveValue > 0.2) {
+                move = 1;
+            } else if (moveValue >= -0.2) {
+                move = 0;
+            } else if (moveValue >= -0.4) {
+                move = -1;
+            } else if (moveValue >= -0.6) {
+                move = -2;
+            } else if (moveValue >= -0.8) {
+                move = -3;
+            } else if (moveValue >= -1) {
+                move = -4;
+            } else {
+                move = 0;
+            }
+
+            Values.BEERWORLD.playTimestep(move);
+
+            beerWorldVBox.getChildren().remove(beerWorldGridPane);
+            beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
+            beerWorldVBox.getChildren().add(beerWorldGridPane);
+            updateBoardValues(numberOfMoves);
         }
 
-        Values.BEERWORLD.playTimestep(move);
-
-
-        beerWorldVBox.getChildren().remove(beerWorldGridPane);
-        beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
-        beerWorldVBox.getChildren().add(beerWorldGridPane);
-
-        updateBoardValues(numberOfMoves);
-
-    }
 
     private void updateBoardValues(int numberOfMoves) {
         iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
-        capturedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided()));
-        avoidedLabel.setText(String.valueOf(Values.BEERWORLD.getCaptured()));
+        avoidedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided()));
+        capturedLabel.setText(String.valueOf(Values.BEERWORLD.getCaptured()));
         failedAvoidedLabel.setText(String.valueOf(Values.BEERWORLD.getFailedAvoid()));
         failedCaptureLabel.setText(String.valueOf(Values.BEERWORLD.getFailedCapture()));
     }
@@ -487,6 +452,13 @@ public class P4GUIController {
         beerWorldVBox = new VBox();
         beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
         beerWorldVBox.getChildren().add(beerWorldGridPane);
+
+        CheckBox drawMovementCheckBox = new CheckBox("Draw best hyp");
+        drawMovementCheckBox.setOnAction(event -> {
+            Values.DRAW_MOVEMENT = drawMovementCheckBox.isSelected();
+        });
+        drawMovementCheckBox.setSelected(Values.UPDATE_CHARTS);
+        beerWorldVBox.getChildren().add(drawMovementCheckBox);
 
         HBox iterationsHBox = new HBox();
         iterationsLabel = new Label();
@@ -534,15 +506,6 @@ public class P4GUIController {
             }
         });
         beerWorldVBox.getChildren().add(sleepDurationTextField);
-
-
-        CheckBox dynamicCheckBox = new CheckBox("Dynamic board");
-        dynamicCheckBox.setOnAction(event -> {
-            Values.FLATLAND_DYNAMIC = dynamicCheckBox.isSelected();
-
-        });
-        dynamicCheckBox.setSelected(Values.FLATLAND_DYNAMIC);
-        beerWorldVBox.getChildren().add(dynamicCheckBox);
 
         return beerWorldVBox;
     }
