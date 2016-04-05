@@ -187,8 +187,6 @@ public class CTRNN {
         return getNumberOfGainValues();
     }
 
-
-
     private int getNumberOfWeights() {
         return networkWeights.size();
     }
@@ -266,6 +264,8 @@ public class CTRNN {
                 Node parentNode = nodePairKey.getElement1();
                 double weight = entry.getValue();
 
+                //Test om der er noe forskjell om man bruker gammel eller ny.
+                //nodeToBeUpdated.setsValue(nodeToBeUpdated.getsValue() + parentNode.getOldOutputValue() * weight);
                 nodeToBeUpdated.setsValue(nodeToBeUpdated.getsValue() + parentNode.getOutputValue() * weight);
             }
         }

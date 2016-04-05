@@ -11,6 +11,7 @@ public class Node {
     private double gain;
     private double timeConstant;
     private double outputValue;
+    private double oldOutputValue;
     private double sValue;
     private double yValue;
 
@@ -49,8 +50,9 @@ public class Node {
         return outputValue;
     }
 
-    public void setOutputValue(double outputValue) {
-        this.outputValue = outputValue;
+    public void setOutputValue(double newOutputValue) {
+        this.oldOutputValue = this.outputValue;
+        this.outputValue = newOutputValue;
     }
 
     public double getsValue() {
@@ -67,5 +69,9 @@ public class Node {
 
     public void setyValue(double yValue) {
         this.yValue = yValue;
+    }
+
+    public double getOldOutputValue() {
+        return oldOutputValue;
     }
 }
