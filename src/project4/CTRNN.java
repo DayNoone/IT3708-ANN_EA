@@ -138,7 +138,18 @@ public class CTRNN {
 
 
     public void setNetworValues(double[] phenotype){
-        //TODO: Set weights, gains and time constants
+        int numNodeWeights = getNumberOfNormalNodeWeights();
+        int numBiasWeights = getNumberOfBiasNodeWeights();
+        int numGains = getNumberOfBiasNodeWeights();
+        int numTimeConstants = getNumberOfTimeConstantValues();
+
+        double[] nodeWeights = Arrays.copyOfRange(phenotype, 0, numNodeWeights+numBiasWeights);
+        double[] gains = Arrays.copyOfRange(phenotype, numNodeWeights+numBiasWeights, numNodeWeights+numBiasWeights+numGains);
+        double[] timeConstants = Arrays.copyOfRange(phenotype, numNodeWeights+numBiasWeights+numGains, numNodeWeights+numBiasWeights+numGains+numTimeConstants);
+
+        setNetworkWeights(nodeWeights);
+        setNodeGeins(gains);
+        setNodeTimeConstants(timeConstants);
     }
 
     public int getPhenotypeSize(){
@@ -146,16 +157,18 @@ public class CTRNN {
     }
 
 
-    public int getMove(int[] inputValues){
-
+    public double[] getMove(int[] inputValues){
         //updates input layer with input values
         setValuesOfInputLayerNodes(inputValues);
 
         updateAllNodeValues();
 
-//        int highestIndex = findHighestIndex(outputLayerNodes);
-//        return highestIndex;
-        return 0;
+        double[] outputArray = new double[outputLayerNodes.size()];
+        for (int i = 0; i < outputArray.length; i++) {
+            outputArray[i] = outputLayerNodes.get(i).getOutputValue();
+        }
+
+        return outputArray;
     }
 
     public int getNumberOfNormalNodeWeights(){
@@ -266,15 +279,16 @@ public class CTRNN {
         }
     }
 
-    private int findHighestIndex(double[] outputLayer) {
-        int highestIndex = 0;
-        double highestValue = outputLayer[0];
-        for (int i = 1; i < outputLayer.length; i++) {
-            if (outputLayer[i] > highestValue) {
-                highestIndex = i;
-                highestValue = outputLayer[i];
-            }
-        }
-        return highestIndex;
-    }
+//    private int findHighestIndex(List<Node> nodeLayer) {
+//        int highestIndex = 0;
+//        double highestValue = nodeLayer.get(0).getOutputValue();
+//        for (int i = 1; i < nodeLayer.size(); i++) {
+//            double tempValue = nodeLayer.get(i).getOutputValue();
+//            if (tempValue > highestValue) {
+//                highestIndex = i;
+//                highestValue = tempValue;
+//            }
+//        }
+//        return highestIndex;
+//    }
 }
