@@ -69,8 +69,8 @@ public class BeerWorld {
         trackerXPos = (trackerXPos + trackerMove + Values.BEERWORLD_BOARD_WIDTH) % Values.BEERWORLD_BOARD_WIDTH;
     }
 
-    public ArrayList<Integer> getSensors(){
-        ArrayList<Integer> sensors = new ArrayList<>();
+    public int[] getSensors(){
+        int[] sensors = new int[Values.ANN_INPUT_NODES];
         for (int x = trackerXPos; x < trackerXPos + 5; x++) {
             boolean overlap = false;
             for (int y = 0; y < Values.BEERWORLD_BOARD_HEIGHT; y++) {
@@ -79,7 +79,7 @@ public class BeerWorld {
                     break;
                 }
             }
-            sensors.add(overlap ? 1 : 0);
+            sensors[x] = (overlap ? 1 : 0);
         }
         return sensors;
     }

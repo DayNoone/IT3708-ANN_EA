@@ -47,9 +47,18 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         Values.ANN.setNetworkWeights(this.phenotype);
 
         for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
-            ArrayList<Integer> sensorValues = Values.BEERWORLD.getSensors();
+            int[] sensorValues = Values.BEERWORLD.getSensors();
 
-            Values.BEERWORLD.playTimestep(Values.CTRANN.getMove(sensorValues));
+            double moveValue = Values.CTRANN.getMove(sensorValues);
+            int move = (int) Math.round(moveValue);
+
+            if (move > 4) {
+                move = 4;
+            } else if ( move < -4) {
+                move = -4;
+            }
+
+            Values.BEERWORLD.playTimestep(move);
         }
 
 
@@ -63,6 +72,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         else {
             fitness = 0;
         }
+        Math.max(0, fitness);
         this.setFitness(fitness);
     }
 
