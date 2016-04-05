@@ -17,8 +17,11 @@ public class Node {
 
     public Node(ENodeType type) {
         this.type = type;
-        this.gain = 0;
-        this.timeConstant = 0;
+        this.gain = 1.0;
+        this.timeConstant = 1.0;
+        this.outputValue = 0;
+        this.sValue = 0;
+        this.yValue = 0;
     }
 
     public double getGain() {
@@ -63,7 +66,7 @@ public class Node {
         this.sValue = sValue;
     }
 
-    public double getyValue() {
+    public double getYValue() {
         return yValue;
     }
 
