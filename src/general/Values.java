@@ -71,11 +71,23 @@ public class Values {
 
     public static final int POISON_PENALTY = 3;
 
+
+
     public static Board BOARD;
     public static general.ANN ANN;
     public static project4.CTRNN CTRNN;
 
+
+    /**
+
+        BEERWORLD VALUES
+
+     **/
+
     public static BeerWorld BEERWORLD;
+
+    public static final int BEERWORLD_ITERATIONS = 60;
+
     public static final int BEERWORLD_GENOTYPE_RANGE = 10;
 
     public static final int BEERWORLD_BOARD_HEIGHT = 15;

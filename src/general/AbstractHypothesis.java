@@ -29,7 +29,7 @@ public abstract class AbstractHypothesis {
     public String getPhenotypeString() {
         String phenoTypeString = "";
         for (double aPhenotype : this.phenotype) {
-            phenoTypeString += String.valueOf(aPhenotype);
+            phenoTypeString += " " + String.valueOf(aPhenotype);
         }
         return phenoTypeString;
     }
