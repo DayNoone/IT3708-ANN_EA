@@ -44,7 +44,50 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     @Override
     public void calculateFitness() {
-        // TODO: Rewrite for BeerTracker
+        Values.ANN.setNetworkWeights(this.phenotype);
+
+        for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
+            int[] sensorValues = Values.BEERWORLD.getSensors();
+
+            double moveValue = Values.CTRANN.getMove(sensorValues);
+            int move;
+
+            if (moveValue <= 1 && moveValue > 0.75){
+                move = 4;
+            } else if (moveValue <= 0.75 && moveValue > 0.5){
+                move = 3;
+            } else if (moveValue <= 0.5 && moveValue > 0.25){
+                move = 2;
+            } else if (moveValue <= 0.25 && moveValue > 0){
+                move = 1;
+            } else if (moveValue < 0 && moveValue >= -0.25){
+                move = -1;
+            } else if (moveValue < -0.25 && moveValue >= -0.5){
+                move = -2;
+            } else if (moveValue < -0.5 && moveValue >= -0.75){
+                move = -3;
+            } else if (moveValue < -0.75 && moveValue >= -1){
+                move = -4;
+            } else {
+                move = 0;
+            }
+
+            Values.BEERWORLD.playTimestep(move);
+        }
+
+
+        int beerWorldFallenObjects = Values.BEERWORLD.getFallenObjects();
+        double fitness;
+        if (beerWorldFallenObjects != 0)
+            fitness = (1.0 * Values.BEERWORLD.getCaptured()
+                    + Values.BEERWORLD.getAvoided()
+                    - (Values.BEERWORLD.getFailedAvoid() * Values.BEERWORLD_FAILEDAVOID_PENALTY)
+                    - (Values.BEERWORLD.getFailedCapture() * Values.BEERWORLD_FAILEDCAPTURE_PENALTY)) / beerWorldFallenObjects;
+        else {
+            fitness = 0;
+        }
+        Math.max(0, fitness);
+        this.setFitness(fitness);
     }
 
 

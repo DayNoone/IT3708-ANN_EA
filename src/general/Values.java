@@ -12,9 +12,7 @@ import project4.BeerWorld;
  */
 public class Values {
 
-    public static final int BEERWORLD_BOARD_HEIGHT = 15;
-    public static final int BEERWORLD_BOARD_WIDTH = 30;
-    public static BeerWorld BEERWORLD;
+
     /**
 
         EA VALUES
@@ -77,4 +75,10 @@ public class Values {
     public static general.ANN ANN;
     public static project4.CTRNN CTRNN;
 
+    public static final int BEERWORLD_BOARD_HEIGHT = 15;
+    public static final int BEERWORLD_BOARD_WIDTH = 30;
+    public static CTRNN CTRANN;
+    public static BeerWorld BEERWORLD;
+    public static int BEERWORLD_FAILEDAVOID_PENALTY = 4;
+    public static int BEERWORLD_FAILEDCAPTURE_PENALTY = 2;
 }

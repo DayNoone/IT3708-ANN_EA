@@ -192,7 +192,7 @@ public class CTRNN {
     }
 
 
-    public int getMove(double[] inputValues) {
+    public int getMove(int[] inputValues){
 
         //updates input layer with input values
         setValuesOfInputLayerNodes(inputValues);
@@ -237,7 +237,7 @@ public class CTRNN {
     }
 
 
-    private void setValuesOfInputLayerNodes(double[] inputValues) {
+    private void setValuesOfInputLayerNodes(int[] inputValues) {
         for (int i = 0; i < inputLayerNodes.size(); i++) {
             Node node = inputLayerNodes.get(i);
             node.setOutputValue(inputValues[i]);
