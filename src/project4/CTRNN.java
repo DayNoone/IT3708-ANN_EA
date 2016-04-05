@@ -141,54 +141,8 @@ public class CTRNN {
         //TODO: Set weights, gains and time constants
     }
 
-    public int getNumberOfWeights() {
-        return networkWeights.size();
-    }
-
-    public int getNumberOfOutputAndHiddenNodes() {
-        int numGeins = 0;
-
-        for (List<Node> hiddenLayer : hiddenLayers) {
-            numGeins += hiddenLayer.size();
-        }
-
-        numGeins += outputLayerNodes.size();
-
-        return numGeins;
-    }
-
-    public void setNetworkWeights(double[] weights) {
-        int counter = 0;
-        for (Map.Entry<Pair<Node, Node>, Double> entry : networkWeights.entrySet()) {
-            Pair<Node, Node> key = entry.getKey();
-            networkWeights.put(key, weights[counter++]);
-        }
-    }
-
-    public void setNodeGeins(double[] gains) {
-        int counter = 0;
-        for (List<Node> hiddenLayer : hiddenLayers) {
-            for (Node hiddenNode : hiddenLayer) {
-                hiddenNode.setGain(gains[counter++]);
-            }
-        }
-
-        for (Node outputNode : outputLayerNodes) {
-            outputNode.setGain(gains[counter++]);
-        }
-    }
-
-    public void setNodeTimeConstants(double[] timeConstants) {
-        int counter = 0;
-        for (List<Node> hiddenLayer : hiddenLayers) {
-            for (Node hiddenNode : hiddenLayer) {
-                hiddenNode.setGain(timeConstants[counter++]);
-            }
-        }
-
-        for (Node outputNode : outputLayerNodes) {
-            outputNode.setGain(timeConstants[counter++]);
-        }
+    public int getPhenotypeSize(){
+        return getNumberOfNormalNodeWeights() + getNumberOfBiasNodeWeights() + getNumberOfGainValues() + getNumberOfTimeConstantValues();
     }
 
 
@@ -202,6 +156,74 @@ public class CTRNN {
 //        int highestIndex = findHighestIndex(outputLayerNodes);
 //        return highestIndex;
         return 0;
+    }
+
+    public int getNumberOfNormalNodeWeights(){
+        return getNumberOfWeights() - numberOfBiasNodeWeights;
+    }
+
+    public int getNumberOfBiasNodeWeights(){
+        return numberOfBiasNodeWeights;
+    }
+
+    public int getNumberOfGainValues(){
+        return getNumberOfOutputAndHiddenNodes();
+    }
+
+    public int getNumberOfTimeConstantValues(){
+        return getNumberOfGainValues();
+    }
+
+
+
+    private int getNumberOfWeights() {
+        return networkWeights.size();
+    }
+
+    private int getNumberOfOutputAndHiddenNodes() {
+        int numGeins = 0;
+
+        for (List<Node> hiddenLayer : hiddenLayers) {
+            numGeins += hiddenLayer.size();
+        }
+
+        numGeins += outputLayerNodes.size();
+
+        return numGeins;
+    }
+
+    private void setNetworkWeights(double[] weights) {
+        int counter = 0;
+        for (Map.Entry<Pair<Node, Node>, Double> entry : networkWeights.entrySet()) {
+            Pair<Node, Node> key = entry.getKey();
+            networkWeights.put(key, weights[counter++]);
+        }
+    }
+
+    private void setNodeGeins(double[] gains) {
+        int counter = 0;
+        for (List<Node> hiddenLayer : hiddenLayers) {
+            for (Node hiddenNode : hiddenLayer) {
+                hiddenNode.setGain(gains[counter++]);
+            }
+        }
+
+        for (Node outputNode : outputLayerNodes) {
+            outputNode.setGain(gains[counter++]);
+        }
+    }
+
+    private void setNodeTimeConstants(double[] timeConstants) {
+        int counter = 0;
+        for (List<Node> hiddenLayer : hiddenLayers) {
+            for (Node hiddenNode : hiddenLayer) {
+                hiddenNode.setGain(timeConstants[counter++]);
+            }
+        }
+
+        for (Node outputNode : outputLayerNodes) {
+            outputNode.setGain(timeConstants[counter++]);
+        }
     }
 
     private void updateAllNodeValues() {
