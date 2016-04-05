@@ -41,7 +41,6 @@ public class P4Main extends Application {
         Values.CTRNN = new CTRNN();
 
         Values.BEERWORLD = new BeerWorld();
-        Values.ANN = new ANN();
 
         Pane pane = p4GuiController.generateGUI(this);
 
@@ -116,7 +115,7 @@ public class P4Main extends Application {
                             eaController.generateNewPopulation();
                         }
 
-                        Values.ANN.setNetworkWeights(bestHypothesis.getPhenotype());
+                        Values.CTRANN.setNetworkValues(bestHypothesis.getPhenotype());
 
                     }
                 }
