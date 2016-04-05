@@ -78,7 +78,7 @@ public class P4Main extends Application {
                         shouldRestart = false;
                     }
 
-                    if (numberOfMoves < Values.FLATLAND_ITERATIONS){
+                    if (numberOfMoves < Values.BEERWORLD_ITERATIONS){
 
                         if (now - lastUpdate >= Values.FLATLAND_SLEEP_DURATION * 1000000) { // 20_000_000 = 20ms
                             lastUpdate = now;
