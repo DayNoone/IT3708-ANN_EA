@@ -82,7 +82,7 @@ public class P4Main extends Application {
 
                         if (now - lastUpdate >= Values.FLATLAND_SLEEP_DURATION * 1000000) { // 20_000_000 = 20ms
                             lastUpdate = now;
-                            //p4GuiController.drawMovement(numberOfMoves);
+                            p4GuiController.drawMovement(numberOfMoves);
                             numberOfMoves++;
                         }
 

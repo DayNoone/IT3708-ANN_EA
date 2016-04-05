@@ -59,8 +59,8 @@ public class P4GUIController {
     private Label tournamentEpsilonLabel;
 
     private BorderPane mainPane;
-    private GridPane boardGridPane;
-    private VBox boardVBox;
+    private GridPane beerWorldGridPane;
+    private VBox beerWorldVBox;
     private Label iterationsLabel;
     private Label poisonEatenLabel;
     private Label foodEatenLabel;
@@ -436,51 +436,64 @@ public class P4GUIController {
 
     }
 
-    /*public void drawMovement(int numberOfMoves) {
+    public void drawMovement(int numberOfMoves) {
 
 
-        ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
-        int highestIndex = Values.ANN.getMove(sensorValues);
+        int[] sensorValues = Values.BEERWORLD.getSensors();
 
-        if (highestIndex == 0){
-            Values.BOARD.moveForeward();
-        }else if (highestIndex == 1){
-            Values.BOARD.moveLeft();
+        double[] moveValues = Values.CTRNN.getMove(sensorValues);
+        double moveValue = moveValues[1] - moveValues[0];
+        int move;
 
+        if (moveValue > 0.8){
+            move = 4;
+        } else if (moveValue > 0.6){
+            move = 3;
+        } else if (moveValue > 0.4){
+            move = 2;
+        } else if (moveValue > 0.2){
+            move = 1;
+        } else if (moveValue >= -0.2){
+            move = 0;
+        } else if (moveValue >= -0.4){
+            move = -1;
+        } else if (moveValue >= -0.6){
+            move = -2;
+        } else if (moveValue >= -0.8){
+            move = -3;
+        } else if (moveValue >= -1){
+            move = -4;
+        } else {
+            move = 0;
         }
-        else if (highestIndex == 2){
-            Values.BOARD.moveRight();
-        }
 
-        boardVBox.getChildren().remove(boardGridPane);
-        boardGridPane = Values.BOARD.generateBoardGridPane();
-        boardVBox.getChildren().add(boardGridPane);
+        Values.BEERWORLD.playTimestep(move);
+
+        beerWorldVBox.getChildren().remove(beerWorldGridPane);
+        beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
+        beerWorldVBox.getChildren().add(beerWorldGridPane);
 
         updateBoardValues(numberOfMoves);
 
-    }*/
+    }
 
     private void updateBoardValues(int numberOfMoves) {
-        iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
-        foodEatenLabel.setText(String.valueOf(Values.BOARD.getFoodEaten()));
-        poisonEatenLabel.setText( String.valueOf(Values.BOARD.getPoisonEaten()));
-
-
+        //iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
     }
 
     private VBox getCenterGUI(int numberOfMoves) {
-        boardVBox = new VBox();
-        boardGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
-        boardVBox.getChildren().add(boardGridPane);
+        beerWorldVBox = new VBox();
+        beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
+        beerWorldVBox.getChildren().add(beerWorldGridPane);
 
         HBox iterationsHBox = new HBox();
         iterationsLabel = new Label();
         iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
         iterationsHBox.getChildren().add(new Label("Iterations:\t"));
         iterationsHBox.getChildren().add(iterationsLabel);
-        boardVBox.getChildren().add(iterationsHBox);
+        beerWorldVBox.getChildren().add(iterationsHBox);
 
-        addLabel(boardVBox, "Sleep duration");
+        addLabel(beerWorldVBox, "Sleep duration");
         TextField sleepDurationTextField = new TextField();
         sleepDurationTextField.setText(String.valueOf(Values.FLATLAND_SLEEP_DURATION));
         sleepDurationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -490,7 +503,7 @@ public class P4GUIController {
                 Values.FLATLAND_SLEEP_DURATION = Integer.parseInt(oldValue);
             }
         });
-        boardVBox.getChildren().add(sleepDurationTextField);
+        beerWorldVBox.getChildren().add(sleepDurationTextField);
 
 
         CheckBox dynamicCheckBox = new CheckBox("Dynamic board");
@@ -499,8 +512,8 @@ public class P4GUIController {
 
         });
         dynamicCheckBox.setSelected(Values.FLATLAND_DYNAMIC);
-        boardVBox.getChildren().add(dynamicCheckBox);
+        beerWorldVBox.getChildren().add(dynamicCheckBox);
 
-        return boardVBox;
+        return beerWorldVBox;
     }
 }
