@@ -75,7 +75,6 @@ public class Values {
     public static general.ANN ANN;
     public static project4.CTRNN CTRNN;
 
-    public static CTRNN CTRANN;
     public static BeerWorld BEERWORLD;
     public static final int BEERWORLD_GENOTYPE_RANGE = 10;
 

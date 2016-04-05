@@ -10,7 +10,8 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     public BeerTrackerHypothesis() {
 
-        this.setGenotype(new int[Values.CTRANN.getPhenotypeSize()]);
+        int[] genotype = new int[Values.CTRNN.getPhenotypeSize()];
+        this.setGenotype(genotype);
         initiateRandomGenotype();
         generatePhenotype();
 
@@ -23,10 +24,10 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     @Override
     public void generatePhenotype() {
-        int noWeights = Values.CTRANN.getNumberOfNormalNodeWeights();
-        int noBias = Values.CTRANN.getNumberOfBiasNodeWeights();
-        int noGains = Values.CTRANN.getNumberOfGainValues();
-        int noTime = Values.CTRANN.getNumberOfTimeConstantValues();
+        int noWeights = Values.CTRNN.getNumberOfNormalNodeWeights();
+        int noBias = Values.CTRNN.getNumberOfBiasNodeWeights();
+        int noGains = Values.CTRNN.getNumberOfGainValues();
+        int noTime = Values.CTRNN.getNumberOfTimeConstantValues();
 
         this.phenotype = new double[this.genotype.length];
         for (int i = 0; i < this.phenotype.length; i++) {
@@ -48,7 +49,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     @Override
     public void initiateRandomGenotype() {
-        for (int i = 0; i < Values.CTRANN.getPhenotypeSize(); i++) {
+        for (int i = 0; i < Values.CTRNN.getPhenotypeSize(); i++) {
             int randomGenotypeInt = random.nextInt(Values.BEERWORLD_GENOTYPE_RANGE);
             getGenotype()[i] = randomGenotypeInt;
         }
@@ -56,12 +57,12 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     @Override
     public void calculateFitness() {
-        Values.CTRANN.setNetworkValues(this.phenotype);
+        Values.CTRNN.setNetworkValues(this.phenotype);
 
         for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
             int[] sensorValues = Values.BEERWORLD.getSensors();
 
-            double[] moveValues = Values.CTRANN.getMove(sensorValues);
+            double[] moveValues = Values.CTRNN.getMove(sensorValues);
             double moveValue = moveValues[1] - moveValues[0];
             int move;
 

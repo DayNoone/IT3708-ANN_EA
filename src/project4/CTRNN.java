@@ -24,9 +24,9 @@ public class CTRNN {
     }
 
     private void initializeAnn() {
-        List<Node> inputLayerNodes = new ArrayList<>();
-        List<List<Node>> hiddenLayers = new ArrayList<>();
-        List<Node> outputLayerNodes = new ArrayList<>();
+        inputLayerNodes = new ArrayList<>();
+        hiddenLayers = new ArrayList<>();
+        outputLayerNodes = new ArrayList<>();
 
         Node biasNode = new Node(ENodeType.BIAS);
 
