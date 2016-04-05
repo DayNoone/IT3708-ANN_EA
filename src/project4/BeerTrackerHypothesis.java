@@ -30,21 +30,27 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         int noTime = Values.CTRNN.getNumberOfTimeConstantValues();
 
         this.phenotype = new double[this.genotype.length];
+        double oldMax = 10.0;
+        double oldMin = 0.0;
         for (int i = 0; i < this.phenotype.length; i++) {
             if(i < noWeights){
-                phenotype[i] = this.genotype[i] + 5.0;
+                phenotype[i] = convertToNewRange(genotype[i], oldMax, oldMin, 5.0, -5.0);
             } else if (i < noWeights + noBias) {
-                phenotype[i] = this.genotype[i] + 10.0;
+                phenotype[i] = convertToNewRange(genotype[i], oldMax, oldMin, 0.0, -10.0);
             } else if (i < noWeights + noBias + noGains) {
-                double oldRange = (5.0 - 1.0);
-                phenotype[i] = (((this.genotype[i] - 1.0) * 10.0) / oldRange);
+                phenotype[i] = convertToNewRange(genotype[i], oldMax, oldMin, 5.0, 1.0);
             } else if (i < noWeights + noBias + noGains + noTime) {
-                double oldRange = (2.0 - 1.0);
-                phenotype[i] = (((this.genotype[i] - 1.0) * 10.0) / oldRange);
+                phenotype[i] = convertToNewRange(genotype[i], oldMax, oldMin, 2.0, 1.0);
             } else {
                 throw new NullPointerException("Generate phenotype: wrong lenght");
             }
         }
+    }
+
+    private double convertToNewRange(int oldValue, double oldMax, double oldMin, double newMax, double newMin) {
+        double oldRange = (oldMax - oldMin);
+        double newRange = (newMax - newMin);
+        return (((oldValue - oldMin) * newRange) / oldRange) + newMin;
     }
 
     @Override
