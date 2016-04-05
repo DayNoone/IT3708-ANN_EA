@@ -1,10 +1,7 @@
 package project4;
 
-import enums.BoardElement;
 import general.AbstractHypothesis;
 import general.Values;
-
-import java.util.ArrayList;
 
 /**
  * Created by markus on 16.03.2016.
@@ -13,7 +10,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     public BeerTrackerHypothesis() {
 
-        this.setGenotype(new int[Values.ANN.getNumberOfWeights()]);
+        this.setGenotype(new int[Values.CTRANN.getPhenotypeSize()]);
         initiateRandomGenotype();
         generatePhenotype();
 
@@ -26,47 +23,65 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     @Override
     public void generatePhenotype() {
+        int noWeights = Values.CTRANN.getNumberOfNormalNodeWeights();
+        int noBias = Values.CTRANN.getNumberOfBiasNodeWeights();
+        int noGains = Values.CTRANN.getNumberOfGainValues();
+        int noTime = Values.CTRANN.getNumberOfTimeConstantValues();
+
         this.phenotype = new double[this.genotype.length];
         for (int i = 0; i < this.phenotype.length; i++) {
-            int tempGEnoVal = this.genotype[i];
-            double tempPhenotypeValue = 1.0 * tempGEnoVal / Values.FLATLAND_GENOTYPE_RANGE;
-            this.phenotype[i] = tempPhenotypeValue;
+            if(i < noWeights){
+                phenotype[i] = this.genotype[i] + 5.0;
+            } else if (i < noWeights + noBias) {
+                phenotype[i] = this.genotype[i] + 10.0;
+            } else if (i < noWeights + noBias + noGains) {
+                double oldRange = (5.0 - 1.0);
+                phenotype[i] = (((this.genotype[i] - 1.0) * 10.0) / oldRange);
+            } else if (i < noWeights + noBias + noGains + noTime) {
+                double oldRange = (2.0 - 1.0);
+                phenotype[i] = (((this.genotype[i] - 1.0) * 10.0) / oldRange);
+            } else {
+                throw new NullPointerException("Generate phenotype: wrong lenght");
+            }
         }
     }
 
     @Override
     public void initiateRandomGenotype() {
-        for (int i = 0; i < Values.ANN.getNumberOfWeights(); i++) {
-            int randomGenotypeInt = random.nextInt(Values.FLATLAND_GENOTYPE_RANGE);
+        for (int i = 0; i < Values.CTRANN.getPhenotypeSize(); i++) {
+            int randomGenotypeInt = random.nextInt(Values.BEERWORLD_GENOTYPE_RANGE);
             getGenotype()[i] = randomGenotypeInt;
         }
     }
 
     @Override
     public void calculateFitness() {
-        Values.ANN.setNetworkWeights(this.phenotype);
+        Values.CTRANN.setNetworkValues(this.phenotype);
 
         for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
             int[] sensorValues = Values.BEERWORLD.getSensors();
 
-            double moveValue = Values.CTRANN.getMove(sensorValues);
+            double[] moveValues = Values.CTRANN.getMove(sensorValues);
+            double moveValue = moveValues[1] - moveValues[0];
             int move;
 
-            if (moveValue <= 1 && moveValue > 0.75){
+            if (moveValue > 0.8){
                 move = 4;
-            } else if (moveValue <= 0.75 && moveValue > 0.5){
+            } else if (moveValue > 0.6){
                 move = 3;
-            } else if (moveValue <= 0.5 && moveValue > 0.25){
+            } else if (moveValue > 0.4){
                 move = 2;
-            } else if (moveValue <= 0.25 && moveValue > 0){
+            } else if (moveValue > 0.2){
                 move = 1;
-            } else if (moveValue < 0 && moveValue >= -0.25){
+            } else if (moveValue >= -0.2){
+                move = 0;
+            } else if (moveValue >= -0.4){
                 move = -1;
-            } else if (moveValue < -0.25 && moveValue >= -0.5){
+            } else if (moveValue >= -0.6){
                 move = -2;
-            } else if (moveValue < -0.5 && moveValue >= -0.75){
+            } else if (moveValue >= -0.8){
                 move = -3;
-            } else if (moveValue < -0.75 && moveValue >= -1){
+            } else if (moveValue >= -1){
                 move = -4;
             } else {
                 move = 0;
@@ -86,7 +101,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         else {
             fitness = 0;
         }
-        Math.max(0, fitness);
+        fitness = Math.max(0, fitness);
         this.setFitness(fitness);
     }
 
