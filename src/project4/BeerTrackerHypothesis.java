@@ -50,12 +50,26 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
             int[] sensorValues = Values.BEERWORLD.getSensors();
 
             double moveValue = Values.CTRANN.getMove(sensorValues);
-            int move = (int) Math.round(moveValue);
+            int move;
 
-            if (move > 4) {
+            if (moveValue <= 1 && moveValue > 0.75){
                 move = 4;
-            } else if ( move < -4) {
+            } else if (moveValue <= 0.75 && moveValue > 0.5){
+                move = 3;
+            } else if (moveValue <= 0.5 && moveValue > 0.25){
+                move = 2;
+            } else if (moveValue <= 0.25 && moveValue > 0){
+                move = 1;
+            } else if (moveValue < 0 && moveValue >= -0.25){
+                move = -1;
+            } else if (moveValue < -0.25 && moveValue >= -0.5){
+                move = -2;
+            } else if (moveValue < -0.5 && moveValue >= -0.75){
+                move = -3;
+            } else if (moveValue < -0.75 && moveValue >= -1){
                 move = -4;
+            } else {
+                move = 0;
             }
 
             Values.BEERWORLD.playTimestep(move);
