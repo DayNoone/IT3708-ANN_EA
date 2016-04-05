@@ -20,7 +20,7 @@ public class BeerWorld {
     private static Random random = new Random();
 
     public BeerWorld(){
-        trackerXPos = 0;
+        trackerXPos = Values.BEERWORLD_BOARD_WIDTH / 2;
         spawnObject();
 
 //        System.out.println(captured + " " + avoided);
@@ -79,7 +79,7 @@ public class BeerWorld {
                     break;
                 }
             }
-            sensors[x] = (overlap ? 1 : 0);
+            sensors[x-trackerXPos] = (overlap ? 1 : 0);
         }
         return sensors;
     }
