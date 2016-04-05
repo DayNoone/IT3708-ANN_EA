@@ -23,6 +23,17 @@ public class CTRNN {
         initializeAnn();
     }
 
+    public void resetNetwork(){
+        hiddenLayers.forEach(this::resetNodesInLayer);
+        resetNodesInLayer(outputLayerNodes);
+    }
+
+    private void resetNodesInLayer(List<Node> layer) {
+        for (Node node : layer){
+            node.resetValues();
+        }
+    }
+
     private void initializeAnn() {
         inputLayerNodes = new ArrayList<>();
         hiddenLayers = new ArrayList<>();

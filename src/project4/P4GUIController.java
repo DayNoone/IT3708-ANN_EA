@@ -437,6 +437,7 @@ public class P4GUIController {
     }
 
     public void drawMovement(int numberOfMoves) {
+        Values.CTRNN.resetNetwork();
 
 
         int[] sensorValues = Values.BEERWORLD.getSensors();

@@ -77,4 +77,12 @@ public class Node {
     public double getOldOutputValue() {
         return oldOutputValue;
     }
+
+    public void resetValues() {
+        this.gain = 1.0;
+        this.timeConstant = 1.0;
+        this.outputValue = 0;
+        this.sValue = 0;
+        this.yValue = 0;
+    }
 }
