@@ -10,6 +10,7 @@ public class Node {
     private ENodeType type;
     private double gain;
     private double timeConstant;
+    private double value;
 
     public Node(ENodeType type) {
         this.type = type;
@@ -40,5 +41,13 @@ public class Node {
     @Override
     public String toString() {
         return String.valueOf(this.type) + " " + super.toString();
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
     }
 }

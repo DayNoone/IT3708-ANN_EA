@@ -188,39 +188,58 @@ public class CTRNN {
         }
     }
 
-//
-//    public int getMove(int[] inputValues){
-//        initiateInputLayer(inputValues);
-//
-//        for (int hiddenLayerCounter = 0; hiddenLayerCounter < hiddenLayers.length; hiddenLayerCounter++) {
-//            if (hiddenLayerCounter == 0){
-//                updateLayerNodes(hiddenLayers[hiddenLayerCounter], inputLayerNodes);
-//            }
-//            //Rest of hidden layers
-//            else{
-//                updateLayerNodes(hiddenLayers[hiddenLayerCounter], hiddenLayers[hiddenLayerCounter-1]);
-//            }
-//        }
-//        updateLayerNodes(outputLayerNodes, hiddenLayers[hiddenLayers.length-1]);
-//
-//
+
+    public int getMove(double[] inputValues){
+
+        //updates input layer with input values
+        setValuesOfInputLayerNodes(inputValues);
+
+        updateAllNodeValues();
+
 //        int highestIndex = findHighestIndex(outputLayerNodes);
 //        return highestIndex;
-//    }
-//
-//    private int findHighestIndex(double[] outputLayer) {
-//        int highestIndex = 0;
-//        double highestValue = outputLayer[0];
-//        for (int i = 1; i < outputLayer.length; i++) {
-//            if (outputLayer[i] > highestValue) {
-//                highestIndex = i;
-//                highestValue = outputLayer[i];
-//            }
+        return 0;
+    }
+
+    private void updateAllNodeValues() {
+        for (List<Node> hiddenLayer : hiddenLayers){
+            updateNodeValuesInLayer(hiddenLayer);
+        }
+
+        updateNodeValuesInLayer(outputLayerNodes);
+    }
+
+    private void updateNodeValuesInLayer(List<Node> layer) {
+
+
+
+//        for (Map.Entry<Pair<Node, Node>, Double> entry : networkWeights.entrySet())
+//        {
+//            Pair<Node, Node> key = entry.getKey();
+//            networkWeights.put(key, weights[counter++]);
 //        }
-//        return highestIndex;
-//    }
-//
-//    private void updateLayerNodes(double[] currentLayer, double[] previousLayer){
+    }
+
+    private void setValuesOfInputLayerNodes(double[] inputValues) {
+        for (int i = 0; i < inputLayerNodes.size(); i++) {
+            Node node = inputLayerNodes.get(i);
+            node.setValue(inputValues[i]);
+        }
+    }
+
+    private int findHighestIndex(double[] outputLayer) {
+        int highestIndex = 0;
+        double highestValue = outputLayer[0];
+        for (int i = 1; i < outputLayer.length; i++) {
+            if (outputLayer[i] > highestValue) {
+                highestIndex = i;
+                highestValue = outputLayer[i];
+            }
+        }
+        return highestIndex;
+    }
+
+//    private void updateLayerNodes(List<Node> currentLayer, List<Node> previousLayer){
 //        for (int currentLayerNodeCounter = 0; currentLayerNodeCounter < currentLayer.length; currentLayerNodeCounter++) {
 //
 //            double totalValue = 0;
@@ -232,33 +251,15 @@ public class CTRNN {
 //        }
 //        weightCounter = 0;
 //    }
-//
-//    private double activationFunction(double totalValue) {
-////        if (totalValue > 1){
-////            totalValue = 1;
-////        }
-//        return Math.max(0, totalValue);
-//    }
-//
-//    private void initiateInputLayer(int[] sensorValues) {
-//        for (int i = 0; i < sensorValues.length; i++) {
-//                inputLayerNodes[i] = sensorValues[i];
+
+    private double activationFunction(double totalValue) {
+//        if (totalValue > 1){
+//            totalValue = 1;
 //        }
-//    }
-//
-//
-//    public void setNetworkWeights(double[] networkWeights) {
-//        this.networkWeights = new double[networkWeights.length];
-//        System.arraycopy(networkWeights, 0, this.networkWeights, 0, networkWeights.length);
-//    }
-//
-//    public int getNumberOfWeights() {
-//        return numberOfWeights;
-//    }
-//
-//    public void setNumberOfWeights(int numberOfWeights) {
-//        this.numberOfWeights = numberOfWeights;
-//    }
+        return Math.max(0, totalValue);
+    }
+
+
 
 
 }
