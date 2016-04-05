@@ -15,21 +15,23 @@ public class BeerWorld {
     private int objectXPos, objectYPos, objectSize;
     private int trackerXPos;
 
-    private int captured, avoided, failedCapture, failedAvoid;
+    private int fallenObjects, captured, avoided, failedCapture, failedAvoid;
 
     private static Random random = new Random();
 
     public BeerWorld(){
-        trackerXPos = Values.BEERWORLD_BOARD_WIDTH / 2;
+        trackerXPos = 0;
         spawnObject();
 
-        System.out.println(captured + " " + avoided);
+//        System.out.println(captured + " " + avoided);
+//        System.out.println(failedCapture + " " + failedAvoid);
     }
 
     private void spawnObject(){
         objectXPos = random.nextInt(Values.BEERWORLD_BOARD_WIDTH);
         objectYPos = 0;
-        objectSize = random.nextInt(6);
+        objectSize = random.nextInt(5) + 1;
+        fallenObjects++;
     }
 
     public void playTimestep(int trackerMove) {
@@ -104,5 +106,25 @@ public class BeerWorld {
         }
         gridPane.setGridLinesVisible(true);
         return gridPane;
+    }
+
+    public int getFallenObjects() {
+        return fallenObjects;
+    }
+
+    public int getCaptured() {
+        return captured;
+    }
+
+    public int getAvoided() {
+        return avoided;
+    }
+
+    public int getFailedCapture() {
+        return failedCapture;
+    }
+
+    public int getFailedAvoid() {
+        return failedAvoid;
     }
 }

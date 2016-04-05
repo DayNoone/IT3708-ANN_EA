@@ -44,7 +44,26 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
     @Override
     public void calculateFitness() {
-        // TODO: Rewrite for BeerTracker
+        Values.ANN.setNetworkWeights(this.phenotype);
+
+        for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
+            ArrayList<Integer> sensorValues = Values.BEERWORLD.getSensors();
+
+            Values.BEERWORLD.playTimestep(Values.CTRANN.getMove(sensorValues));
+        }
+
+
+        int beerWorldFallenObjects = Values.BEERWORLD.getFallenObjects();
+        double fitness;
+        if (beerWorldFallenObjects != 0)
+            fitness = (1.0 * Values.BEERWORLD.getCaptured()
+                    + Values.BEERWORLD.getAvoided()
+                    - (Values.BEERWORLD.getFailedAvoid() * Values.BEERWORLD_FAILEDAVOID_PENALTY)
+                    - (Values.BEERWORLD.getFailedCapture() * Values.BEERWORLD_FAILEDCAPTURE_PENALTY)) / beerWorldFallenObjects;
+        else {
+            fitness = 0;
+        }
+        this.setFitness(fitness);
     }
 
 
