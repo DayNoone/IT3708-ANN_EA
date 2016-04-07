@@ -96,9 +96,9 @@ public class Values {
     public static final int BEERWORLD_BOARD_WIDTH = 30;
 
     public static int BEERWORLD_FAILEDAVOID_PENALTY = 4;
-    public static int BEERWORLD_FAILEDCAPTURE_PENALTY = 1;
+    public static int BEERWORLD_FAILEDCAPTURE_PENALTY = 2;
 
-    public static final int BEERWORLD_CAPTURE_PRIZE = 1;
-    public static final int BEERWORLD_AVOID_PRIZE = 1;
+    public static final int BEERWORLD_CAPTURE_PRIZE = 2;
+    public static final int BEERWORLD_AVOID_PRIZE = 2;
 
 }

@@ -159,7 +159,7 @@ public class CTRNN {
         double[] timeConstants = Arrays.copyOfRange(phenotype, numNodeWeights+numBiasWeights+numGains, numNodeWeights+numBiasWeights+numGains+numTimeConstants);
 
         setNetworkWeights(nodeWeights);
-        setNodeGeins(gains);
+        setNodeGains(gains);
         setNodeTimeConstants(timeConstants);
     }
 
@@ -222,7 +222,7 @@ public class CTRNN {
         }
     }
 
-    private void setNodeGeins(double[] gains) {
+    private void setNodeGains(double[] gains) {
         int counter = 0;
         for (List<Node> hiddenLayer : hiddenLayers) {
             for (Node hiddenNode : hiddenLayer) {
@@ -239,12 +239,12 @@ public class CTRNN {
         int counter = 0;
         for (List<Node> hiddenLayer : hiddenLayers) {
             for (Node hiddenNode : hiddenLayer) {
-                hiddenNode.setGain(timeConstants[counter++]);
+                hiddenNode.setTimeConstant(timeConstants[counter++]);
             }
         }
 
         for (Node outputNode : outputLayerNodes) {
-            outputNode.setGain(timeConstants[counter++]);
+            outputNode.setTimeConstant(timeConstants[counter++]);
         }
     }
 
