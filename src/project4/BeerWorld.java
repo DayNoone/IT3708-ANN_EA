@@ -40,15 +40,17 @@ public class BeerWorld {
     }
 
     public void playTimestep(int trackerMove) {
+        Values.BEERWORLD_PULLED = false;
         // Tracker move is -1 for one move left and 2 for two moves right
         if (++objectYPos == Values.BEERWORLD_BOARD_HEIGHT-1) {
             checkCollision();
             spawnObject();
         }
 
-
-        if(trackerMove == 0) {
-            // TODO: Perform pull
+        if(trackerMove == 5) {
+            checkCollision();
+            spawnObject();
+            Values.BEERWORLD_PULLED = true;
         } else {
             moveTracker(trackerMove);
         }
@@ -99,9 +101,17 @@ public class BeerWorld {
                 tile.setPrefWidth(20);
                 String color;
                 if (y == Values.BEERWORLD_BOARD_HEIGHT - 1 && x >= trackerXPos && x < trackerXPos + 5) {
-                    color = "black";
+                    if (Values.BEERWORLD_PULLED){
+                        color = "violet";
+                    } else {
+                        color = "black";
+                    }
                 } else if (y == objectYPos && x >= objectXPos && x < objectXPos + objectSize) {
-                    color = "yellow";
+                    if(objectSize > 4){
+                        color = "red";
+                    } else {
+                        color = "green";
+                    }
                 } else {
                     color = "white";
                 }

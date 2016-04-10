@@ -407,31 +407,7 @@ public class P4GUIController {
 
             double[] moveValues = Values.CTRNN.getMove(sensorValues);
             double moveValue = moveValues[1] - moveValues[0];
-            int move;
-
-            if (moveValue > 0.8) {
-                move = 4;
-            } else if (moveValue > 0.6) {
-                move = 3;
-            } else if (moveValue > 0.4) {
-                move = 2;
-            } else if (moveValue > 0.2) {
-                move = 1;
-            } else if (moveValue >= -0.2) {
-                move = 0;
-            } else if (moveValue >= -0.4) {
-                move = -1;
-            } else if (moveValue >= -0.6) {
-                move = -2;
-            } else if (moveValue >= -0.8) {
-                move = -3;
-            } else if (moveValue >= -1) {
-                move = -4;
-            } else {
-                move = 0;
-            }
-
-            Values.BEERWORLD.playTimestep(move);
+            Values.BEERWORLD.playTimestep(BeerTrackerHypothesis.getMove(moveValue));
 
             beerWorldVBox.getChildren().remove(beerWorldGridPane);
             beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
