@@ -64,6 +64,8 @@ public class Values {
     public static final int FLATLAND_GENOTYPE_RANGE = 10; // 0 - range
     public static final int FLATLAND_ITERATIONS = 60;
     public static int FLATLAND_SLEEP_DURATION = 20;
+    public static final boolean FLATLAND_DIFFERENT_SCENARIOS = true;
+    public static final int FLATLAND_NUMBER_OF_DIFFERENT_SCENARIOS = 5;
 
     public static boolean FLATLAND_DYNAMIC = false;
 
@@ -74,6 +76,7 @@ public class Values {
 
 
     public static Board BOARD;
+    public static Board[] BOARDS;
     public static general.ANN ANN;
     public static project4.CTRNN CTRNN;
 
