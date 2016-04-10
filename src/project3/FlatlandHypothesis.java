@@ -29,7 +29,8 @@ public class FlatlandHypothesis extends AbstractHypothesis {
         this.phenotype = new double[this.genotype.length];
         for (int i = 0; i < this.phenotype.length; i++) {
             int tempGEnoVal = this.genotype[i];
-            double tempPhenotypeValue = 1.0 * tempGEnoVal / Values.FLATLAND_GENOTYPE_RANGE;
+//            double tempPhenotypeValue = 1.0 * tempGEnoVal / Values.FLATLAND_GENOTYPE_RANGE;
+            double tempPhenotypeValue = convertToNewRange(tempGEnoVal, Values.FLATLAND_GENOTYPE_RANGE, 0, 5.0, -5.0);
             this.phenotype[i] = tempPhenotypeValue;
         }
     }
@@ -99,13 +100,17 @@ public class FlatlandHypothesis extends AbstractHypothesis {
                 }
             }
 
-
-
             int flatlandMaxFoodCount = Values.FLATLAND_MAX_FOOD_COUNT;
             double fitness = (1.0 * Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / flatlandMaxFoodCount;
             double max = Math.max(0, fitness);
             this.setFitness(max);
         }
+    }
+
+    private double convertToNewRange(int oldValue, double oldMax, double oldMin, double newMax, double newMin) {
+        double oldRange = (oldMax - oldMin);
+        double newRange = (newMax - newMin);
+        return (((oldValue - oldMin) * newRange) / oldRange) + newMin;
     }
 
 
