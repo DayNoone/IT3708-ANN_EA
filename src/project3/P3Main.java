@@ -39,6 +39,11 @@ public class P3Main extends Application {
         p3GuiController = new P3GUIController();
 
         Values.BOARD = new Board();
+        Values.BOARDS = new Board[5];
+        for(int i = 0; i < Values.FLATLAND_NUMBER_OF_DIFFERENT_SCENARIOS; i++) {
+            Values.BOARDS[i] = new Board();
+        }
+
         Values.ANN = new ANN();
 
         Pane pane = p3GuiController.generateGUI(this);
@@ -116,9 +121,16 @@ public class P3Main extends Application {
 
                         if (Values.FLATLAND_DYNAMIC){
                             Values.BOARD = new Board();
-                        }
+                            Values.BOARDS = new Board[5];
+                            for(int i = 0; i < Values.FLATLAND_NUMBER_OF_DIFFERENT_SCENARIOS; i++) {
+                                Values.BOARDS[i] = new Board();
+                            }
 
+                        }
                         Values.BOARD.resetBoard();
+                        for(Board board: Values.BOARDS){
+                            board.resetBoard();
+                        }
                         Values.ANN.setNetworkWeights(bestHypothesis.getPhenotype());
 
                     }

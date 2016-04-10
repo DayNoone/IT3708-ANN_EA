@@ -57,6 +57,7 @@ public class ANN {
     }
 
     private int findHighestIndex(double[] outputLayer) {
+        boolean allEqual = true;
         int highestIndex = 0;
         double highestValue = outputLayer[0];
         for (int i = 1; i < outputLayer.length; i++) {
@@ -64,8 +65,11 @@ public class ANN {
                 highestIndex = i;
                 highestValue = outputLayer[i];
             }
+            if (outputLayer[i] != highestValue){
+                allEqual = false;
+            }
         }
-        return highestIndex;
+        return allEqual ? -1 : highestIndex;
     }
 
     private void updateLayerNodes(double[] currentLayer, double[] previousLayer){

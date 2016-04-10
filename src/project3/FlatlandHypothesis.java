@@ -44,30 +44,68 @@ public class FlatlandHypothesis extends AbstractHypothesis {
 
     @Override
     public void calculateFitness() {
-        Values.BOARD.resetBoard();
-        Values.ANN.setNetworkWeights(this.phenotype);
-
-        for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
-            ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
-
-            int highestIndex = Values.ANN.getMove(sensorValues);
-
-            if (highestIndex == 0){
-                Values.BOARD.moveForeward();
-            }else if (highestIndex == 1){
-                Values.BOARD.moveLeft();
+        if(Values.FLATLAND_DIFFERENT_SCENARIOS){
+            for(Board board: Values.BOARDS){
+                board.resetBoard();
             }
-            else if (highestIndex == 2){
-                Values.BOARD.moveRight();
+            Values.ANN.setNetworkWeights(this.phenotype);
+
+            double[] allFitness = new double[Values.FLATLAND_NUMBER_OF_DIFFERENT_SCENARIOS];
+
+            for (int boardIndex = 0; boardIndex < Values.FLATLAND_NUMBER_OF_DIFFERENT_SCENARIOS; boardIndex++){
+                for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
+                    ArrayList<BoardElement> sensorValues = Values.BOARDS[boardIndex].getSensors();
+
+                    int highestIndex = Values.ANN.getMove(sensorValues);
+
+                    if (highestIndex == 0){
+                        Values.BOARDS[boardIndex].moveForeward();
+                    }else if (highestIndex == 1){
+                        Values.BOARDS[boardIndex].moveLeft();
+                    }
+                    else if (highestIndex == 2){
+                        Values.BOARDS[boardIndex].moveRight();
+                    }
+                }
+                int flatlandMaxFoodCount = Values.FLATLAND_MAX_FOOD_COUNT;
+                allFitness[boardIndex] = (1.0 * Values.BOARDS[boardIndex].getFoodEaten() - Values.POISON_PENALTY * Values.BOARDS[boardIndex].getPoisonEaten()) / flatlandMaxFoodCount;
+
             }
+            double avgFitness = 0.0;
+            for(double fitness: allFitness){
+                avgFitness += fitness;
+            }
+            avgFitness = avgFitness / Values.FLATLAND_NUMBER_OF_DIFFERENT_SCENARIOS;
+
+            double max = Math.max(0, avgFitness);
+            this.setFitness(max);
+
+        } else {
+            Values.BOARD.resetBoard();
+            Values.ANN.setNetworkWeights(this.phenotype);
+
+            for (int i = 0; i < Values.FLATLAND_ITERATIONS; i++) {
+                ArrayList<BoardElement> sensorValues = Values.BOARD.getSensors();
+
+                int highestIndex = Values.ANN.getMove(sensorValues);
+
+                if (highestIndex == 0){
+                    Values.BOARD.moveForeward();
+                }else if (highestIndex == 1){
+                    Values.BOARD.moveLeft();
+                }
+                else if (highestIndex == 2){
+                    Values.BOARD.moveRight();
+                }
+            }
+
+
+
+            int flatlandMaxFoodCount = Values.FLATLAND_MAX_FOOD_COUNT;
+            double fitness = (1.0 * Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / flatlandMaxFoodCount;
+            double max = Math.max(0, fitness);
+            this.setFitness(max);
         }
-
-
-
-        int flatlandMaxFoodCount = Values.FLATLAND_MAX_FOOD_COUNT;
-        double fitness = (1.0 * Values.BOARD.getFoodEaten() - Values.POISON_PENALTY * Values.BOARD.getPoisonEaten()) / flatlandMaxFoodCount;
-        double max = Math.max(0, fitness);
-        this.setFitness(max);
     }
 
 
