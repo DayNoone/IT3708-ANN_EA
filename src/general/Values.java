@@ -106,4 +106,6 @@ public class Values {
     public static final int BEERWORLD_CAPTURE_PRIZE = 1;
     public static final int BEERWORLD_AVOID_PRIZE = 1;
 
+    public static boolean BEERWORLD_PULLED = false;
+
 }

@@ -72,31 +72,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
 
             double[] moveValues = Values.CTRNN.getMove(sensorValues);
             double moveValue = moveValues[1] - moveValues[0];
-            int move;
-
-            if (moveValue > 0.8){
-                move = 4;
-            } else if (moveValue > 0.6){
-                move = 3;
-            } else if (moveValue > 0.4){
-                move = 2;
-            } else if (moveValue > 0.2){
-                move = 1;
-            } else if (moveValue >= -0.2){
-                move = 0;
-            } else if (moveValue >= -0.4){
-                move = -1;
-            } else if (moveValue >= -0.6){
-                move = -2;
-            } else if (moveValue >= -0.8){
-                move = -3;
-            } else if (moveValue >= -1){
-                move = -4;
-            } else {
-                move = 0;
-            }
-
-            Values.BEERWORLD.playTimestep(move);
+            Values.BEERWORLD.playTimestep(getMove(moveValue));
         }
 
 
@@ -119,6 +95,36 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         }
         fitness = Math.max(0, fitness);
         this.setFitness(fitness);
+    }
+
+    public static int getMove(double moveValue) {
+        int move;
+        if (moveValue > 0.8){
+            move = 4;
+        } else if (moveValue > 0.6){
+            move = 3;
+        } else if (moveValue > 0.4){
+            move = 2;
+        } else if (moveValue > 0.2) {
+            move = 1;
+        } else if (moveValue > 0.15){
+            move = 0;
+        } else if (moveValue >= -0.15){
+            move = 5;
+        } else if (moveValue >= -0.2){
+            move = 0;
+        } else if (moveValue >= -0.4){
+            move = -1;
+        } else if (moveValue >= -0.6){
+            move = -2;
+        } else if (moveValue >= -0.8){
+            move = -3;
+        } else if (moveValue >= -1){
+            move = -4;
+        } else {
+            move = 0;
+        }
+        return move;
     }
 
 
