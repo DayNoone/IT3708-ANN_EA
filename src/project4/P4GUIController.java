@@ -25,11 +25,13 @@ public class P4GUIController {
 
     LineChart<Number, Number> populationFitnessLineChart = new LineChart<>(xAxis, yAxis);
     final NumberAxis xAxis2 = new NumberAxis();
-    final NumberAxis yAxis2 = new NumberAxis(0, 1, 0.1);
+    final NumberAxis yAxis2 = new NumberAxis();
+//    final NumberAxis yAxis2 = new NumberAxis(0, 1, 0.1);
 
     final LineChart<Number, Number> maxFitnessLineChart = new LineChart<>(xAxis2, yAxis2);
     final NumberAxis xAxis3 = new NumberAxis();
-    final NumberAxis yAxis3 = new NumberAxis(0, 1, 0.1);
+//    final NumberAxis yAxis3 = new NumberAxis(0, 1, 0.1);
+    final NumberAxis yAxis3 = new NumberAxis();
 
     final LineChart<Number, Number> avarageFitnessLineChart = new LineChart<>(xAxis3, yAxis3);
     final NumberAxis xAxis4 = new NumberAxis();

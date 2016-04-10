@@ -75,6 +75,9 @@ public class ANN {
             for (int previousLayerNodeCounter = 0; previousLayerNodeCounter < previousLayer.length; previousLayerNodeCounter++) {
                 totalValue += previousLayer[previousLayerNodeCounter] * networkWeights[weightCounter++];
             }
+            if (Values.ANN_USE_BIAS_NODES){
+                totalValue += 1.0 * networkWeights[weightCounter++];
+            }
 
             currentLayer[currentLayerNodeCounter] = activationFunction(totalValue);
         }
@@ -109,7 +112,7 @@ public class ANN {
         return numberOfWeights;
     }
 
-    public void setNumberOfWeights(int numberOfWeights) {
+    private void setNumberOfWeights(int numberOfWeights) {
         this.numberOfWeights = numberOfWeights;
     }
 
@@ -121,6 +124,16 @@ public class ANN {
             numWeights += Values.ANN_NODES_IN_HIDDEN_LAYERS[i-1] * Values.ANN_NODES_IN_HIDDEN_LAYERS[i];
         }
         numWeights += Values.ANN_NODES_IN_HIDDEN_LAYERS[Values.ANN_NODES_IN_HIDDEN_LAYERS.length - 1] * Values.ANN_OUTPUT_NODES;
+
+        if (Values.ANN_USE_BIAS_NODES){
+            int numBiasWeigts = 0;
+            for (int i = 0; i < Values.ANN_NODES_IN_HIDDEN_LAYERS.length; i++) {
+                numBiasWeigts += Values.ANN_NODES_IN_HIDDEN_LAYERS[i];
+            }
+            numBiasWeigts+= Values.ANN_OUTPUT_NODES;
+            numWeights += numBiasWeigts;
+        }
+
         setNumberOfWeights(numWeights);
     }
 }

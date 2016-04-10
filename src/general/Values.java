@@ -31,7 +31,7 @@ public class Values {
     public static int POPULATION_SIZE = 60;
     public static int MAX_ADULT_SIZE = POPULATION_SIZE / 2;
     public static int MAX_PARENT_SIZE = POPULATION_SIZE / 2;
-    public static int NUMBER_OF_ELITES = (int) (POPULATION_SIZE * 0.1);
+    public static int NUMBER_OF_ELITES = (int) (POPULATION_SIZE * 0.05);
 
     public static EAdultSelection ADULT_SELECTION = EAdultSelection.GENERATION_MIXING;
     public static EParentSelection PARENT_SELECTION = EParentSelection.SIGMA_SCALING;
@@ -53,6 +53,8 @@ public class Values {
     public static int ANN_OUTPUT_NODES = 3;
 
     public static int[] ANN_NODES_IN_HIDDEN_LAYERS = new int[]{2};
+
+    public static boolean ANN_USE_BIAS_NODES = true;
 
     /**
 
@@ -95,10 +97,10 @@ public class Values {
     public static final int BEERWORLD_BOARD_HEIGHT = 15;
     public static final int BEERWORLD_BOARD_WIDTH = 30;
 
-    public static int BEERWORLD_FAILEDAVOID_PENALTY = 4;
+    public static int BEERWORLD_FAILEDAVOID_PENALTY = 2;
     public static int BEERWORLD_FAILEDCAPTURE_PENALTY = 2;
 
-    public static final int BEERWORLD_CAPTURE_PRIZE = 2;
-    public static final int BEERWORLD_AVOID_PRIZE = 2;
+    public static final int BEERWORLD_CAPTURE_PRIZE = 1;
+    public static final int BEERWORLD_AVOID_PRIZE = 1;
 
 }

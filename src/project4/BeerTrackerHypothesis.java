@@ -30,7 +30,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         int noTime = Values.CTRNN.getNumberOfTimeConstantValues();
 
         this.phenotype = new double[this.genotype.length];
-        double oldMax = 10.0;
+        double oldMax = Values.BEERWORLD_GENOTYPE_RANGE;
         double oldMin = 0.0;
         for (int i = 0; i < this.phenotype.length; i++) {
             if(i < noWeights){
