@@ -79,7 +79,6 @@ public class P4Main extends Application {
         solutionFound = false;
         startTime = System.currentTimeMillis();
         numberOfMoves = 600;
-
         mainLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {

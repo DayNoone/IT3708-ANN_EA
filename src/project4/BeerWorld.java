@@ -5,6 +5,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -26,9 +27,6 @@ public class BeerWorld {
     private int pulledAvoid;
     private int pulledFailedCapture;
     private int pulledFailedAvoid;
-
-
-
 
 
     private static Random random = new Random();
@@ -56,15 +54,18 @@ public class BeerWorld {
 
     private void spawnObject(){
         if (fallenObjects >= spawnedObjectHistory.size()){
-            objectXPos = random.nextInt(Values.BEERWORLD_BOARD_WIDTH);
-            objectYPos = 0;
             objectSize = random.nextInt(6) + 1;
+            objectXPos = random.nextInt(Values.BEERWORLD_BOARD_WIDTH);
+            if (objectXPos + objectSize > Values.BEERWORLD_BOARD_WIDTH){
+                objectXPos -= objectSize;
+            }
+            objectYPos = 0;
             spawnedObjectHistory.add(new SpawnedObject(objectXPos, objectYPos, objectSize));
         }else{
             SpawnedObject so = spawnedObjectHistory.get(fallenObjects);
+            objectSize = so.getObjectSize();
             objectXPos = so.getObjectXPos();
             objectYPos = so.getObjectYPos();
-            objectSize = so.getObjectSize();
         }
         fallenObjects++;
     }
@@ -135,8 +136,12 @@ public class BeerWorld {
     }
 
     public int[] getSensors(){
+        Integer[] trackerXPosArray = getTrackerXPosArray();
+
         int[] sensors = new int[Values.CTRNN_INPUT_NODES + (Values.BEERWORLD_NO_WRAP ? 2 : 0)];
-        for (int x = trackerXPos; x < trackerXPos + 5; x++) {
+
+        for (int i = 0; i < trackerXPosArray.length; i++) {
+            int x = trackerXPosArray[i];
             boolean overlap = false;
             for (int y = 0; y < Values.BEERWORLD_BOARD_HEIGHT; y++) {
                 if (x >= objectXPos && x < objectXPos + objectSize) {
@@ -144,7 +149,7 @@ public class BeerWorld {
                     break;
                 }
             }
-            sensors[x-trackerXPos] = (overlap ? 1 : 0);
+            sensors[i] = (overlap ? 1 : 0);
         }
         if(Values.BEERWORLD_NO_WRAP){
             sensors[Values.CTRNN_INPUT_NODES] = (trackerXPos == 0) ? 1 : 0;
@@ -155,34 +160,61 @@ public class BeerWorld {
 
     public GridPane generateBeerWorldGridPane() {
         GridPane gridPane = new GridPane();
+        int[] sensors = getSensors();
+
+        Integer[] trackerXPosArray = getTrackerXPosArray();
 
         for(int y = 0; y < Values.BEERWORLD_BOARD_HEIGHT; y++) {
             for (int x = 0; x < Values.BEERWORLD_BOARD_WIDTH; x++) {
                 HBox tile = new HBox();
                 tile.setPrefHeight(20);
                 tile.setPrefWidth(20);
-                String color;
-                if (y == Values.BEERWORLD_BOARD_HEIGHT - 1 && x >= trackerXPos && x < (trackerXPos + 5) % Values.BEERWORLD_BOARD_WIDTH) {
-                    if (Values.BEERWORLD_PULLED_OBJECT){
-                        color = "violet";
-                    } else {
-                        color = "black";
+                String color = "white";
+
+                if (y == Values.BEERWORLD_BOARD_HEIGHT - 1 ){
+                    if (Arrays.asList(trackerXPosArray).contains(x)) {
+                        if (Values.BEERWORLD_PULLED_OBJECT){
+                            color = "violet";
+                        } else {
+                            color = "black";
+                        }
                     }
-                } else if (y == objectYPos && x >= objectXPos && x < objectXPos + objectSize) {
+                    for (int i = 0; i < sensors.length; i++) {
+                        if (x == trackerXPosArray[i] && sensors[i] == 1){
+                            color = "yellow";
+                        }
+                    }
+                }
+
+                else if (y == objectYPos && x >= objectXPos && x < objectXPos + objectSize) {
                     if(objectSize > 4){
                         color = "red";
                     } else {
                         color = "green";
                     }
-                } else {
+                } 
+                else {
                     color = "white";
                 }
+
+
+
                 tile.setStyle("-fx-background-color: "+color+";");
                 gridPane.add(tile, x, y);
+
             }
         }
         gridPane.setGridLinesVisible(true);
         return gridPane;
+    }
+
+    private Integer[] getTrackerXPosArray() {
+        Integer[] trackerXPosArray = new Integer[5];
+        for (int i = 0; i < 5; i++) {
+            trackerXPosArray[i] = (trackerXPos + i) % Values.BEERWORLD_BOARD_WIDTH;
+        }
+        return trackerXPosArray;
+
     }
 
     public int getFallenObjects() {
