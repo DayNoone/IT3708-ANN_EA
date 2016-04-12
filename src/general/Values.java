@@ -114,6 +114,15 @@ public class Values {
     public static int BEERWORLD_PULLED_FAILEDCAPTURE = 8;
     public static int BEERWORLD_PULLED_FAILEDAVOID = 20;
 
+    public static int BEERWORLD_WRAP_FAILEDAVOID_PENALTY = 3;
+    public static int BEERWORLD_WRAP_FAILEDCAPTURE_PENALTY = 3;
+    public static int BEERWORLD_WRAP_CAPTURE_PRIZE = 4;
+    public static int BEERWORLD_WRAP_AVOID_PRIZE = 3;
+    public static int BEERWORLD_WRAP_PULLED_CAPTURE = 8;
+    public static int BEERWORLD_WRAP_PULLED_AVOID = 3;
+    public static int BEERWORLD_WRAP_PULLED_FAILEDCAPTURE = 8;
+    public static int BEERWORLD_WRAP_PULLED_FAILEDAVOID = 20;
+
     public static int BEERWORLD_PULL_FAILEDAVOID_PENALTY = 3;
     public static int BEERWORLD_PULL_FAILEDCAPTURE_PENALTY = 3;
     public static final int BEERWORLD_PULL_CAPTURE_PRIZE = 4;

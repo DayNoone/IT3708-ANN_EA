@@ -33,25 +33,7 @@ public class P4Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        if(Values.BEERWORLD_PULL){
-            Values.BEERWORLD_FAILEDAVOID_PENALTY = Values.BEERWORLD_PULL_FAILEDAVOID_PENALTY;
-            Values.BEERWORLD_FAILEDCAPTURE_PENALTY = Values.BEERWORLD_PULL_FAILEDCAPTURE_PENALTY;
-            Values.BEERWORLD_CAPTURE_PRIZE = Values.BEERWORLD_PULL_CAPTURE_PRIZE;
-            Values.BEERWORLD_AVOID_PRIZE = Values.BEERWORLD_PULL_AVOID_PRIZE;
-            Values.BEERWORLD_PULLED_CAPTURE = Values.BEERWORLD_PULL_PULLED_CAPTURE;
-            Values.BEERWORLD_PULLED_AVOID = Values.BEERWORLD_PULL_PULLED_AVOID;
-            Values.BEERWORLD_PULLED_FAILEDCAPTURE = Values.BEERWORLD_PULL_PULLED_FAILEDCAPTURE;
-            Values.BEERWORLD_PULLED_FAILEDAVOID = Values.BEERWORLD_PULL_PULLED_FAILEDAVOID;
-        } else if (Values.BEERWORLD_NO_WRAP){
-            Values.BEERWORLD_FAILEDAVOID_PENALTY = Values.BEERWORLD_NOWRAP_FAILEDAVOID_PENALTY;
-            Values.BEERWORLD_FAILEDCAPTURE_PENALTY = Values.BEERWORLD_NOWRAP_FAILEDCAPTURE_PENALTY;
-            Values.BEERWORLD_CAPTURE_PRIZE = Values.BEERWORLD_NOWRAP_CAPTURE_PRIZE;
-            Values.BEERWORLD_AVOID_PRIZE = Values.BEERWORLD_NOWRAP_AVOID_PRIZE;
-            Values.BEERWORLD_PULLED_CAPTURE = Values.BEERWORLD_NOWRAP_PULLED_CAPTURE;
-            Values.BEERWORLD_PULLED_AVOID = Values.BEERWORLD_NOWRAP_PULLED_AVOID;
-            Values.BEERWORLD_PULLED_FAILEDCAPTURE = Values.BEERWORLD_NOWRAP_PULLED_FAILEDCAPTURE;
-            Values.BEERWORLD_PULLED_FAILEDAVOID = Values.BEERWORLD_NOWRAP_PULLED_FAILEDAVOID;
-        }
+
 
         Values.ANN_OUTPUT_NODES = 2;
         Values.SELECTED_PROBLEM = EProblemSelection.TRACKER;
@@ -86,13 +68,17 @@ public class P4Main extends Application {
 
                     if (shouldRestart){
                         startTime = System.currentTimeMillis();
-                        eaController = new EAController();
+                        resetStaticValues();
+
                         generation = 0;
                         solutionFound = false;
-
                         p4GuiController.clearGUI();
-
                         shouldRestart = false;
+
+                        eaController = new EAController();
+                        Values.CTRNN = new CTRNN();
+                        Values.BEERWORLD = new BeerWorld();
+                        p4GuiController = new P4GUIController();
                     }
 
                     if (numberOfMoves < Values.BEERWORLD_ITERATIONS && generation > 0 && Values.DRAW_MOVEMENT){
@@ -142,6 +128,49 @@ public class P4Main extends Application {
             }
         };
         mainLoop.start();
+    }
+
+    private void resetStaticValues() {
+        if(Values.BEERWORLD_PULL){
+
+            Values.BEERWORLD_FAILEDAVOID_PENALTY = Values.BEERWORLD_PULL_FAILEDAVOID_PENALTY;
+            Values.BEERWORLD_FAILEDCAPTURE_PENALTY = Values.BEERWORLD_PULL_FAILEDCAPTURE_PENALTY;
+            Values.BEERWORLD_CAPTURE_PRIZE = Values.BEERWORLD_PULL_CAPTURE_PRIZE;
+            Values.BEERWORLD_AVOID_PRIZE = Values.BEERWORLD_PULL_AVOID_PRIZE;
+            Values.BEERWORLD_PULLED_CAPTURE = Values.BEERWORLD_PULL_PULLED_CAPTURE;
+            Values.BEERWORLD_PULLED_AVOID = Values.BEERWORLD_PULL_PULLED_AVOID;
+            Values.BEERWORLD_PULLED_FAILEDCAPTURE = Values.BEERWORLD_PULL_PULLED_FAILEDCAPTURE;
+            Values.BEERWORLD_PULLED_FAILEDAVOID = Values.BEERWORLD_PULL_PULLED_FAILEDAVOID;
+
+            Values.CTRNN_INPUT_NODES = 5;
+
+        } else if (Values.BEERWORLD_NO_WRAP){
+
+            Values.BEERWORLD_FAILEDAVOID_PENALTY = Values.BEERWORLD_NOWRAP_FAILEDAVOID_PENALTY;
+            Values.BEERWORLD_FAILEDCAPTURE_PENALTY = Values.BEERWORLD_NOWRAP_FAILEDCAPTURE_PENALTY;
+            Values.BEERWORLD_CAPTURE_PRIZE = Values.BEERWORLD_NOWRAP_CAPTURE_PRIZE;
+            Values.BEERWORLD_AVOID_PRIZE = Values.BEERWORLD_NOWRAP_AVOID_PRIZE;
+            Values.BEERWORLD_PULLED_CAPTURE = Values.BEERWORLD_NOWRAP_PULLED_CAPTURE;
+            Values.BEERWORLD_PULLED_AVOID = Values.BEERWORLD_NOWRAP_PULLED_AVOID;
+            Values.BEERWORLD_PULLED_FAILEDCAPTURE = Values.BEERWORLD_NOWRAP_PULLED_FAILEDCAPTURE;
+            Values.BEERWORLD_PULLED_FAILEDAVOID = Values.BEERWORLD_NOWRAP_PULLED_FAILEDAVOID;
+
+            Values.CTRNN_INPUT_NODES = 7;
+
+        }else{
+
+            Values.BEERWORLD_FAILEDAVOID_PENALTY = Values.BEERWORLD_WRAP_FAILEDAVOID_PENALTY;
+            Values.BEERWORLD_FAILEDCAPTURE_PENALTY = Values.BEERWORLD_WRAP_FAILEDCAPTURE_PENALTY;
+            Values.BEERWORLD_CAPTURE_PRIZE = Values.BEERWORLD_WRAP_CAPTURE_PRIZE;
+            Values.BEERWORLD_AVOID_PRIZE = Values.BEERWORLD_WRAP_AVOID_PRIZE;
+            Values.BEERWORLD_PULLED_CAPTURE = Values.BEERWORLD_WRAP_PULLED_CAPTURE;
+            Values.BEERWORLD_PULLED_AVOID = Values.BEERWORLD_WRAP_PULLED_AVOID;
+            Values.BEERWORLD_PULLED_FAILEDCAPTURE = Values.BEERWORLD_WRAP_PULLED_FAILEDCAPTURE;
+            Values.BEERWORLD_PULLED_FAILEDAVOID = Values.BEERWORLD_WRAP_PULLED_FAILEDAVOID;
+
+            Values.CTRNN_INPUT_NODES = 5;
+
+        }
     }
 
     private void updateGUI(long now, Stage primaryStage) {
