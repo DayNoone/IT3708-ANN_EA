@@ -132,10 +132,10 @@ public class Values {
     public static final int BEERWORLD_PULL_PULLED_FAILEDCAPTURE = 8;
     public static final int BEERWORLD_PULL_PULLED_FAILEDAVOID = 20;
 
-    public static int BEERWORLD_NOWRAP_FAILEDAVOID_PENALTY = 3;
-    public static int BEERWORLD_NOWRAP_FAILEDCAPTURE_PENALTY = 3;
+    public static int BEERWORLD_NOWRAP_FAILEDAVOID_PENALTY = 2;
+    public static int BEERWORLD_NOWRAP_FAILEDCAPTURE_PENALTY = 1;
     public static final int BEERWORLD_NOWRAP_CAPTURE_PRIZE = 4;
-    public static final int BEERWORLD_NOWRAP_AVOID_PRIZE = 10;
+    public static final int BEERWORLD_NOWRAP_AVOID_PRIZE = 6;
     public static final int BEERWORLD_NOWRAP_PULLED_CAPTURE = 8;
     public static final int BEERWORLD_NOWRAP_PULLED_AVOID = 3;
     public static final int BEERWORLD_NOWRAP_PULLED_FAILEDCAPTURE = 8;
