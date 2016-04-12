@@ -337,9 +337,9 @@ public class P4GUIController {
                 " \tPhenotype:  " + phenoTypeString +
                 "\n");/**/
 
-        System.out.println("GENERATION " + generation);
-        Values.CTRNN.printWeights();
-        System.out.println("");
+//        System.out.println("GENERATION " + generation);
+//        Values.CTRNN.printWeights();
+//        System.out.println("");
     }
 
     void appendTextToConsole(String s) {
