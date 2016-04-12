@@ -46,7 +46,7 @@ public class CTRNN {
         //Init topology
 
         //Initiates input layer with nodes
-        for (int i = 0; i < Values.ANN_INPUT_NODES; i++) {
+        for (int i = 0; i < Values.CTRNN_INPUT_NODES; i++) {
             inputLayerNodes.add(new Node(ENodeType.INPUT));
         }
 

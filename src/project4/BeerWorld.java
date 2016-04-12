@@ -6,7 +6,6 @@ import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Random;
 
 /**
@@ -18,7 +17,17 @@ public class BeerWorld {
     private int objectXPos, objectYPos, objectSize;
     private int trackerXPos;
 
-    private int fallenObjects, captured, avoided, failedCapture, failedAvoid;
+    private int fallenObjects;
+    private int captured;
+    private int avoided;
+    private int failedCapture;
+    private int failedAvoid;
+    private int pulledCapture;
+    private int pulledAvoid;
+    private int pulledFailedCapture;
+    private int pulledFailedAvoid;
+
+
 
 
 
@@ -39,13 +48,17 @@ public class BeerWorld {
         failedCapture = 0;
         failedAvoid = 0;
         trackerXPos = initialTrackerPos;
+        pulledCapture = 0;
+        pulledAvoid = 0;
+        pulledFailedCapture = 0;
+        pulledFailedAvoid = 0;
     }
 
     private void spawnObject(){
         if (fallenObjects >= spawnedObjectHistory.size()){
             objectXPos = random.nextInt(Values.BEERWORLD_BOARD_WIDTH);
             objectYPos = 0;
-            objectSize = random.nextInt(5) + 1;
+            objectSize = random.nextInt(6) + 1;
             spawnedObjectHistory.add(new SpawnedObject(objectXPos, objectYPos, objectSize));
         }else{
             SpawnedObject so = spawnedObjectHistory.get(fallenObjects);
@@ -57,7 +70,7 @@ public class BeerWorld {
     }
 
     public void playTimestep(int trackerMove) {
-        Values.BEERWORLD_PULLED = false;
+        Values.BEERWORLD_PULLED_OBJECT = false;
         // Tracker move is -1 for one move left and 2 for two moves right
         if (++objectYPos == Values.BEERWORLD_BOARD_HEIGHT-1) {
             checkCollision();
@@ -65,9 +78,9 @@ public class BeerWorld {
         }
 
         if(trackerMove == 5) {
+            Values.BEERWORLD_PULLED_OBJECT = true;
             checkCollision();
             spawnObject();
-            Values.BEERWORLD_PULLED = true;
         } else {
             moveTracker(trackerMove);
         }
@@ -76,25 +89,53 @@ public class BeerWorld {
     private void checkCollision() {
         if (objectSize < 5) {
             if (objectXPos >= trackerXPos  && trackerXPos + 5 >= objectXPos + objectSize) {
-                captured++;
+                if(Values.BEERWORLD_PULLED_OBJECT){
+                    pulledCapture++;
+                } else {
+                    captured++;
+                }
             } else {
-                failedCapture++;
+                if(Values.BEERWORLD_PULLED_OBJECT){
+                    pulledFailedCapture++;
+                } else {
+                    failedCapture++;
+                }
             }
         } else {
             if (trackerXPos + 4 < objectXPos || trackerXPos >= objectXPos + objectSize){
-                avoided++;
+                if(Values.BEERWORLD_PULLED_OBJECT){
+                    pulledAvoid++;
+                } else {
+                    avoided++;
+                }
             } else {
-                failedAvoid++;
+                if(Values.BEERWORLD_PULLED_OBJECT){
+                    pulledFailedAvoid++;
+                } else {
+                    failedAvoid++;
+                }
             }
         }
     }
 
     private void moveTracker(int trackerMove) {
-        trackerXPos = (trackerXPos + trackerMove + Values.BEERWORLD_BOARD_WIDTH) % Values.BEERWORLD_BOARD_WIDTH;
+        if(Values.BEERWORLD_NO_WRAP){
+            int newTrackerXPos = (trackerXPos + trackerMove);
+            while(newTrackerXPos > Values.BEERWORLD_BOARD_WIDTH - 5){
+                newTrackerXPos--;
+            }
+            while(newTrackerXPos < 0){
+                newTrackerXPos++;
+            }
+            trackerXPos = newTrackerXPos;
+
+        } else {
+            trackerXPos = (trackerXPos + trackerMove + Values.BEERWORLD_BOARD_WIDTH) % Values.BEERWORLD_BOARD_WIDTH;
+        }
     }
 
     public int[] getSensors(){
-        int[] sensors = new int[Values.ANN_INPUT_NODES];
+        int[] sensors = new int[Values.CTRNN_INPUT_NODES + (Values.BEERWORLD_NO_WRAP ? 2 : 0)];
         for (int x = trackerXPos; x < trackerXPos + 5; x++) {
             boolean overlap = false;
             for (int y = 0; y < Values.BEERWORLD_BOARD_HEIGHT; y++) {
@@ -104,6 +145,10 @@ public class BeerWorld {
                 }
             }
             sensors[x-trackerXPos] = (overlap ? 1 : 0);
+        }
+        if(Values.BEERWORLD_NO_WRAP){
+            sensors[Values.CTRNN_INPUT_NODES] = (trackerXPos == 0) ? 1 : 0;
+            sensors[Values.CTRNN_INPUT_NODES + 1] = (trackerXPos == Values.BEERWORLD_BOARD_WIDTH - 5) ? 1 : 0;
         }
         return sensors;
     }
@@ -117,8 +162,8 @@ public class BeerWorld {
                 tile.setPrefHeight(20);
                 tile.setPrefWidth(20);
                 String color;
-                if (y == Values.BEERWORLD_BOARD_HEIGHT - 1 && x >= trackerXPos && x < trackerXPos + 5) {
-                    if (Values.BEERWORLD_PULLED){
+                if (y == Values.BEERWORLD_BOARD_HEIGHT - 1 && x >= trackerXPos && x < (trackerXPos + 5) % Values.BEERWORLD_BOARD_WIDTH) {
+                    if (Values.BEERWORLD_PULLED_OBJECT){
                         color = "violet";
                     } else {
                         color = "black";
@@ -158,5 +203,21 @@ public class BeerWorld {
 
     public int getFailedAvoid() {
         return failedAvoid;
+    }
+
+    public int getPulledCapture() {
+        return pulledCapture;
+    }
+
+    public int getPulledAvoid() {
+        return pulledAvoid;
+    }
+
+    public int getPulledFailedCapture() {
+        return pulledFailedCapture;
+    }
+
+    public int getPulledFailedAvoid() {
+        return pulledFailedAvoid;
     }
 }

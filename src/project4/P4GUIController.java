@@ -4,6 +4,7 @@ import enums.EAdultSelection;
 import enums.EParentSelection;
 import general.AbstractHypothesis;
 import general.Values;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -420,16 +421,48 @@ public class P4GUIController {
 
     private void updateBoardValues(int numberOfMoves) {
         iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
-        avoidedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided()));
-        capturedLabel.setText(String.valueOf(Values.BEERWORLD.getCaptured()));
-        failedAvoidedLabel.setText(String.valueOf(Values.BEERWORLD.getFailedAvoid()));
-        failedCaptureLabel.setText(String.valueOf(Values.BEERWORLD.getFailedCapture()));
+        avoidedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided() + Values.BEERWORLD.getPulledAvoid()));
+        capturedLabel.setText(String.valueOf(Values.BEERWORLD.getCaptured() + Values.BEERWORLD.getPulledCapture()));
+        failedAvoidedLabel.setText(String.valueOf(Values.BEERWORLD.getFailedAvoid() + Values.BEERWORLD.getPulledFailedAvoid()));
+        failedCaptureLabel.setText(String.valueOf(Values.BEERWORLD.getFailedCapture() + Values.BEERWORLD.getPulledFailedCapture()));
     }
 
     private VBox getCenterGUI(int numberOfMoves) {
         beerWorldVBox = new VBox();
         beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
         beerWorldVBox.getChildren().add(beerWorldGridPane);
+
+        HBox scenarioBox = new HBox();
+
+        ToggleGroup group = new ToggleGroup();
+        RadioButton button1 = new RadioButton("Original");
+        button1.setToggleGroup(group);
+        button1.setSelected(true);
+        RadioButton button2 = new RadioButton("Pull");
+        button2.setToggleGroup(group);
+        RadioButton button3 = new RadioButton("No wrap");
+        button3.setToggleGroup(group);
+        scenarioBox.getChildren().addAll(button1, button2, button3);
+
+        group.selectedToggleProperty().addListener(
+            (ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) -> {
+                if (group.getSelectedToggle() == button1){
+                    Values.CTRNN = new CTRNN();
+                    Values.BEERWORLD_PULL = false;
+                    Values.BEERWORLD_NO_WRAP = false;
+                } else if (group.getSelectedToggle() == button2){
+                    Values.CTRNN = new CTRNN();
+                    Values.BEERWORLD_PULL = true;
+                    Values.BEERWORLD_NO_WRAP = false;
+                } else if (group.getSelectedToggle() == button3){
+                    Values.CTRNN = new CTRNN();
+                    Values.BEERWORLD_PULL = false;
+                    Values.BEERWORLD_NO_WRAP = true;
+                }
+            }
+        );
+
+        beerWorldVBox.getChildren().add(scenarioBox);
 
         CheckBox drawMovementCheckBox = new CheckBox("Draw best hyp");
         drawMovementCheckBox.setOnAction(event -> {
