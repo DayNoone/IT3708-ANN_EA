@@ -77,8 +77,6 @@ public class P4Main extends Application {
 
                         eaController = new EAController();
                         Values.CTRNN = new CTRNN();
-                        Values.BEERWORLD = new BeerWorld();
-                        p4GuiController = new P4GUIController();
                     }
 
                     if (numberOfMoves < Values.BEERWORLD_ITERATIONS && generation > 0 && Values.DRAW_MOVEMENT){
