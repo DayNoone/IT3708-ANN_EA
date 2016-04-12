@@ -179,7 +179,7 @@ public class BeerWorld {
                             color = "black";
                         }
                     }
-                    for (int i = 0; i < sensors.length; i++) {
+                    for (int i = 0; i < trackerXPosArray.length; i++) {
                         if (x == trackerXPosArray[i] && sensors[i] == 1){
                             color = "yellow";
                         }
@@ -197,11 +197,8 @@ public class BeerWorld {
                     color = "white";
                 }
 
-
-
                 tile.setStyle("-fx-background-color: "+color+";");
                 gridPane.add(tile, x, y);
-
             }
         }
         gridPane.setGridLinesVisible(true);
