@@ -5,6 +5,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 /**
@@ -12,15 +14,21 @@ import java.util.Random;
  */
 public class BeerWorld {
 
+    private final int initialTrackerPos;
     private int objectXPos, objectYPos, objectSize;
     private int trackerXPos;
 
     private int fallenObjects, captured, avoided, failedCapture, failedAvoid;
 
+
+
     private static Random random = new Random();
+    private List<SpawnedObject> spawnedObjectHistory;
 
     public BeerWorld(){
-        trackerXPos = (Values.BEERWORLD_BOARD_WIDTH / 2) - 3;
+        initialTrackerPos = (Values.BEERWORLD_BOARD_WIDTH / 2) - 3;
+        trackerXPos = initialTrackerPos;
+        spawnedObjectHistory = new ArrayList<>();
         spawnObject();
     }
 
@@ -30,12 +38,21 @@ public class BeerWorld {
         avoided = 0;
         failedCapture = 0;
         failedAvoid = 0;
+        trackerXPos = initialTrackerPos;
     }
 
     private void spawnObject(){
-        objectXPos = random.nextInt(Values.BEERWORLD_BOARD_WIDTH);
-        objectYPos = 0;
-        objectSize = random.nextInt(5) + 1;
+        if (fallenObjects >= spawnedObjectHistory.size()){
+            objectXPos = random.nextInt(Values.BEERWORLD_BOARD_WIDTH);
+            objectYPos = 0;
+            objectSize = random.nextInt(5) + 1;
+            spawnedObjectHistory.add(new SpawnedObject(objectXPos, objectYPos, objectSize));
+        }else{
+            SpawnedObject so = spawnedObjectHistory.get(fallenObjects);
+            objectXPos = so.getObjectXPos();
+            objectYPos = so.getObjectYPos();
+            objectSize = so.getObjectSize();
+        }
         fallenObjects++;
     }
 

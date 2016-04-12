@@ -47,11 +47,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         }
     }
 
-    private double convertToNewRange(int oldValue, double oldMax, double oldMin, double newMax, double newMin) {
-        double oldRange = (oldMax - oldMin);
-        double newRange = (newMax - newMin);
-        return (((oldValue - oldMin) * newRange) / oldRange) + newMin;
-    }
+
 
     @Override
     public void initiateRandomGenotype() {
@@ -110,7 +106,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         } else if (moveValue > 0.15){
             move = 0;
         } else if (moveValue >= -0.15){
-            move = 5;
+            move = 0;
         } else if (moveValue >= -0.2){
             move = 0;
         } else if (moveValue >= -0.4){
@@ -126,7 +122,6 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         }
         return move;
     }
-
 
     @Override
     public AbstractHypothesis instantiateNewChileWithGenoType(int[] genotype) {
@@ -151,5 +146,11 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
                 }
             }
         }
+    }
+
+    private double convertToNewRange(int oldValue, double oldMax, double oldMin, double newMax, double newMin) {
+        double oldRange = (oldMax - oldMin);
+        double newRange = (newMax - newMin);
+        return (((oldValue - oldMin) * newRange) / oldRange) + newMin;
     }
 }

@@ -28,7 +28,7 @@ public class Values {
     public static double MUTATION_PROBABILITY = 0.01;
 
 
-    public static int POPULATION_SIZE = 500;
+    public static int POPULATION_SIZE = 300;
     public static int MAX_ADULT_SIZE = POPULATION_SIZE / 2;
     public static int MAX_PARENT_SIZE = POPULATION_SIZE / 2;
     public static int NUMBER_OF_ELITES = (int) (POPULATION_SIZE * 0.05);
@@ -100,11 +100,11 @@ public class Values {
     public static final int BEERWORLD_BOARD_HEIGHT = 15;
     public static final int BEERWORLD_BOARD_WIDTH = 30;
 
-    public static int BEERWORLD_FAILEDAVOID_PENALTY = 2;
-    public static int BEERWORLD_FAILEDCAPTURE_PENALTY = 2;
+    public static int BEERWORLD_FAILEDAVOID_PENALTY = 0;
+    public static int BEERWORLD_FAILEDCAPTURE_PENALTY = 0;
 
     public static final int BEERWORLD_CAPTURE_PRIZE = 1;
-    public static final int BEERWORLD_AVOID_PRIZE = 1;
+    public static final int BEERWORLD_AVOID_PRIZE = 2;
 
     public static boolean BEERWORLD_PULLED = false;
 
