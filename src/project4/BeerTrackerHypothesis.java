@@ -89,7 +89,7 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         else {
             fitness = 0;
         }
-        fitness = Math.max(0, fitness);
+        fitness = Math.max(0, fitness+10000);
         this.setFitness(fitness);
     }
 

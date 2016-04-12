@@ -51,16 +51,16 @@ public class CTRNN {
         }
 
         //Initiates hidden layers with nodes
-        for (int i = 0; i < Values.ANN_NODES_IN_HIDDEN_LAYERS.length; i++) {
+        for (int i = 0; i < Values.CTRNN_NODES_IN_HIDDEN_LAYERS.length; i++) {
             List<Node> tempHiddenLayerNodes = new ArrayList<>();
-            for (int j = 0; j < Values.ANN_NODES_IN_HIDDEN_LAYERS[i]; j++) {
-                tempHiddenLayerNodes.add(new Node(ENodeType.HIDDEN));
+            for (int j = 0; j < Values.CTRNN_NODES_IN_HIDDEN_LAYERS[i]; j++) {
+                tempHiddenLayerNodes.add(new Node(ENodeType.HIDDEN, i));
             }
             hiddenLayers.add(tempHiddenLayerNodes);
         }
 
         //Initiates out layer with nodes
-        for (int i = 0; i < Values.ANN_OUTPUT_NODES; i++) {
+        for (int i = 0; i < Values.CTRNN_OUTPUT_NODES; i++) {
             outputLayerNodes.add(new Node(ENodeType.OUTPUT));
         }
 
@@ -73,7 +73,7 @@ public class CTRNN {
             }
         }
 
-        //second hidden - n hidden
+        //first hidden - n hidden
         for (int layerCounter = 0; layerCounter < hiddenLayers.size(); layerCounter++) {
 
             List<Node> topHiddenLayer = hiddenLayers.get(layerCounter);
@@ -290,6 +290,15 @@ public class CTRNN {
         for (int i = 0; i < inputLayerNodes.size(); i++) {
             Node node = inputLayerNodes.get(i);
             node.setOutputValue(inputValues[i]);
+        }
+    }
+
+    public void printWeights(){
+        for (Map.Entry<Pair<Node, Node>, Double> entry : networkWeights.entrySet()) {
+            Pair<Node, Node> nodePairKey = entry.getKey();
+            double weight = entry.getValue();
+
+            System.out.println(nodePairKey.getElement1() + " " + weight + " " + nodePairKey.getElement2());
         }
     }
 

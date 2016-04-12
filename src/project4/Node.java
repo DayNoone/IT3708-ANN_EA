@@ -14,14 +14,40 @@ public class Node {
     private double oldOutputValue;
     private double sValue;
     private double yValue;
+    private int positionInLayer;
+
+    private static int inputNodeCount = 0;
+    private static int hiddenNodeCount = 0;
+    private static int outputNodeCount = 0;
+
+    private static int hiddenLayerCount = 0;
 
     public Node(ENodeType type) {
         this.type = type;
+        switch (this.type){
+            case HIDDEN:
+                this.positionInLayer = hiddenNodeCount++;
+                break;
+            case INPUT:
+                this.positionInLayer = inputNodeCount++;
+                break;
+            case OUTPUT:
+                this.positionInLayer = outputNodeCount++;
+                break;
+        }
         this.gain = 1.0;
         this.timeConstant = 1.0;
         this.outputValue = 0;
         this.sValue = 0;
         this.yValue = 0;
+    }
+
+    public Node(ENodeType type, int hiddenLayerCount) {
+        this(type);
+        if (hiddenLayerCount > Node.hiddenLayerCount){
+            hiddenNodeCount = 0;
+        }
+        Node.hiddenLayerCount = hiddenLayerCount;
     }
 
     public double getGain() {
@@ -46,7 +72,14 @@ public class Node {
 
     @Override
     public String toString() {
-        return String.valueOf(this.type) + " " + super.toString();
+        if (this.type == ENodeType.HIDDEN){
+//            return String.valueOf(this.type) + " " + this.positionInLayer + " (" + hiddenLayerCount + ")";
+            return String.valueOf(this.type) + " " + this.positionInLayer;
+
+
+        }else{
+            return String.valueOf(this.type) + " " + this.positionInLayer;
+        }
     }
 
     public double getOutputValue() {

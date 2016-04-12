@@ -28,7 +28,7 @@ public class Values {
     public static double MUTATION_PROBABILITY = 0.01;
 
 
-    public static int POPULATION_SIZE = 100;
+    public static int POPULATION_SIZE = 300;
     public static int MAX_ADULT_SIZE = POPULATION_SIZE / 2;
     public static int MAX_PARENT_SIZE = POPULATION_SIZE / 2;
     public static int NUMBER_OF_ELITES = (int) (POPULATION_SIZE * 0.05);
@@ -52,7 +52,10 @@ public class Values {
     public static int ANN_INPUT_NODES = 6;
     public static int ANN_OUTPUT_NODES = 3;
 
-    public static int[] ANN_NODES_IN_HIDDEN_LAYERS = new int[]{5,5};
+    public static int[] ANN_NODES_IN_HIDDEN_LAYERS = new int[]{5, 5};
+
+    public static int[] CTRNN_NODES_IN_HIDDEN_LAYERS = new int[]{2};
+    public static int CTRNN_OUTPUT_NODES = 2;
 
     public static boolean ANN_USE_BIAS_NODES = true;
 
@@ -100,7 +103,7 @@ public class Values {
 
     public static final int BEERWORLD_ITERATIONS = 600;
 
-    public static final int BEERWORLD_GENOTYPE_RANGE = 10;
+    public static final int BEERWORLD_GENOTYPE_RANGE = 20;
 
     public static final int BEERWORLD_BOARD_HEIGHT = 15;
     public static final int BEERWORLD_BOARD_WIDTH = 30;
@@ -118,10 +121,6 @@ public class Values {
     public static int BEERWORLD_WRAP_FAILEDCAPTURE_PENALTY = 3;
     public static int BEERWORLD_WRAP_CAPTURE_PRIZE = 4;
     public static int BEERWORLD_WRAP_AVOID_PRIZE = 3;
-    public static int BEERWORLD_WRAP_PULLED_CAPTURE = 8;
-    public static int BEERWORLD_WRAP_PULLED_AVOID = 3;
-    public static int BEERWORLD_WRAP_PULLED_FAILEDCAPTURE = 8;
-    public static int BEERWORLD_WRAP_PULLED_FAILEDAVOID = 20;
 
     public static int BEERWORLD_PULL_FAILEDAVOID_PENALTY = 3;
     public static int BEERWORLD_PULL_FAILEDCAPTURE_PENALTY = 3;
@@ -136,12 +135,6 @@ public class Values {
     public static int BEERWORLD_NOWRAP_FAILEDCAPTURE_PENALTY = 1;
     public static final int BEERWORLD_NOWRAP_CAPTURE_PRIZE = 4;
     public static final int BEERWORLD_NOWRAP_AVOID_PRIZE = 6;
-    public static final int BEERWORLD_NOWRAP_PULLED_CAPTURE = 8;
-    public static final int BEERWORLD_NOWRAP_PULLED_AVOID = 3;
-    public static final int BEERWORLD_NOWRAP_PULLED_FAILEDCAPTURE = 8;
-    public static final int BEERWORLD_NOWRAP_PULLED_FAILEDAVOID = 20;
-
 
     public static boolean BEERWORLD_PULLED_OBJECT = false;
-
 }

@@ -148,10 +148,6 @@ public class P4Main extends Application {
             Values.BEERWORLD_FAILEDCAPTURE_PENALTY = Values.BEERWORLD_NOWRAP_FAILEDCAPTURE_PENALTY;
             Values.BEERWORLD_CAPTURE_PRIZE = Values.BEERWORLD_NOWRAP_CAPTURE_PRIZE;
             Values.BEERWORLD_AVOID_PRIZE = Values.BEERWORLD_NOWRAP_AVOID_PRIZE;
-            Values.BEERWORLD_PULLED_CAPTURE = Values.BEERWORLD_NOWRAP_PULLED_CAPTURE;
-            Values.BEERWORLD_PULLED_AVOID = Values.BEERWORLD_NOWRAP_PULLED_AVOID;
-            Values.BEERWORLD_PULLED_FAILEDCAPTURE = Values.BEERWORLD_NOWRAP_PULLED_FAILEDCAPTURE;
-            Values.BEERWORLD_PULLED_FAILEDAVOID = Values.BEERWORLD_NOWRAP_PULLED_FAILEDAVOID;
 
             Values.CTRNN_INPUT_NODES = 7;
 
@@ -161,10 +157,6 @@ public class P4Main extends Application {
             Values.BEERWORLD_FAILEDCAPTURE_PENALTY = Values.BEERWORLD_WRAP_FAILEDCAPTURE_PENALTY;
             Values.BEERWORLD_CAPTURE_PRIZE = Values.BEERWORLD_WRAP_CAPTURE_PRIZE;
             Values.BEERWORLD_AVOID_PRIZE = Values.BEERWORLD_WRAP_AVOID_PRIZE;
-            Values.BEERWORLD_PULLED_CAPTURE = Values.BEERWORLD_WRAP_PULLED_CAPTURE;
-            Values.BEERWORLD_PULLED_AVOID = Values.BEERWORLD_WRAP_PULLED_AVOID;
-            Values.BEERWORLD_PULLED_FAILEDCAPTURE = Values.BEERWORLD_WRAP_PULLED_FAILEDCAPTURE;
-            Values.BEERWORLD_PULLED_FAILEDAVOID = Values.BEERWORLD_WRAP_PULLED_FAILEDAVOID;
 
             Values.CTRNN_INPUT_NODES = 5;
 
@@ -176,7 +168,7 @@ public class P4Main extends Application {
         double avgFitness = eaController.calculateAvarageFitness(eaController.getPopulation());
         bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
 
-        p4GuiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(), avgFitness, eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness), generation, bestHypothesis.getPhenotypeString());
+        p4GuiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness()-10000, avgFitness-10000, eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness), generation, bestHypothesis.getPhenotypeString());
 //        p4GuiController.updateFPS(now, primaryStage);
 //        p4GuiController.drawMovement(bestHypothesis);
     }
