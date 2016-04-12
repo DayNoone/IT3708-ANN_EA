@@ -62,7 +62,7 @@ public class P3Main extends Application {
         generation = 0;
         solutionFound = false;
         startTime = System.currentTimeMillis();
-        numberOfMoves = 60;
+        numberOfMoves = Values.FLATLAND_ITERATIONS;
 
         mainLoop = new AnimationTimer() {
             @Override
@@ -74,6 +74,7 @@ public class P3Main extends Application {
                         eaController = new EAController();
                         generation = 0;
                         solutionFound = false;
+                        numberOfMoves = Values.FLATLAND_ITERATIONS;
 
                         p3GuiController.clearGUI();
 

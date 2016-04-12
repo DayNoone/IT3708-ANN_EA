@@ -58,6 +58,7 @@ public class Board {
     }
 
     public void resetBoard(){
+        direction = 0;
         foodEaten = 0;
         poisonEaten = 0;
         board = deepCopyBoardElementMatrix(initialBoardState);

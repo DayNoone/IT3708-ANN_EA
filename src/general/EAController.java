@@ -283,10 +283,6 @@ public class EAController {
         boolean solutionFound = false;
         for (AbstractHypothesis hypothesis : population) {
             hypothesis.calculateFitness();
-//            if (hypothesis.checkIfSolution()) {
-//                Board board = Values.BOARD;
-//                solutionFound = true;
-//            }
         }
         return solutionFound;
     }
