@@ -4,6 +4,9 @@ import enums.ENodeType;
 import general.Pair;
 import general.Values;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -300,6 +303,74 @@ public class CTRNN {
 
             System.out.println(nodePairKey.getElement1() + " " + weight + " " + nodePairKey.getElement2());
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+        CTRNN network = new CTRNN();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String goodPhenotype = "4.0 -2.5 -1.5 -3.5 -1.0 -5.0 -2.0 -5.0 3.0 -4.5 -0.5 2.0 2.0 -1.0 1.5 -2.0 4.0 -2.0 -5.0 -4.0 -2.5 1.0 -9.5 -5.5 -2.0 -8.5 2.6 4.0 1.4 3.6 1.15 1.2 1.65 1.25";
+        boolean continueLoop = true;
+        while (continueLoop){
+            System.out.println("");
+            System.out.println("1 - get output from sensor input, 2 - Enter new phenotype, 3 - use existing phenotype, 0 - Exit: ");
+            String command = br.readLine();
+            if (command.equals("0")){
+                continueLoop = false;
+            }
+            else if(command.equals("1")){
+                System.out.println("Enter sensorinput: ");
+                String sensorString = br.readLine();
+//                System.out.println(sensorString);
+                String[] stringArray = sensorString.split("");
+                int[] sensorArray = Arrays.stream(stringArray).mapToInt(Integer::parseInt).toArray();
+
+                double[] moveArray = network.getMove(sensorArray);
+                double moveValue = moveArray[1] - moveArray[0];
+                int move = BeerTrackerHypothesis.getMove(moveValue);
+
+                printCtrnnOutput(sensorArray, moveArray, move);
+            }
+            else if (command.equals("2")) {
+                System.out.println("Enter phenotype: ");
+                String phenotypeString = br.readLine();
+//                System.out.println(phenotypeString);
+//                System.out.println("4.0 -2.5 -1.5 -3.5 -1.0 -5.0 -2.0 -5.0 3.0 -4.5 -0.5 2.0 2.0 -1.0 1.5 -2.0 4.0 -2.0 -5.0 -4.0 -2.5 1.0 -9.5 -5.5 -2.0 -8.5 2.6 4.0 1.4 3.6 1.15 1.2 1.65 1.25");
+                String[] stringArray = phenotypeString.split(" ");
+                double[] phenotypeArray = Arrays.stream(stringArray).mapToDouble(Double::parseDouble).toArray();
+//                System.out.println(Arrays.toString(phenotypeArray));
+                network.setNetworkValues(phenotypeArray);
+                System.out.println("Network updated");
+                System.out.println("");
+
+            }
+            else if (command.equals("3")) {
+                String[] stringArray = goodPhenotype.split(" ");
+                double[] phenotypeArray = Arrays.stream(stringArray).mapToDouble(Double::parseDouble).toArray();
+                network.setNetworkValues(phenotypeArray);
+                System.out.println("Network updated");
+                System.out.println("");
+            }else{
+                try{
+                    String[] stringArray = command.split("");
+                    int[] sensorArray = Arrays.stream(stringArray).mapToInt(Integer::parseInt).toArray();
+
+                    double[] moveArray = network.getMove(sensorArray);
+                    double moveValue = moveArray[1] - moveArray[0];
+                    int move = BeerTrackerHypothesis.getMove(moveValue);
+
+                    printCtrnnOutput(sensorArray, moveArray, move);
+
+                }catch (Exception ignored){
+                    System.out.println("Unknown command!");
+                }
+            }
+        }
+
+
+    }
+
+    private static void printCtrnnOutput(int[] sensorArray, double[] moveArray, int move) {
+        System.out.println("Move: " + move + "\t\tOutput layer: " + Arrays.toString(moveArray) + "\tSensor input: " + Arrays.toString(sensorArray));
     }
 
 //    private int findHighestIndex(List<Node> nodeLayer) {
