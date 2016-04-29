@@ -69,28 +69,6 @@ public class EAController {
         population.addAll(newPopulation);
     }
 
-    private List<AbstractHypothesis> crossover(AbstractHypothesis parent1, AbstractHypothesis parent2) {
-        List<AbstractHypothesis> children = new ArrayList<>();
-
-        int crossOverPoint = random.nextInt(parent1.getGenotype().length);
-
-        int[] newGenotype1 = new int[parent1.getGenotype().length];
-        int[] newGenotype2 = new int[parent1.getGenotype().length];
-        for (int i = 0; i < parent1.getGenotype().length; i++) {
-            if (crossOverPoint <= i) {
-                newGenotype1[i] = parent1.getGenotype()[i];
-                newGenotype2[i] = parent2.getGenotype()[i];
-            } else {
-                newGenotype1[i] = parent2.getGenotype()[i];
-                newGenotype2[i] = parent1.getGenotype()[i];
-            }
-        }
-        AbstractHypothesis child1 = parent1.instantiateNewChileWithGenoType(newGenotype1);
-        AbstractHypothesis child2 = parent2.instantiateNewChileWithGenoType(newGenotype2);
-        children.add(child1);
-        children.add(child2);
-        return children;
-    }
 
     public void adultSelection() {
         List<AbstractHypothesis> tempPopulation = new ArrayList<>();
@@ -290,7 +268,7 @@ public class EAController {
     public List<AbstractHypothesis> generateNewChildren(AbstractHypothesis parent1, AbstractHypothesis parent2) {
         List<AbstractHypothesis> children = new ArrayList<>();
         if (random.nextDouble() <= Values.CROSSOVER_PROBABILITY) {
-            children.addAll(crossover(parent1, parent2));
+            children.addAll(parent1.crossover(parent1, parent2));
             children.forEach((hyp) -> hyp.mutate());
         } else {
             AbstractHypothesis child1 = parent1.instantiateNewChileWithGenoType(parent1.getGenotype());
