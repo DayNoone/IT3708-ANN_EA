@@ -37,8 +37,8 @@ public class P5Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         XLSXReader xlsxReader = new XLSXReader();
-        int[][] distance = xlsxReader.read("Distance.xlsx", 45);
-        int[][] cost = xlsxReader.read("Cost.xlsx", 45);
+        int[][] distance = xlsxReader.read("src/project5/Distance.xlsx", 45);
+        int[][] cost = xlsxReader.read("src/project5/Cost.xlsx", 45);
 
         Values.SELECTED_PROBLEM = EProblemSelection.TRACKER;
 
