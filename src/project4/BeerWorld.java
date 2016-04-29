@@ -53,20 +53,30 @@ public class BeerWorld {
     }
 
     private void spawnObject(){
-        if (fallenObjects >= spawnedObjectHistory.size()){
-            objectSize = random.nextInt(6) + 1;
-            objectXPos = random.nextInt(Values.BEERWORLD_BOARD_WIDTH);
-            if (objectXPos + objectSize > Values.BEERWORLD_BOARD_WIDTH){
-                objectXPos -= objectSize;
+
+//        if (Values.BEERWORLD_NO_WRAP){
+//            objectSize = random.nextInt(6) + 1;
+//            objectXPos = random.nextInt(Values.BEERWORLD_BOARD_WIDTH);
+//            if (objectXPos + objectSize > Values.BEERWORLD_BOARD_WIDTH){
+//                objectXPos -= objectSize;
+//            }
+//            objectYPos = 0;
+//        }else{
+            if (fallenObjects >= spawnedObjectHistory.size()){
+                objectSize = random.nextInt(6) + 1;
+                objectXPos = random.nextInt(Values.BEERWORLD_BOARD_WIDTH);
+                if (objectXPos + objectSize > Values.BEERWORLD_BOARD_WIDTH){
+                    objectXPos -= objectSize;
+                }
+                objectYPos = 0;
+                spawnedObjectHistory.add(new SpawnedObject(objectXPos, objectYPos, objectSize));
+            }else{
+                SpawnedObject so = spawnedObjectHistory.get(fallenObjects);
+                objectSize = so.getObjectSize();
+                objectXPos = so.getObjectXPos();
+                objectYPos = so.getObjectYPos();
             }
-            objectYPos = 0;
-            spawnedObjectHistory.add(new SpawnedObject(objectXPos, objectYPos, objectSize));
-        }else{
-            SpawnedObject so = spawnedObjectHistory.get(fallenObjects);
-            objectSize = so.getObjectSize();
-            objectXPos = so.getObjectXPos();
-            objectYPos = so.getObjectYPos();
-        }
+//        }
         fallenObjects++;
     }
 

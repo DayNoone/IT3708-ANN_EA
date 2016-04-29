@@ -56,6 +56,7 @@ public class Values {
 
     public static int[] CTRNN_NODES_IN_HIDDEN_LAYERS = new int[]{2};
     public static int CTRNN_OUTPUT_NODES = 2;
+    public static int CTRNN_INPUT_NODES = 5;
 
     public static boolean ANN_USE_BIAS_NODES = true;
 
@@ -69,9 +70,10 @@ public class Values {
     public static final int FLATLAND_GENOTYPE_RANGE = 10; // 0 - range
     public static final int FLATLAND_ITERATIONS = 60;
     public static int FLATLAND_SLEEP_DURATION = 20;
-    public static final boolean FLATLAND_DIFFERENT_SCENARIOS = true;
-    public static final int FLATLAND_NUMBER_OF_DIFFERENT_SCENARIOS = 5;
 
+
+    public static final boolean FLATLAND_DIFFERENT_SCENARIOS = false;
+    public static final int FLATLAND_NUMBER_OF_DIFFERENT_SCENARIOS = 5;
     public static boolean FLATLAND_DYNAMIC = false;
 
     public static final int FLATLAND_MAX_FOOD_COUNT = (Values.FLATLAND_BOARD_SIZE * Values.FLATLAND_BOARD_SIZE) / 3;
@@ -96,7 +98,7 @@ public class Values {
 
     public static BeerWorld BEERWORLD;
 
-    public static int CTRNN_INPUT_NODES = 5;
+
 
     public static boolean BEERWORLD_NO_WRAP = false;
     public static boolean BEERWORLD_PULL = false;

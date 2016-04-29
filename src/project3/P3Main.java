@@ -68,9 +68,6 @@ public class P3Main extends Application {
             @Override
             public void handle(long now) {
                 if (!simulationPaused) {
-                    if (generation == 80){
-                        simulationPaused = true;
-                    }
                     if (shouldRestart){
                         startTime = System.currentTimeMillis();
                         eaController = new EAController();
