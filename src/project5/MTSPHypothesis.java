@@ -39,7 +39,7 @@ public class MTSPHypothesis extends AbstractHypothesis{
         for(int i = 0; i < Values.MTSP_NUMBER_OF_CITIES; i++){
             pool.add(i);
         }
-        int[] genotype = new int[48];
+        int[] genotype = new int[Values.MTSP_NUMBER_OF_CITIES];
         for(int j = 0; j < Values.MTSP_NUMBER_OF_CITIES; j++){
             genotype[j] = pool.remove(random.nextInt(pool.size()));
         }
