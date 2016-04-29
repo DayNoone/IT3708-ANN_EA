@@ -139,4 +139,15 @@ public class Values {
     public static final int BEERWORLD_NOWRAP_AVOID_PRIZE = 6;
 
     public static boolean BEERWORLD_PULLED_OBJECT = false;
+
+
+
+    /**
+
+     MTSP VALUES
+
+     **/
+
+    public static int MTSP_NUMBER_OF_CITIES = 48;
+
 }
