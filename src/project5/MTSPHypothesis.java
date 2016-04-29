@@ -2,8 +2,10 @@ package project5;
 
 import general.AbstractHypothesis;
 
+import java.util.List;
+
 /**
- * Created by dihel on 29.04.2016.
+ * Created by dagih on 29.04.2016.
  */
 public class MTSPHypothesis extends AbstractHypothesis{
     @Override
@@ -35,8 +37,9 @@ public class MTSPHypothesis extends AbstractHypothesis{
     public void mutate() {
 
     }
-    @Override
-    public void crossover() {
 
+    @Override
+    public List<AbstractHypothesis> crossover(AbstractHypothesis parent1, AbstractHypothesis parent2) {
+        return null;
     }
 }
