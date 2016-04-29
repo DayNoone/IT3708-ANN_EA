@@ -346,11 +346,6 @@ public class P5GUIController {
         consoleTextArea.appendText(s);
     }
 
-    void updateFPS(long now, Stage primaryStage) {
-        String fpsString = getFPSString(now);
-        primaryStage.setTitle(fpsString);
-    }
-
     private String getFPSString(long now) {
         long oldFrameTime = frameTimes[frameTimeIndex];
         frameTimes[frameTimeIndex] = now;

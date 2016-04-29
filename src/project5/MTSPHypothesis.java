@@ -9,9 +9,28 @@ import java.util.*;
  * Created by dagih on 29.04.2016.
  */
 public class MTSPHypothesis extends AbstractHypothesis{
+
+
+    public MTSPHypothesis() {
+
+        int[] genotype = new int[Values.MTSP_NUMBER_OF_CITIES];
+        this.setGenotype(genotype);
+        initiateRandomGenotype();
+        generatePhenotype();
+
+    }
+
+    public MTSPHypothesis(int[] newGenotype) {
+        this.genotype = newGenotype;
+        generatePhenotype();
+    }
+
     @Override
     public void generatePhenotype() {
-
+        this.phenotype = new double[this.genotype.length];
+        for (int i = 0; i < this.genotype.length; i++) {
+            this.phenotype[i] = (double)this.genotype[i];
+        }
     }
 
     @Override
@@ -34,12 +53,14 @@ public class MTSPHypothesis extends AbstractHypothesis{
 
     @Override
     public AbstractHypothesis instantiateNewChileWithGenoType(int[] genotype) {
-        return null;
+
+        return new MTSPHypothesis(genotype);
     }
 
     @Override
     public AbstractHypothesis instantiateNewChild() {
-        return null;
+
+        return new MTSPHypothesis();
     }
 
     @Override

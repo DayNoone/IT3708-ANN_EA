@@ -157,4 +157,6 @@ public class BeerTrackerHypothesis extends AbstractHypothesis {
         double newRange = (newMax - newMin);
         return (((oldValue - oldMin) * newRange) / oldRange) + newMin;
     }
+
+
 }

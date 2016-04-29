@@ -1,16 +1,14 @@
 package general;
 
-import project3.Board;
 import project3.FlatlandHypothesis;
 import project4.BeerTrackerHypothesis;
+import project5.MTSPHypothesis;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created by markus on 23.02.2016.
- */
+
 public class EAController {
 
     private Random random = new Random();
@@ -20,13 +18,16 @@ public class EAController {
 
     public EAController(){
 
-        AbstractHypothesis initialObject = null;
+        AbstractHypothesis initialObject;
         switch (Values.SELECTED_PROBLEM){
             case FLATLAND:
                 initialObject = new FlatlandHypothesis();
                 break;
             case TRACKER:
                 initialObject = new BeerTrackerHypothesis();
+                break;
+            case MTSP:
+                initialObject = new MTSPHypothesis();
                 break;
             default:
                 initialObject = null;
@@ -40,15 +41,6 @@ public class EAController {
 
     public void generatePhenotypes() {
         population.forEach(AbstractHypothesis::generatePhenotype);
-    }
-
-    private List<AbstractHypothesis> generateInitialPopulation(AbstractHypothesis initialObject, int sizeOfGeneration) {
-        List<AbstractHypothesis> initialPopulation = new ArrayList<>();
-        for (int i = 0; i < sizeOfGeneration; i++) {
-            AbstractHypothesis hypothesis = initialObject.instantiateNewChild();
-            initialPopulation.add(hypothesis);
-        }
-        return initialPopulation;
     }
 
     public void generateNewPopulation() {
@@ -184,6 +176,87 @@ public class EAController {
         }
     }
 
+
+
+    public double calculateStandardDeviation(List<AbstractHypothesis> hyps, double avarageFitness) {
+        double sumOfSquaredDistance = 0.0;
+        for (AbstractHypothesis tempHyp : hyps) {
+            sumOfSquaredDistance += Math.pow(tempHyp.getFitness() - avarageFitness, 2);
+        }
+
+        return Math.sqrt(sumOfSquaredDistance / hyps.size());
+    }
+
+    public double calculateAvarageFitness(List<AbstractHypothesis> hypothesises) {
+        double totalFitness = getTotalFitnessFromIHypothesis(hypothesises);
+        return totalFitness / hypothesises.size();
+    }
+
+
+
+    public void testAndUpdateFitnessOfPhenotypes() {
+        for (AbstractHypothesis hypothesis : population) {
+            hypothesis.calculateFitness();
+        }
+    }
+
+
+
+    public AbstractHypothesis getBestHypothesis(List<AbstractHypothesis> hypothesises) {
+        AbstractHypothesis bestHyp = hypothesises.get(0);
+        for (AbstractHypothesis hyp : hypothesises) {
+            if (hyp.getFitness() > bestHyp.getFitness()) {
+                bestHyp = hyp;
+            }
+        }
+        return bestHyp;
+    }
+
+    public List<AbstractHypothesis> getPopulation() {
+        return population;
+    }
+
+    private List<AbstractHypothesis> generateNewChildren(AbstractHypothesis parent1, AbstractHypothesis parent2) {
+        List<AbstractHypothesis> children = new ArrayList<>();
+        if (random.nextDouble() <= Values.CROSSOVER_PROBABILITY) {
+            children.addAll(parent1.crossover(parent1, parent2));
+            children.forEach((hyp) -> hyp.mutate());
+        } else {
+            AbstractHypothesis child1 = parent1.instantiateNewChileWithGenoType(parent1.getGenotype());
+            AbstractHypothesis child2 = parent2.instantiateNewChileWithGenoType(parent2.getGenotype());
+            children.add(child1);
+            children.add(child2);
+        }
+
+        return children;
+    }
+
+    private AbstractHypothesis findHypothesisWithBestFitness(List<AbstractHypothesis> hypothesises) {
+        AbstractHypothesis best = hypothesises.get(0);
+        for (AbstractHypothesis hyp : hypothesises) {
+            if (hyp.getFitness() > best.getFitness()) {
+                best = hyp;
+            }
+        }
+        return best;
+    }
+
+    private double getTotalFitnessFromIHypothesis(List<AbstractHypothesis> hypothesises) {
+        double sum = 0;
+        for (AbstractHypothesis hyp : hypothesises) {
+            sum += hyp.getFitness();
+        }
+        return sum;
+    }
+
+    private double getTotalExpectedValueFromIHypothesis(List<AbstractHypothesis> hypothesises) {
+        double sum = 0;
+        for (AbstractHypothesis hyp : hypothesises) {
+            sum += hyp.getExpectedValue();
+        }
+        return sum;
+    }
+
     private AbstractHypothesis expectedValueRoulette(List<AbstractHypothesis> hypothesises) {
         double totalExpectedValue = getTotalExpectedValueFromIHypothesis(hypothesises);
         double x = totalExpectedValue * random.nextDouble();
@@ -227,81 +300,13 @@ public class EAController {
         }
     }
 
-    public double calculateStandardDeviation(List<AbstractHypothesis> hyps, double avarageFitness) {
-        double sumOfSquaredDistance = 0.0;
-        for (AbstractHypothesis tempHyp : hyps) {
-            sumOfSquaredDistance += Math.pow(tempHyp.getFitness() - avarageFitness, 2);
+    private List<AbstractHypothesis> generateInitialPopulation(AbstractHypothesis initialObject, int sizeOfGeneration) {
+        List<AbstractHypothesis> initialPopulation = new ArrayList<>();
+        for (int i = 0; i < sizeOfGeneration; i++) {
+            AbstractHypothesis hypothesis = initialObject.instantiateNewChild();
+            initialPopulation.add(hypothesis);
         }
-
-        return Math.sqrt(sumOfSquaredDistance / hyps.size());
+        return initialPopulation;
     }
 
-    public double calculateAvarageFitness(List<AbstractHypothesis> hypothesises) {
-        double totalFitness = getTotalFitnessFromIHypothesis(hypothesises);
-        return totalFitness / hypothesises.size();
-    }
-
-    private double getTotalFitnessFromIHypothesis(List<AbstractHypothesis> hypothesises) {
-        double sum = 0;
-        for (AbstractHypothesis hyp : hypothesises) {
-            sum += hyp.getFitness();
-        }
-        return sum;
-    }
-
-    private double getTotalExpectedValueFromIHypothesis(List<AbstractHypothesis> hypothesises) {
-        double sum = 0;
-        for (AbstractHypothesis hyp : hypothesises) {
-            sum += hyp.getExpectedValue();
-        }
-        return sum;
-    }
-
-    public boolean testAndUpdateFitnessOfPhenotypes() {
-        boolean solutionFound = false;
-        for (AbstractHypothesis hypothesis : population) {
-            hypothesis.calculateFitness();
-        }
-        return solutionFound;
-    }
-
-    public List<AbstractHypothesis> generateNewChildren(AbstractHypothesis parent1, AbstractHypothesis parent2) {
-        List<AbstractHypothesis> children = new ArrayList<>();
-        if (random.nextDouble() <= Values.CROSSOVER_PROBABILITY) {
-            children.addAll(parent1.crossover(parent1, parent2));
-            children.forEach((hyp) -> hyp.mutate());
-        } else {
-            AbstractHypothesis child1 = parent1.instantiateNewChileWithGenoType(parent1.getGenotype());
-            AbstractHypothesis child2 = parent2.instantiateNewChileWithGenoType(parent2.getGenotype());
-            children.add(child1);
-            children.add(child2);
-        }
-
-
-        return children;
-    }
-
-    private AbstractHypothesis findHypothesisWithBestFitness(List<AbstractHypothesis> hypothesises) {
-        AbstractHypothesis best = hypothesises.get(0);
-        for (AbstractHypothesis hyp : hypothesises) {
-            if (hyp.getFitness() > best.getFitness()) {
-                best = hyp;
-            }
-        }
-        return best;
-    }
-
-    public AbstractHypothesis getBestHypothesis(List<AbstractHypothesis> hypothesises) {
-        AbstractHypothesis bestHyp = hypothesises.get(0);
-        for (AbstractHypothesis hyp : hypothesises) {
-            if (hyp.getFitness() > bestHyp.getFitness()) {
-                bestHyp = hyp;
-            }
-        }
-        return bestHyp;
-    }
-
-    public List<AbstractHypothesis> getPopulation() {
-        return population;
-    }
 }
