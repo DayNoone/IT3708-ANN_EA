@@ -30,6 +30,8 @@ public class P5Main extends Application {
 
 
     public static void main(String[] args) {
+        MTSPHypothesis mstHyp = new MTSPHypothesis();
+        mstHyp.initiateRandomGenotype();
         launch(args);
     }
 
