@@ -55,8 +55,8 @@ public class MTSPHypothesis{
     }
 
     public void calculateFitness() {
-        int distances = sumMatrix(Values.MTSP_DISTANCES);
-        int cost = sumMatrix(Values.MTSP_COSTS);
+        this.setDistanceFitness(sumMatrix(Values.MTSP_DISTANCES));
+        this.setCostFitness(sumMatrix(Values.MTSP_COSTS));
     }
 
     private int sumMatrix(int[][] matrix) {
