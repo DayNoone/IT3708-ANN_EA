@@ -48,7 +48,18 @@ public class MTSPHypothesis extends AbstractHypothesis{
 
     @Override
     public void calculateFitness() {
+        int distances = sumMatrix(Values.MTSP_DISTANCES);
+        int cost = sumMatrix(Values.MTSP_COSTS);
+    }
 
+    private int sumMatrix(int[][] matrix) {
+        int sum = 0;
+        int[] genotype = getGenotype();
+        for(int i = 0; i < genotype.length; i++){
+            sum += matrix[genotype[i]][genotype[i+1]];
+        }
+        sum += matrix[-1][0];
+        return sum;
     }
 
     @Override
@@ -66,6 +77,52 @@ public class MTSPHypothesis extends AbstractHypothesis{
     @Override
     public void mutate() {
 
+        ArrayList<Integer> mutatedGenotype = generateArrayList(getGenotype());
+        ArrayList<Integer> subGenotypeList = new ArrayList<>();
+        ​
+        /** INVERSION MUTATION **/
+        int randStart = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
+        int randStop = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
+        ​
+        if(randStart > randStop){
+            int temp = randStart;
+            randStart = randStop;
+            randStop = temp;
+        }
+        int subSize = randStop - randStart;
+        int randInsert = random.nextInt(Values.MTSP_NUMBER_OF_CITIES - subSize);
+        ​
+        for (int i = 0; i < subSize; i++) {
+            subGenotypeList.add(mutatedGenotype.remove(randStart));
+        }
+        ​
+        for(int i = 0, j = subGenotypeList.size() - 1; i < j; i++) {
+            subGenotypeList.add(i, subGenotypeList.remove(j));
+        }
+        ​
+        /** DISPLACEMENT MUTATION **/
+        ​
+        for (int i = 0; i < subGenotypeList.size(); i++) {
+            /** ONLY INVERSION NO DISPLACEMENT **/
+            //mutatedGenotype.add(randStart + i, subGenotypeList.get(i));
+            /** DISPLACEMENT **/
+            mutatedGenotype.add(randInsert + i, subGenotypeList.get(i));
+        }
+        ​
+        int[] mutatedGenotypeArray = new int[mutatedGenotype.size()];
+        for (int i = 0; i < mutatedGenotype.size(); i++) {
+            mutatedGenotypeArray[i] = mutatedGenotype.get(i);
+        }
+        setGenotype(mutatedGenotypeArray);
+        ​
+    }
+    ​
+    private ArrayList<Integer> generateArrayList(int[] array){
+        ArrayList<Integer> newArrayList = new ArrayList<>();
+        for (int i = 0; i < array.length; i++) {
+            newArrayList.add(array[i]);
+        }
+        return newArrayList;
     }
 
     @Override
@@ -74,8 +131,6 @@ public class MTSPHypothesis extends AbstractHypothesis{
 
         int crossOverPoint = random.nextInt(parent1.getGenotype().length);
         int crossOverLength = random.nextInt(parent1.getGenotype().length - 2) + 1;
-        crossOverPoint = 2;
-        crossOverLength = 3;
 
         int[] newGenotype1 = instantiateIntArray(parent1.getGenotype());
         int[] newGenotype2 = instantiateIntArray(parent2.getGenotype());
@@ -84,11 +139,11 @@ public class MTSPHypothesis extends AbstractHypothesis{
             if (i >= crossOverPoint && i < crossOverPoint + crossOverLength) {
                 oldValue = newGenotype1[i];
                 newGenotype1[i] = parent2.getGenotype()[i];
-                newGenotype1 = repairCrossover(newGenotype1, oldValue, i);
+                newGenotype1 = swapOldValue(newGenotype1, oldValue, i);
 
                 oldValue = newGenotype2[i];
                 newGenotype2[i] = parent1.getGenotype()[i];
-                newGenotype2 = repairCrossover(newGenotype2, oldValue, i);
+                newGenotype2 = swapOldValue(newGenotype2, oldValue, i);
             }
         }
 
@@ -127,7 +182,7 @@ public class MTSPHypothesis extends AbstractHypothesis{
         return newGenotype;
     }
 
-    private int[] repairCrossover(int[] newGenotype, int oldValue, int i) {
+    private int[] swapOldValue(int[] newGenotype, int oldValue, int i) {
         for(int j = 0; j < newGenotype.length; j++){
             if (newGenotype[i] == newGenotype[j] && i != j) {
                 newGenotype[j] = oldValue;

@@ -13,6 +13,7 @@ import project4.BeerWorld;
 public class Values {
 
 
+
     /**
 
         EA VALUES
@@ -149,5 +150,6 @@ public class Values {
      **/
 
     public static int MTSP_NUMBER_OF_CITIES = 48;
-
+    public static int[][] MTSP_COSTS;
+    public static int[][] MTSP_DISTANCES;
 }
