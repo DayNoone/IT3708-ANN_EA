@@ -8,13 +8,18 @@ import java.util.*;
 /**
  * Created by dagih on 29.04.2016.
  */
-public class MTSPHypothesis extends AbstractHypothesis{
+public class MTSPHypothesis{
 
     private int distanceFitness;
 
     private int costFitness;
 
     private int rank;
+
+    protected Random random = new Random();
+    protected int[] genotype;
+    protected double[] phenotype;
+    protected double exceptedValue;
 
     public MTSPHypothesis() {
 
@@ -30,7 +35,6 @@ public class MTSPHypothesis extends AbstractHypothesis{
         generatePhenotype();
     }
 
-    @Override
     public void generatePhenotype() {
         this.phenotype = new double[this.genotype.length];
         for (int i = 0; i < this.genotype.length; i++) {
@@ -38,7 +42,6 @@ public class MTSPHypothesis extends AbstractHypothesis{
         }
     }
 
-    @Override
     public void initiateRandomGenotype() {
         ArrayList<Integer> pool = new ArrayList<>();
         for(int i = 0; i < Values.MTSP_NUMBER_OF_CITIES; i++){
@@ -51,29 +54,24 @@ public class MTSPHypothesis extends AbstractHypothesis{
         setGenotype(genotype);
     }
 
-    @Override
     public void calculateFitness() {
 
     }
 
-    @Override
     public AbstractHypothesis instantiateNewChileWithGenoType(int[] genotype) {
 
         return new MTSPHypothesis(genotype);
     }
 
-    @Override
     public AbstractHypothesis instantiateNewChild() {
 
         return new MTSPHypothesis();
     }
 
-    @Override
     public void mutate() {
 
     }
 
-    @Override
     public List<AbstractHypothesis> crossover(AbstractHypothesis parent1, AbstractHypothesis parent2) {
         return null;
     }

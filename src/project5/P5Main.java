@@ -18,7 +18,7 @@ public class P5Main extends Application {
     private int generation;
 
     private P5GUIController p5GuiController;
-    private EAController eaController;
+    private MTSPEAController eaController;
     private boolean shouldRestart;
     boolean simulationPaused;
 
