@@ -20,17 +20,20 @@ public class P5Main extends Application {
 
 
     public static void main(String[] args) {
+        XLSXReader xlsxReader = new XLSXReader();
+        Values.MTSP_DISTANCES = xlsxReader.read("src/project5/Distance.xlsx", 48);
+        Values.MTSP_COSTS = xlsxReader.read("src/project5/Cost.xlsx", 48);
         MTSPHypothesis mstHyp = new MTSPHypothesis();
-        mstHyp.initiateRandomGenotype();
+        mstHyp.calculateFitness();
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-//        XLSXReader xlsxReader = new XLSXReader();-
-//        int[][] distance = xlsxReader.read("src/project5/Distance.xlsx", 48);
-//        int[][] cost = xlsxReader.read("src/project5/Cost.xlsx", 48);
+        XLSXReader xlsxReader = new XLSXReader();
+        Values.MTSP_DISTANCES = xlsxReader.read("src/project5/Distance.xlsx", 48);
+        Values.MTSP_COSTS = xlsxReader.read("src/project5/Cost.xlsx", 48);
 
         Values.SELECTED_PROBLEM = EProblemSelection.MTSP;
 

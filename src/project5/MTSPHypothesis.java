@@ -80,14 +80,13 @@ public class MTSPHypothesis{
     }
 
     public void mutate() {
-
         ArrayList<Integer> mutatedGenotype = generateArrayList(getGenotype());
         ArrayList<Integer> subGenotypeList = new ArrayList<>();
-        ​
+
         /** INVERSION MUTATION **/
         int randStart = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
         int randStop = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
-        ​
+
         if(randStart > randStop){
             int temp = randStart;
             randStart = randStop;
@@ -95,32 +94,31 @@ public class MTSPHypothesis{
         }
         int subSize = randStop - randStart;
         int randInsert = random.nextInt(Values.MTSP_NUMBER_OF_CITIES - subSize);
-        ​
+
         for (int i = 0; i < subSize; i++) {
             subGenotypeList.add(mutatedGenotype.remove(randStart));
         }
-        ​
+
         for(int i = 0, j = subGenotypeList.size() - 1; i < j; i++) {
             subGenotypeList.add(i, subGenotypeList.remove(j));
         }
-        ​
+
         /** DISPLACEMENT MUTATION **/
-        ​
         for (int i = 0; i < subGenotypeList.size(); i++) {
             /** ONLY INVERSION NO DISPLACEMENT **/
             //mutatedGenotype.add(randStart + i, subGenotypeList.get(i));
             /** DISPLACEMENT **/
             mutatedGenotype.add(randInsert + i, subGenotypeList.get(i));
         }
-        ​
+
         int[] mutatedGenotypeArray = new int[mutatedGenotype.size()];
         for (int i = 0; i < mutatedGenotype.size(); i++) {
             mutatedGenotypeArray[i] = mutatedGenotype.get(i);
         }
         setGenotype(mutatedGenotypeArray);
-        ​
+
     }
-    ​
+
     private ArrayList<Integer> generateArrayList(int[] array){
         ArrayList<Integer> newArrayList = new ArrayList<>();
         for (int i = 0; i < array.length; i++) {
@@ -155,8 +153,8 @@ public class MTSPHypothesis{
 
         int[] p1 = parent1.getGenotype();
         int[] p2 = parent2.getGenotype();
-        AbstractHypothesis child1 = parent1.instantiateNewChileWithGenoType(newGenotype1);
-        AbstractHypothesis child2 = parent2.instantiateNewChileWithGenoType(newGenotype2);
+        MTSPHypothesis child1 = parent1.instantiateNewChileWithGenoType(newGenotype1);
+        MTSPHypothesis child2 = parent2.instantiateNewChileWithGenoType(newGenotype2);
         children.add(child1);
         children.add(child2);
         return children;
