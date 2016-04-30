@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import project5.MTSPHypothesis;
 
 public class P4Main extends Application {
 
@@ -57,6 +58,8 @@ public class P4Main extends Application {
     private void startEvolutionaryAlgorithmLoop(Stage primaryStage) {
 
         eaController = new EAController();
+        eaController.generateInitialPopulation(new BeerTrackerHypothesis(), Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);
+
         generation = 0;
         solutionFound = false;
         startTime = System.currentTimeMillis();
@@ -76,6 +79,8 @@ public class P4Main extends Application {
                         shouldRestart = false;
 
                         eaController = new EAController();
+                        eaController.generateInitialPopulation(new BeerTrackerHypothesis(), Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);
+
                         Values.CTRNN = new CTRNN();
                     }
 

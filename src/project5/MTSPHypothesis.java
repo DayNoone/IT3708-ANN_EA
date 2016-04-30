@@ -1,6 +1,5 @@
 package project5;
 
-import general.AbstractHypothesis;
 import general.Values;
 
 import java.util.*;
@@ -8,8 +7,19 @@ import java.util.*;
 /**
  * Created by dagih on 29.04.2016.
  */
-public class MTSPHypothesis extends AbstractHypothesis{
+@SuppressWarnings("WeakerAccess")
+public class MTSPHypothesis{
 
+    private int distanceFitness;
+
+    private int costFitness;
+
+    private int rank;
+
+    protected Random random = new Random();
+    protected int[] genotype;
+    protected double[] phenotype;
+    protected double exceptedValue;
 
     public MTSPHypothesis() {
 
@@ -25,7 +35,6 @@ public class MTSPHypothesis extends AbstractHypothesis{
         generatePhenotype();
     }
 
-    @Override
     public void generatePhenotype() {
         this.phenotype = new double[this.genotype.length];
         for (int i = 0; i < this.genotype.length; i++) {
@@ -33,9 +42,8 @@ public class MTSPHypothesis extends AbstractHypothesis{
         }
     }
 
-    @Override
     public void initiateRandomGenotype() {
-        ArrayList<Integer> pool = new ArrayList<Integer>();
+        ArrayList<Integer> pool = new ArrayList<>();
         for(int i = 0; i < Values.MTSP_NUMBER_OF_CITIES; i++){
             pool.add(i);
         }
@@ -46,7 +54,6 @@ public class MTSPHypothesis extends AbstractHypothesis{
         setGenotype(genotype);
     }
 
-    @Override
     public void calculateFitness() {
         int distances = sumMatrix(Values.MTSP_DISTANCES);
         int cost = sumMatrix(Values.MTSP_COSTS);
@@ -62,19 +69,16 @@ public class MTSPHypothesis extends AbstractHypothesis{
         return sum;
     }
 
-    @Override
-    public AbstractHypothesis instantiateNewChileWithGenoType(int[] genotype) {
+    public MTSPHypothesis instantiateNewChileWithGenoType(int[] genotype) {
 
         return new MTSPHypothesis(genotype);
     }
 
-    @Override
-    public AbstractHypothesis instantiateNewChild() {
+    public MTSPHypothesis instantiateNewChild() {
 
         return new MTSPHypothesis();
     }
 
-    @Override
     public void mutate() {
 
         ArrayList<Integer> mutatedGenotype = generateArrayList(getGenotype());
@@ -125,9 +129,8 @@ public class MTSPHypothesis extends AbstractHypothesis{
         return newArrayList;
     }
 
-    @Override
-    public List<AbstractHypothesis> crossover(AbstractHypothesis parent1, AbstractHypothesis parent2) {
-        List<AbstractHypothesis> children = new ArrayList<>();
+    public List<MTSPHypothesis> crossover(MTSPHypothesis parent1, MTSPHypothesis parent2) {
+        List<MTSPHypothesis> children = new ArrayList<>();
 
         int crossOverPoint = random.nextInt(parent1.getGenotype().length);
         int crossOverLength = random.nextInt(parent1.getGenotype().length - 2) + 1;
@@ -190,5 +193,72 @@ public class MTSPHypothesis extends AbstractHypothesis{
             }
         }
         return null;
+    }
+
+    public int getCostFitness() {
+        return costFitness;
+    }
+
+    public int getDistanceFitness() {
+        return distanceFitness;
+    }
+
+    public int getRank() {
+            return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public void setDistanceFitness(int distanceFitness) {
+        this.distanceFitness = distanceFitness;
+    }
+
+    public void setCostFitness(int costFitness) {
+        this.costFitness = costFitness;
+    }
+
+    public boolean dominates(MTSPHypothesis hyp) {
+        if (this.getCostFitness() > hyp.getCostFitness() || this.getDistanceFitness() > hyp.getDistanceFitness()){
+            return false;
+        }
+        else
+            return this.getCostFitness() < hyp.getCostFitness() || this.getDistanceFitness() < hyp.getDistanceFitness();
+
+    }
+
+    public String getPhenotypeString() {
+        String phenoTypeString = "";
+        for (double aPhenotype : this.phenotype) {
+            phenoTypeString += " " + String.valueOf(aPhenotype);
+        }
+        return phenoTypeString;
+    }
+
+    public double getExpectedValue() {
+        return this.exceptedValue;
+    }
+
+    public void setExpectedValue(double i) {
+        this.exceptedValue = i;
+    }
+
+
+    public int[] getGenotype() {
+        return genotype;
+    }
+
+    public void setGenotype(int[] genotype) {
+        this.genotype = genotype;
+    }
+
+    public double[] getPhenotype() {
+
+        return phenotype;
+    }
+
+    public double getFitness() {
+        return -1.0;
     }
 }

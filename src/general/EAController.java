@@ -1,9 +1,5 @@
 package general;
 
-import project3.FlatlandHypothesis;
-import project4.BeerTrackerHypothesis;
-import project5.MTSPHypothesis;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,56 +7,35 @@ import java.util.Random;
 
 public class EAController {
 
-    private Random random = new Random();
-    private final List<AbstractHypothesis> population;
-    private final ArrayList<AbstractHypothesis> adults;
-    private final ArrayList<Pair> parentPairs;
+    protected Random random = new Random();
+    protected List<AbstractHypothesis> population;
+    protected ArrayList<AbstractHypothesis> adults;
+    protected ArrayList<Pair> parentPairs;
 
     public EAController(){
-
-        AbstractHypothesis initialObject;
-        switch (Values.SELECTED_PROBLEM){
-            case FLATLAND:
-                initialObject = new FlatlandHypothesis();
-                break;
-            case TRACKER:
-                initialObject = new BeerTrackerHypothesis();
-                break;
-            case MTSP:
-                initialObject = new MTSPHypothesis();
-                break;
-            default:
-                initialObject = null;
-        }
-
-        population = generateInitialPopulation(initialObject, Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);
         adults = new ArrayList<>();
         parentPairs = new ArrayList<>();
 
+    }
+
+    public void generateInitialPopulation(AbstractHypothesis initialObject, int sizeOfGeneration) {
+        List<AbstractHypothesis> initialPopulation = new ArrayList<>();
+        for (int i = 0; i < sizeOfGeneration; i++) {
+            AbstractHypothesis hypothesis = initialObject.instantiateNewChild();
+            initialPopulation.add(hypothesis);
+        }
+        this.population = initialPopulation;
     }
 
     public void generatePhenotypes() {
         population.forEach(AbstractHypothesis::generatePhenotype);
     }
 
-    public void generateNewPopulation() {
-        List<AbstractHypothesis> newPopulation = new ArrayList<>();
-
-
-        for (Pair<AbstractHypothesis, AbstractHypothesis> pair : parentPairs) {
-            newPopulation.addAll(generateNewChildren(pair.getElement1(), pair.getElement2()));
+    public void testAndUpdateFitnessOfPhenotypes() {
+        for (AbstractHypothesis hypothesis : population) {
+            hypothesis.calculateFitness();
         }
-
-        for (int i = 0; i < Values.NUMBER_OF_ELITES; i++) {
-            AbstractHypothesis elite = findHypothesisWithBestFitness(population);
-            population.remove(elite);
-            newPopulation.add(elite);
-        }
-
-        population.clear();
-        population.addAll(newPopulation);
     }
-
 
     public void adultSelection() {
         List<AbstractHypothesis> tempPopulation = new ArrayList<>();
@@ -176,6 +151,27 @@ public class EAController {
         }
     }
 
+    public void generateNewPopulation() {
+        List<AbstractHypothesis> newPopulation = new ArrayList<>();
+
+
+        for (Pair<AbstractHypothesis, AbstractHypothesis> pair : parentPairs) {
+            newPopulation.addAll(generateNewChildren(pair.getElement1(), pair.getElement2()));
+        }
+
+        for (int i = 0; i < Values.NUMBER_OF_ELITES; i++) {
+            AbstractHypothesis elite = findHypothesisWithBestFitness(population);
+            population.remove(elite);
+            newPopulation.add(elite);
+        }
+
+        population.clear();
+        population.addAll(newPopulation);
+    }
+
+
+
+
 
 
     public double calculateStandardDeviation(List<AbstractHypothesis> hyps, double avarageFitness) {
@@ -193,15 +189,6 @@ public class EAController {
     }
 
 
-
-    public void testAndUpdateFitnessOfPhenotypes() {
-        for (AbstractHypothesis hypothesis : population) {
-            hypothesis.calculateFitness();
-        }
-    }
-
-
-
     public AbstractHypothesis getBestHypothesis(List<AbstractHypothesis> hypothesises) {
         AbstractHypothesis bestHyp = hypothesises.get(0);
         for (AbstractHypothesis hyp : hypothesises) {
@@ -214,6 +201,18 @@ public class EAController {
 
     public List<AbstractHypothesis> getPopulation() {
         return population;
+    }
+
+    protected AbstractHypothesis fitnessRoulette(List<AbstractHypothesis> hypothesises) {
+        double totalFitness = getTotalFitnessFromIHypothesis(hypothesises);
+        double x = totalFitness * random.nextDouble();
+        for (AbstractHypothesis hyp : hypothesises) {
+            x -= hyp.getFitness();
+            if (x <= 0) {
+                return hyp;
+            }
+        }
+        return null;
     }
 
     private List<AbstractHypothesis> generateNewChildren(AbstractHypothesis parent1, AbstractHypothesis parent2) {
@@ -269,17 +268,7 @@ public class EAController {
         return null;
     }
 
-    private AbstractHypothesis fitnessRoulette(List<AbstractHypothesis> hypothesises) {
-        double totalFitness = getTotalFitnessFromIHypothesis(hypothesises);
-        double x = totalFitness * random.nextDouble();
-        for (AbstractHypothesis hyp : hypothesises) {
-            x -= hyp.getFitness();
-            if (x <= 0) {
-                return hyp;
-            }
-        }
-        return null;
-    }
+
 
     private void updateExpectedValues(List<AbstractHypothesis> hypothesises) {
         for (AbstractHypothesis adult : hypothesises) {
@@ -300,13 +289,6 @@ public class EAController {
         }
     }
 
-    private List<AbstractHypothesis> generateInitialPopulation(AbstractHypothesis initialObject, int sizeOfGeneration) {
-        List<AbstractHypothesis> initialPopulation = new ArrayList<>();
-        for (int i = 0; i < sizeOfGeneration; i++) {
-            AbstractHypothesis hypothesis = initialObject.instantiateNewChild();
-            initialPopulation.add(hypothesis);
-        }
-        return initialPopulation;
-    }
+
 
 }
