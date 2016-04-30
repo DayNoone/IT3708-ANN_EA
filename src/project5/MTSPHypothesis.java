@@ -1,6 +1,5 @@
 package project5;
 
-import general.AbstractHypothesis;
 import general.Values;
 
 import java.util.*;
@@ -8,6 +7,7 @@ import java.util.*;
 /**
  * Created by dagih on 29.04.2016.
  */
+@SuppressWarnings("WeakerAccess")
 public class MTSPHypothesis{
 
     private int distanceFitness;
@@ -58,12 +58,12 @@ public class MTSPHypothesis{
 
     }
 
-    public AbstractHypothesis instantiateNewChileWithGenoType(int[] genotype) {
+    public MTSPHypothesis instantiateNewChileWithGenoType(int[] genotype) {
 
         return new MTSPHypothesis(genotype);
     }
 
-    public AbstractHypothesis instantiateNewChild() {
+    public MTSPHypothesis instantiateNewChild() {
 
         return new MTSPHypothesis();
     }
@@ -72,8 +72,8 @@ public class MTSPHypothesis{
 
     }
 
-    public List<AbstractHypothesis> crossover(AbstractHypothesis parent1, AbstractHypothesis parent2) {
-        List<AbstractHypothesis> children = new ArrayList<>();
+    public List<MTSPHypothesis> crossover(MTSPHypothesis parent1, MTSPHypothesis parent2) {
+        List<MTSPHypothesis> children = new ArrayList<>();
 
         int crossOverPoint = random.nextInt(parent1.getGenotype().length);
         int crossOverLength = random.nextInt(parent1.getGenotype().length - 2) + 1;
@@ -122,8 +122,8 @@ public class MTSPHypothesis{
 
         int[] p1 = parent1.getGenotype();
         int[] p2 = parent2.getGenotype();
-        AbstractHypothesis child1 = parent1.instantiateNewChileWithGenoType(newGenotype1);
-        AbstractHypothesis child2 = parent2.instantiateNewChileWithGenoType(newGenotype2);
+        MTSPHypothesis child1 = parent1.instantiateNewChileWithGenoType(newGenotype1);
+        MTSPHypothesis child2 = parent2.instantiateNewChileWithGenoType(newGenotype2);
         children.add(child1);
         children.add(child2);
         return children;
@@ -178,5 +178,39 @@ public class MTSPHypothesis{
         else
             return this.getCostFitness() < hyp.getCostFitness() || this.getDistanceFitness() < hyp.getDistanceFitness();
 
+    }
+
+    public String getPhenotypeString() {
+        String phenoTypeString = "";
+        for (double aPhenotype : this.phenotype) {
+            phenoTypeString += " " + String.valueOf(aPhenotype);
+        }
+        return phenoTypeString;
+    }
+
+    public double getExpectedValue() {
+        return this.exceptedValue;
+    }
+
+    public void setExpectedValue(double i) {
+        this.exceptedValue = i;
+    }
+
+
+    public int[] getGenotype() {
+        return genotype;
+    }
+
+    public void setGenotype(int[] genotype) {
+        this.genotype = genotype;
+    }
+
+    public double[] getPhenotype() {
+
+        return phenotype;
+    }
+
+    public double getFitness() {
+        return -1.0;
     }
 }

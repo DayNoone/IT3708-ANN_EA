@@ -1,16 +1,12 @@
 package project5;
 
 import enums.EProblemSelection;
-import general.AbstractHypothesis;
-import general.EAController;
 import general.Values;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import project4.BeerWorld;
-import project4.CTRNN;
 
 public class P5Main extends Application {
 
@@ -93,7 +89,7 @@ public class P5Main extends Application {
     private void updateGUI() {
 
         double avgFitness = eaController.calculateAvarageFitness(eaController.getPopulation());
-        AbstractHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
+        MTSPHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
 
         p5GuiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(),
                 avgFitness,

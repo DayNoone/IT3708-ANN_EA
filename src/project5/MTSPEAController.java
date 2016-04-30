@@ -96,18 +96,17 @@ public class MTSPEAController {
             if (random.nextDouble() >= 1 - Values.TOURNAMENT_SELECTION_EPSILON) {
 
                 MTSPHypothesis bestAttendor = tournamentGroup.get(0);
-                double bestFitness = bestAttendor.getFitness();
                 MTSPHypothesis secondBestAttendor = tournamentGroup.get(1);
                 for (MTSPHypothesis tempAttendor : tournamentGroup) {
-                    if (tempAttendor.getFitness() > bestFitness) {
-                        secondBestAttendor = bestAttendor;
-                        bestAttendor = tempAttendor;
-                        bestFitness = tempAttendor.getFitness();
-                    }
+//                    if (tempAttendor.getCostFitness() > bestFitness) {
+//                        secondBestAttendor = bestAttendor;
+//                        bestAttendor = tempAttendor;
+//                        bestFitness = tempAttendor.getFitness();
+//                    }
                 }
                 parentPairs.add(new Pair<>(bestAttendor, secondBestAttendor));
 
-                parentPairs.add(new Pair<>(attendor1, attendor2));
+                parentPairs.add(new Pair<>(bestAttendor, secondBestAttendor));
 
             } else {
                 MTSPHypothesis rand1 = tournamentGroup.get(random.nextInt(tournamentGroup.size()));
@@ -165,16 +164,6 @@ public class MTSPEAController {
 
         population.clear();
         population.addAll(newPopulation);
-    }
-
-
-    public double calculateStandardDeviation(List<MTSPHypothesis> hyps, double avarageFitness) {
-        double sumOfSquaredDistance = 0.0;
-        for (MTSPHypothesis tempHyp : hyps) {
-            sumOfSquaredDistance += Math.pow(tempHyp.getFitness() - avarageFitness, 2);
-        }
-
-        return Math.sqrt(sumOfSquaredDistance / hyps.size());
     }
 
     public double calculateAvarageFitness(List<MTSPHypothesis> hypothesises) {
@@ -268,5 +257,9 @@ public class MTSPEAController {
         hyps1.addAll(hyps);
 
         calculateRanks(hyps1);
+    }
+
+    public double calculateStandardDeviation(List<MTSPHypothesis> population, double avgFitness) {
+        return -1.0;
     }
 }

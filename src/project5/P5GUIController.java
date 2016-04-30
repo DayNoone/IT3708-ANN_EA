@@ -2,7 +2,6 @@ package project5;
 
 import enums.EAdultSelection;
 import enums.EParentSelection;
-import general.AbstractHypothesis;
 import general.Values;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.chart.LineChart;
@@ -11,7 +10,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import project4.BeerTrackerHypothesis;
 import project4.CTRNN;
 
@@ -314,7 +312,7 @@ public class P5GUIController {
         return gridPane;
     }
 
-    void updateLineCharts(List<AbstractHypothesis> population, double maxFitness, double avgFitness, double stdFitness, int generation, String phenoTypeString) {
+    void updateLineCharts(List<MTSPHypothesis> population, double maxFitness, double avgFitness, double stdFitness, int generation, String phenoTypeString) {
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
             populationFitnessLineChart.getData().retainAll();
