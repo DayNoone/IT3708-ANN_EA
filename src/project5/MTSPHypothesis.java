@@ -10,6 +10,11 @@ import java.util.*;
  */
 public class MTSPHypothesis extends AbstractHypothesis{
 
+    private int distanceFitness;
+
+    private int costFitness;
+
+    private int rank;
 
     public MTSPHypothesis() {
 
@@ -35,11 +40,11 @@ public class MTSPHypothesis extends AbstractHypothesis{
 
     @Override
     public void initiateRandomGenotype() {
-        ArrayList<Integer> pool = new ArrayList<Integer>();
+        ArrayList<Integer> pool = new ArrayList<>();
         for(int i = 0; i < Values.MTSP_NUMBER_OF_CITIES; i++){
             pool.add(i);
         }
-        int[] genotype = new int[48];
+        int[] genotype = new int[Values.MTSP_NUMBER_OF_CITIES];
         for(int j = 0; j < Values.MTSP_NUMBER_OF_CITIES; j++){
             genotype[j] = pool.remove(random.nextInt(pool.size()));
         }
@@ -71,5 +76,38 @@ public class MTSPHypothesis extends AbstractHypothesis{
     @Override
     public List<AbstractHypothesis> crossover(AbstractHypothesis parent1, AbstractHypothesis parent2) {
         return null;
+    }
+
+    public int getCostFitness() {
+        return costFitness;
+    }
+
+    public int getDistanceFitness() {
+        return distanceFitness;
+    }
+
+    public int getRank() {
+            return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public void setDistanceFitness(int distanceFitness) {
+        this.distanceFitness = distanceFitness;
+    }
+
+    public void setCostFitness(int costFitness) {
+        this.costFitness = costFitness;
+    }
+
+    public boolean dominates(MTSPHypothesis hyp) {
+        if (this.getCostFitness() > hyp.getCostFitness() || this.getDistanceFitness() > hyp.getDistanceFitness()){
+            return false;
+        }
+        else
+            return this.getCostFitness() < hyp.getCostFitness() || this.getDistanceFitness() < hyp.getDistanceFitness();
+
     }
 }

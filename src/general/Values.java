@@ -13,7 +13,6 @@ import project4.BeerWorld;
 public class Values {
 
 
-    public static final int MTSP_NUMBER_OF_CITIES = 48;
     /**
 
         EA VALUES
@@ -34,8 +33,8 @@ public class Values {
     public static int MAX_PARENT_SIZE = POPULATION_SIZE / 2;
     public static int NUMBER_OF_ELITES = (int) (POPULATION_SIZE * 0.05);
 
-    public static EAdultSelection ADULT_SELECTION = EAdultSelection.GENERATION_MIXING;
-    public static EParentSelection PARENT_SELECTION = EParentSelection.SIGMA_SCALING;
+    public static EAdultSelection ADULT_SELECTION = EAdultSelection.FULL_GENERATION_REPLACEMENT;
+    public static EParentSelection PARENT_SELECTION = EParentSelection.TOURNAMENT_SELECTION;
 
 
     public static int NUMBER_OF_BITS_IN_PROBLEM = 10;
@@ -149,6 +148,6 @@ public class Values {
 
      **/
 
-    public static int MTSP_NUMBER_OF_CITIES = 48;
+    public static final int MTSP_NUMBER_OF_CITIES = 48;
 
 }

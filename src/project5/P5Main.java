@@ -52,7 +52,8 @@ public class P5Main extends Application {
 
     private void startEvolutionaryAlgorithmLoop() {
 
-        eaController = new EAController();
+        eaController = new MTSPEAController();
+        eaController.generateInitialPopulation(new MTSPHypothesis(), Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);
         generation = 0;
 
         AnimationTimer mainLoop = new AnimationTimer() {
@@ -65,7 +66,9 @@ public class P5Main extends Application {
                         p5GuiController.clearGUI();
                         shouldRestart = false;
 
-                        eaController = new EAController();
+                        eaController = new MTSPEAController();
+                        eaController.generateInitialPopulation(new MTSPHypothesis(), Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);
+
                     }
 
                     generation += 1;

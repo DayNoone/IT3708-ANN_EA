@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import project3.Board;
+import project4.BeerTrackerHypothesis;
 
 public class P3Main extends Application {
 
@@ -59,6 +60,8 @@ public class P3Main extends Application {
     private void startEvolutionaryAlgorithmLoop(Stage primaryStage) {
 
         eaController = new EAController();
+        eaController.generateInitialPopulation(new FlatlandHypothesis(), Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);
+
         generation = 0;
         solutionFound = false;
         startTime = System.currentTimeMillis();
@@ -71,6 +74,8 @@ public class P3Main extends Application {
                     if (shouldRestart){
                         startTime = System.currentTimeMillis();
                         eaController = new EAController();
+                        eaController.generateInitialPopulation(new FlatlandHypothesis(), Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);
+
                         generation = 0;
                         solutionFound = false;
                         numberOfMoves = Values.FLATLAND_ITERATIONS;
@@ -96,7 +101,7 @@ public class P3Main extends Application {
 
                             eaController.generatePhenotypes();
 
-                            solutionFound = eaController.testAndUpdateFitnessOfPhenotypes();
+                            eaController.testAndUpdateFitnessOfPhenotypes();
 
                             p3GuiController.updateFPS(now, primaryStage);
                             if (generation % Values.GENERATION_PRINT_THROTTLE == 0){
