@@ -13,7 +13,6 @@ import project4.BeerWorld;
 public class Values {
 
 
-    public static final int MTSP_NUMBER_OF_CITIES = 48;
     /**
 
         EA VALUES

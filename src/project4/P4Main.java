@@ -95,7 +95,7 @@ public class P4Main extends Application {
 
                             eaController.generatePhenotypes();
 
-                            solutionFound = eaController.testAndUpdateFitnessOfPhenotypes();
+                            eaController.testAndUpdateFitnessOfPhenotypes();
 
                             p4GuiController.updateFPS(now, primaryStage);
                             if (generation % Values.GENERATION_PRINT_THROTTLE == 0){

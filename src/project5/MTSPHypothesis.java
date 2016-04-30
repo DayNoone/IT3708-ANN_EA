@@ -92,6 +92,19 @@ public class MTSPHypothesis extends AbstractHypothesis{
             }
         }
 
+        checkForDuplicate(newGenotype1);
+        checkForDuplicate(newGenotype2);
+
+        int[] p1 = parent1.getGenotype();
+        int[] p2 = parent2.getGenotype();
+        AbstractHypothesis child1 = parent1.instantiateNewChileWithGenoType(newGenotype1);
+        AbstractHypothesis child2 = parent2.instantiateNewChileWithGenoType(newGenotype2);
+        children.add(child1);
+        children.add(child2);
+        return children;
+    }
+
+    private void checkForDuplicate(int[] newGenotype1) {
         for(int x = 0; x < newGenotype1.length - 1; x++){
             for(int y = x + 1; y < newGenotype1.length; y++){
                 if(newGenotype1[x] == newGenotype1[y]){
@@ -104,26 +117,6 @@ public class MTSPHypothesis extends AbstractHypothesis{
                 }
             }
         }
-        for(int x = 0; x < newGenotype2.length - 1; x++){
-            for(int y = x + 1; y < newGenotype2.length; y++){
-                if(newGenotype2[x] == newGenotype2[y]){
-                    System.out.println("Duplicate cities in genotype");
-                    try {
-                        throw new Exception("Duplicate cities in genotype");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        int[] p1 = parent1.getGenotype();
-        int[] p2 = parent2.getGenotype();
-        AbstractHypothesis child1 = parent1.instantiateNewChileWithGenoType(newGenotype1);
-        AbstractHypothesis child2 = parent2.instantiateNewChileWithGenoType(newGenotype2);
-        children.add(child1);
-        children.add(child2);
-        return children;
     }
 
     private int[] instantiateIntArray(int[] genotype) {

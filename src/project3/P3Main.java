@@ -96,7 +96,7 @@ public class P3Main extends Application {
 
                             eaController.generatePhenotypes();
 
-                            solutionFound = eaController.testAndUpdateFitnessOfPhenotypes();
+                            eaController.testAndUpdateFitnessOfPhenotypes();
 
                             p3GuiController.updateFPS(now, primaryStage);
                             if (generation % Values.GENERATION_PRINT_THROTTLE == 0){
