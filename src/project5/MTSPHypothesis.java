@@ -73,6 +73,77 @@ public class MTSPHypothesis{
     }
 
     public List<AbstractHypothesis> crossover(AbstractHypothesis parent1, AbstractHypothesis parent2) {
+        List<AbstractHypothesis> children = new ArrayList<>();
+
+        int crossOverPoint = random.nextInt(parent1.getGenotype().length);
+        int crossOverLength = random.nextInt(parent1.getGenotype().length - 2) + 1;
+        crossOverPoint = 2;
+        crossOverLength = 3;
+
+        int[] newGenotype1 = instantiateIntArray(parent1.getGenotype());
+        int[] newGenotype2 = instantiateIntArray(parent2.getGenotype());
+        int oldValue;
+        for (int i = 0; i < parent1.getGenotype().length; i++) {
+            if (i >= crossOverPoint && i < crossOverPoint + crossOverLength) {
+                oldValue = newGenotype1[i];
+                newGenotype1[i] = parent2.getGenotype()[i];
+                newGenotype1 = repairCrossover(newGenotype1, oldValue, i);
+
+                oldValue = newGenotype2[i];
+                newGenotype2[i] = parent1.getGenotype()[i];
+                newGenotype2 = repairCrossover(newGenotype2, oldValue, i);
+            }
+        }
+
+        for(int x = 0; x < newGenotype1.length - 1; x++){
+            for(int y = x + 1; y < newGenotype1.length; y++){
+                if(newGenotype1[x] == newGenotype1[y]){
+                    System.out.println("Duplicate cities in genotype");
+                    try {
+                        throw new Exception("Duplicate cities in genotype");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        for(int x = 0; x < newGenotype2.length - 1; x++){
+            for(int y = x + 1; y < newGenotype2.length; y++){
+                if(newGenotype2[x] == newGenotype2[y]){
+                    System.out.println("Duplicate cities in genotype");
+                    try {
+                        throw new Exception("Duplicate cities in genotype");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        int[] p1 = parent1.getGenotype();
+        int[] p2 = parent2.getGenotype();
+        AbstractHypothesis child1 = parent1.instantiateNewChileWithGenoType(newGenotype1);
+        AbstractHypothesis child2 = parent2.instantiateNewChileWithGenoType(newGenotype2);
+        children.add(child1);
+        children.add(child2);
+        return children;
+    }
+
+    private int[] instantiateIntArray(int[] genotype) {
+        int[] newGenotype = new int[genotype.length];
+        for(int i = 0; i < genotype.length; i++){
+            newGenotype[i] = genotype[i];
+        }
+        return newGenotype;
+    }
+
+    private int[] repairCrossover(int[] newGenotype, int oldValue, int i) {
+        for(int j = 0; j < newGenotype.length; j++){
+            if (newGenotype[i] == newGenotype[j] && i != j) {
+                newGenotype[j] = oldValue;
+                return newGenotype;
+            }
+        }
         return null;
     }
 
