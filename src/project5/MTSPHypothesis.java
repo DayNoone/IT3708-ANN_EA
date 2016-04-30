@@ -55,14 +55,14 @@ public class MTSPHypothesis{
     }
 
     public void calculateFitness() {
-        int distances = sumMatrix(Values.MTSP_DISTANCES);
-        int cost = sumMatrix(Values.MTSP_COSTS);
+        this.setDistanceFitness(sumMatrix(Values.MTSP_DISTANCES));
+        this.setCostFitness(sumMatrix(Values.MTSP_COSTS));
     }
 
     private int sumMatrix(int[][] matrix) {
         int sum = 0;
         int[] genotype = getGenotype();
-        for(int i = 0; i < genotype.length; i++){
+        for(int i = 0; i < genotype.length - 1; i++){
             sum += matrix[genotype[i]][genotype[i+1]];
         }
         sum += matrix[-1][0];

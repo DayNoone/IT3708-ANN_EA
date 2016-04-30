@@ -20,11 +20,6 @@ public class P5Main extends Application {
 
 
     public static void main(String[] args) {
-        XLSXReader xlsxReader = new XLSXReader();
-        Values.MTSP_DISTANCES = xlsxReader.read("src/project5/Distance.xlsx", 48);
-        Values.MTSP_COSTS = xlsxReader.read("src/project5/Cost.xlsx", 48);
-        MTSPHypothesis mstHyp = new MTSPHypothesis();
-        mstHyp.calculateFitness();
         launch(args);
     }
 
@@ -38,13 +33,13 @@ public class P5Main extends Application {
         Values.SELECTED_PROBLEM = EProblemSelection.MTSP;
 
         p5GuiController = new P5GUIController();
-//
+
         Pane pane = p5GuiController.generateGUI(this);
-//
+
         Scene scene = new Scene(pane);
         primaryStage.setScene(scene);
         primaryStage.show();
-//
+
 //         run generation loop
         startEvolutionaryAlgorithmLoop();
     }
