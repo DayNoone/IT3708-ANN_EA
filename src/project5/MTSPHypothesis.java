@@ -62,10 +62,10 @@ public class MTSPHypothesis{
     private int sumMatrix(int[][] matrix) {
         int sum = 0;
         int[] genotype = getGenotype();
-        for(int i = 0; i < genotype.length; i++){
+        for(int i = 0; i < genotype.length - 1; i++){
             sum += matrix[genotype[i]][genotype[i+1]];
         }
-        sum += matrix[-1][0];
+        sum += matrix[matrix.length-1][0];
         return sum;
     }
 
@@ -132,7 +132,6 @@ public class MTSPHypothesis{
 
         int crossOverPoint = random.nextInt(parent1.getGenotype().length);
         int crossOverLength = random.nextInt(parent1.getGenotype().length - 2) + 1;
-
         int[] newGenotype1 = instantiateIntArray(parent1.getGenotype());
         int[] newGenotype2 = instantiateIntArray(parent2.getGenotype());
         int oldValue;
@@ -190,7 +189,7 @@ public class MTSPHypothesis{
                 return newGenotype;
             }
         }
-        return null;
+        return newGenotype;
     }
 
     public int getCostFitness() {

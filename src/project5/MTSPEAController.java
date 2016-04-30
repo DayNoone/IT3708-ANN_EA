@@ -82,11 +82,14 @@ public class MTSPEAController {
         MTSPHypothesis parent2;
 
         while (parentPairs.size() < Values.MAX_PARENT_SIZE) {
+            tempAdults.clear();
+            tempAdults.addAll(adults);
 
             //Pick random attendants to tournament
             List<MTSPHypothesis> tournamentGroup = new ArrayList<>();
             for (int i = 0; i < Values.TOURNAMENT_SELECTION_GROUP_SIZE; i++) {
-                MTSPHypothesis tournamentAttendor = tempAdults.get(random.nextInt(tempAdults.size()));
+                int index = random.nextInt(tempAdults.size());
+                MTSPHypothesis tournamentAttendor = tempAdults.get(index);
                 tournamentGroup.add(tournamentAttendor);
                 tempAdults.remove(tournamentAttendor);
             }
@@ -105,9 +108,6 @@ public class MTSPEAController {
 //                    }
                 }
                 parentPairs.add(new Pair<>(bestAttendor, secondBestAttendor));
-
-                parentPairs.add(new Pair<>(bestAttendor, secondBestAttendor));
-
             } else {
                 MTSPHypothesis rand1 = tournamentGroup.get(random.nextInt(tournamentGroup.size()));
                 tournamentGroup.remove(rand1);

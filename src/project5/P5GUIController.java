@@ -68,10 +68,6 @@ public class P5GUIController {
         p5MainClass = p5Main;
         mainPane = new BorderPane();
 
-        VBox boardVBox = getCenterGUI(0);
-
-        mainPane.setCenter(boardVBox);
-
         GridPane gridPane = getCharts();
         mainPane.setRight(gridPane);
 
@@ -421,99 +417,5 @@ public class P5GUIController {
         capturedLabel.setText(String.valueOf(Values.BEERWORLD.getCaptured() + Values.BEERWORLD.getPulledCapture()));
         failedAvoidedLabel.setText(String.valueOf(Values.BEERWORLD.getFailedAvoid() + Values.BEERWORLD.getPulledFailedAvoid()));
         failedCaptureLabel.setText(String.valueOf(Values.BEERWORLD.getFailedCapture() + Values.BEERWORLD.getPulledFailedCapture()));
-    }
-
-    private VBox getCenterGUI(int numberOfMoves) {
-        beerWorldVBox = new VBox();
-        beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
-        beerWorldVBox.getChildren().add(beerWorldGridPane);
-
-        HBox scenarioBox = new HBox();
-
-        ToggleGroup group = new ToggleGroup();
-        RadioButton button1 = new RadioButton("Original");
-        button1.setToggleGroup(group);
-        button1.setSelected(true);
-        RadioButton button2 = new RadioButton("Pull");
-        button2.setToggleGroup(group);
-        RadioButton button3 = new RadioButton("No wrap");
-        button3.setToggleGroup(group);
-        scenarioBox.getChildren().addAll(button1, button2, button3);
-
-        group.selectedToggleProperty().addListener(
-            (ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) -> {
-                if (group.getSelectedToggle() == button1){
-                    Values.CTRNN = new CTRNN();
-                    Values.BEERWORLD_PULL = false;
-                    Values.BEERWORLD_NO_WRAP = false;
-                } else if (group.getSelectedToggle() == button2){
-                    Values.CTRNN = new CTRNN();
-                    Values.BEERWORLD_PULL = true;
-                    Values.BEERWORLD_NO_WRAP = false;
-                } else if (group.getSelectedToggle() == button3){
-                    Values.CTRNN = new CTRNN();
-                    Values.BEERWORLD_PULL = false;
-                    Values.BEERWORLD_NO_WRAP = true;
-                }
-            }
-        );
-
-        beerWorldVBox.getChildren().add(scenarioBox);
-
-        CheckBox drawMovementCheckBox = new CheckBox("Draw best hyp");
-        drawMovementCheckBox.setOnAction(event -> {
-            Values.DRAW_MOVEMENT = drawMovementCheckBox.isSelected();
-        });
-        drawMovementCheckBox.setSelected(Values.UPDATE_CHARTS);
-        beerWorldVBox.getChildren().add(drawMovementCheckBox);
-
-        HBox iterationsHBox = new HBox();
-        iterationsLabel = new Label();
-        iterationsLabel.setText(String.valueOf(Values.BEERWORLD.getFallenObjects()));
-        iterationsHBox.getChildren().add(new Label("Iterations:\t"));
-        iterationsHBox.getChildren().add(iterationsLabel);
-        beerWorldVBox.getChildren().add(iterationsHBox);
-
-        HBox captureHBox = new HBox();
-        capturedLabel = new Label();
-        capturedLabel.setText(String.valueOf(Values.BEERWORLD.getCaptured()));
-        captureHBox.getChildren().add(new Label("Captured:\t"));
-        captureHBox.getChildren().add(capturedLabel);
-        beerWorldVBox.getChildren().add(captureHBox);
-
-        HBox avoidedHBox = new HBox();
-        avoidedLabel = new Label();
-        avoidedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided()));
-        avoidedHBox.getChildren().add(new Label("Avoided:\t"));
-        avoidedHBox.getChildren().add(avoidedLabel);
-        beerWorldVBox.getChildren().add(avoidedHBox);
-
-        HBox failedCaptureHBox = new HBox();
-        failedCaptureLabel = new Label();
-        failedCaptureLabel.setText(String.valueOf(Values.BEERWORLD.getFailedCapture()));
-        failedCaptureHBox.getChildren().add(new Label("Failed to capture:\t"));
-        failedCaptureHBox.getChildren().add(failedCaptureLabel);
-        beerWorldVBox.getChildren().add(failedCaptureHBox);
-
-        HBox failedAvoidedHBox = new HBox();
-        failedAvoidedLabel = new Label();
-        failedAvoidedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided()));
-        failedAvoidedHBox.getChildren().add(new Label("Failed to avoid:\t"));
-        failedAvoidedHBox.getChildren().add(failedAvoidedLabel);
-        beerWorldVBox.getChildren().add(failedAvoidedHBox);
-
-        addLabel(beerWorldVBox, "Sleep duration");
-        TextField sleepDurationTextField = new TextField();
-        sleepDurationTextField.setText(String.valueOf(Values.FLATLAND_SLEEP_DURATION));
-        sleepDurationTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            try{
-                Values.FLATLAND_SLEEP_DURATION = Integer.parseInt(newValue);
-            }catch (Exception E){
-                Values.FLATLAND_SLEEP_DURATION = Integer.parseInt(oldValue);
-            }
-        });
-        beerWorldVBox.getChildren().add(sleepDurationTextField);
-
-        return beerWorldVBox;
     }
 }
