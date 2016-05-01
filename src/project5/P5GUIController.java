@@ -341,7 +341,6 @@ public class P5GUIController {
         bestWorstScatter.setTitle("Best and worst rank");
         bestWorstScatter.setPrefSize(500, 300);
         bestWorstScatter.setAnimated(false);
-        bestWorstScatter.setStyle("-fx-padding: 1px;");
         bestSeries = new XYChart.Series<>();
         bestSeries.setName("Best");
         bestSeries.getData().add(new XYChart.Data<>(0, 0));
@@ -394,8 +393,8 @@ public class P5GUIController {
         consoleTextArea.appendText("Gen.:  " + String.format("%03d", generation) +
                 " \tBest cost:     " + String.format("%4.3f", (double) bestHypothesis.getCostFitness()) +
                 " \tBest distance:     " + String.format("%4.3f", (double) bestHypothesis.getDistanceFitness()) +
-                " \tBest fitness:  " + String.format("%4.3f", maxFitness) +
-                " \tAvg fitness:   " + String.format("%4.3f", avgFitness) +
+//                " \tBest fitness:  " + String.format("%4.3f", maxFitness) +
+//                " \tAvg fitness:   " + String.format("%4.3f", avgFitness) +
 //                " \tStandard deviation:  " + String.format("%.3f", stdFitness) +
                 " \tPhenotype:  " + phenoTypeString +
                 "\n");/**/

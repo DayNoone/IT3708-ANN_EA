@@ -213,7 +213,7 @@ public class MTSPEAController {
         List<MTSPHypothesis> children = new ArrayList<>();
         if (random.nextDouble() <= Values.CROSSOVER_PROBABILITY) {
             children.addAll(parent1.crossover(parent1, parent2));
-            children.forEach((hyp) -> hyp.mutate());
+            children.forEach(MTSPHypothesis::mutate);
         } else {
             MTSPHypothesis child1 = parent1.instantiateNewChileWithGenoType(parent1.getGenotype());
             MTSPHypothesis child2 = parent2.instantiateNewChileWithGenoType(parent2.getGenotype());
