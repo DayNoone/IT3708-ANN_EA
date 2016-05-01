@@ -101,11 +101,10 @@ public class MTSPEAController {
                 MTSPHypothesis bestAttendor = tournamentGroup.get(0);
                 MTSPHypothesis secondBestAttendor = tournamentGroup.get(1);
                 for (MTSPHypothesis tempAttendor : tournamentGroup) {
-//                    if (tempAttendor.getCostFitness() > bestFitness) {
-//                        secondBestAttendor = bestAttendor;
-//                        bestAttendor = tempAttendor;
-//                        bestFitness = tempAttendor.getFitness();
-//                    }
+                    if (tempAttendor.getRank() > bestAttendor.getRank()) {
+                        secondBestAttendor = bestAttendor;
+                        bestAttendor = tempAttendor;
+                    }
                 }
                 parentPairs.add(new Pair<>(bestAttendor, secondBestAttendor));
             } else {
@@ -157,7 +156,7 @@ public class MTSPEAController {
         }
 
         for (int i = 0; i < Values.NUMBER_OF_ELITES; i++) {
-            MTSPHypothesis elite = findHypothesisWithBestFitness(population);
+            MTSPHypothesis elite = getBestHypothesis(population);
             population.remove(elite);
             newPopulation.add(elite);
         }
@@ -174,12 +173,24 @@ public class MTSPEAController {
 
     public MTSPHypothesis getBestHypothesis(List<MTSPHypothesis> hypothesises) {
         MTSPHypothesis bestHyp = hypothesises.get(0);
-        for (MTSPHypothesis hyp : hypothesises) {
-            if (hyp.getFitness() > bestHyp.getFitness()) {
+        calculateRanks(hypothesises);
+        for(MTSPHypothesis hyp : hypothesises) {
+            if (hyp.getRank() > bestHyp.getRank()) {
                 bestHyp = hyp;
             }
         }
         return bestHyp;
+    }
+
+    public MTSPHypothesis getWorstHypothesis(List<MTSPHypothesis> hypothesises) {
+        MTSPHypothesis worstHyp = hypothesises.get(0);
+        calculateRanks(hypothesises);
+        for(MTSPHypothesis hyp : hypothesises){
+            if (hyp.getRank() < worstHyp.getRank()){
+                worstHyp = hyp;
+            }
+        }
+        return worstHyp;
     }
 
     public List<MTSPHypothesis> getPopulation() {
@@ -211,16 +222,6 @@ public class MTSPEAController {
         }
 
         return children;
-    }
-
-    private MTSPHypothesis findHypothesisWithBestFitness(List<MTSPHypothesis> hypothesises) {
-        MTSPHypothesis best = hypothesises.get(0);
-        for (MTSPHypothesis hyp : hypothesises) {
-            if (hyp.getFitness() > best.getFitness()) {
-                best = hyp;
-            }
-        }
-        return best;
     }
 
     private double getTotalFitnessFromIHypothesis(List<MTSPHypothesis> hypothesises) {

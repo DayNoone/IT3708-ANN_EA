@@ -88,11 +88,12 @@ public class P5Main extends Application {
 
         double avgFitness = eaController.calculateAvarageFitness(eaController.getPopulation());
         MTSPHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
+        MTSPHypothesis worstHypothesis = eaController.getWorstHypothesis(eaController.getPopulation());
 
         p5GuiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(),
                 avgFitness,
                 eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness),
-                generation, bestHypothesis.getPhenotypeString());
+                generation, bestHypothesis.getPhenotypeString(), bestHypothesis, worstHypothesis);
     }
 
     void restartAlgorithm() {

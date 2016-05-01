@@ -65,7 +65,7 @@ public class MTSPHypothesis{
         for(int i = 0; i < genotype.length - 1; i++){
             sum += matrix[genotype[i]][genotype[i+1]];
         }
-        sum += matrix[matrix.length-1][0];
+        sum += matrix[genotype[genotype.length-1]][genotype[0]];
         return sum;
     }
 
@@ -80,51 +80,44 @@ public class MTSPHypothesis{
     }
 
     public void mutate() {
-        ArrayList<Integer> mutatedGenotype = generateArrayList(getGenotype());
-        ArrayList<Integer> subGenotypeList = new ArrayList<>();
+        ArrayList<Integer> newGenotype = instansiateArrayList(getGenotype());
+        ArrayList<Integer> interval = new ArrayList<>();
 
         /** INVERSION MUTATION **/
-        int randStart = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
-        int randStop = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
+        int start = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
+        int stop = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
 
-        if(randStart > randStop){
-            int temp = randStart;
-            randStart = randStop;
-            randStop = temp;
+        if(start > stop){
+            int temp = start;
+            start = stop;
+            stop = temp;
         }
-        int subSize = randStop - randStart;
-        int randInsert = random.nextInt(Values.MTSP_NUMBER_OF_CITIES - subSize);
+        int intervalLength = stop - start;
+        int insertionPoint = random.nextInt(Values.MTSP_NUMBER_OF_CITIES - intervalLength);
 
-        for (int i = 0; i < subSize; i++) {
-            subGenotypeList.add(mutatedGenotype.remove(randStart));
+        for (int i = 0; i < intervalLength; i++) {
+            interval.add(newGenotype.remove(start));
         }
 
-        for(int i = 0, j = subGenotypeList.size() - 1; i < j; i++) {
-            subGenotypeList.add(i, subGenotypeList.remove(j));
+        for(int i = 0, j = interval.size() - 1; i < j; i++) {
+            interval.add(i, interval.remove(j));
         }
 
         /** DISPLACEMENT MUTATION **/
-        for (int i = 0; i < subGenotypeList.size(); i++) {
+        for (int i = 0; i < interval.size(); i++) {
             /** ONLY INVERSION NO DISPLACEMENT **/
-            //mutatedGenotype.add(randStart + i, subGenotypeList.get(i));
+            newGenotype.add(start + i, interval.get(i));
             /** DISPLACEMENT **/
-            mutatedGenotype.add(randInsert + i, subGenotypeList.get(i));
+            //newGenotype.add(insertionPoint + i, interval.get(i));
         }
 
-        int[] mutatedGenotypeArray = new int[mutatedGenotype.size()];
-        for (int i = 0; i < mutatedGenotype.size(); i++) {
-            mutatedGenotypeArray[i] = mutatedGenotype.get(i);
+        int[] mutatedGenotypeArray = new int[newGenotype.size()];
+        for (int i = 0; i < newGenotype.size(); i++) {
+            mutatedGenotypeArray[i] = newGenotype.get(i);
         }
+        checkForDuplicate(mutatedGenotypeArray);
         setGenotype(mutatedGenotypeArray);
 
-    }
-
-    private ArrayList<Integer> generateArrayList(int[] array){
-        ArrayList<Integer> newArrayList = new ArrayList<>();
-        for (int i = 0; i < array.length; i++) {
-            newArrayList.add(array[i]);
-        }
-        return newArrayList;
     }
 
     public List<MTSPHypothesis> crossover(MTSPHypothesis parent1, MTSPHypothesis parent2) {
@@ -150,8 +143,6 @@ public class MTSPHypothesis{
         checkForDuplicate(newGenotype1);
         checkForDuplicate(newGenotype2);
 
-        int[] p1 = parent1.getGenotype();
-        int[] p2 = parent2.getGenotype();
         MTSPHypothesis child1 = parent1.instantiateNewChileWithGenoType(newGenotype1);
         MTSPHypothesis child2 = parent2.instantiateNewChileWithGenoType(newGenotype2);
         children.add(child1);
@@ -180,6 +171,14 @@ public class MTSPHypothesis{
             newGenotype[i] = genotype[i];
         }
         return newGenotype;
+    }
+
+    private ArrayList<Integer> instansiateArrayList(int[] array){
+        ArrayList<Integer> newArrayList = new ArrayList<>();
+        for (int i = 0; i < array.length; i++) {
+            newArrayList.add(array[i]);
+        }
+        return newArrayList;
     }
 
     private int[] swapOldValue(int[] newGenotype, int oldValue, int i) {
@@ -228,7 +227,7 @@ public class MTSPHypothesis{
     public String getPhenotypeString() {
         String phenoTypeString = "";
         for (double aPhenotype : this.phenotype) {
-            phenoTypeString += " " + String.valueOf(aPhenotype);
+            phenoTypeString += " " + String.valueOf((int) aPhenotype);
         }
         return phenoTypeString;
     }
@@ -256,6 +255,6 @@ public class MTSPHypothesis{
     }
 
     public double getFitness() {
-        return -1.0;
+        return getCostFitness() + getDistanceFitness();
     }
 }

@@ -29,7 +29,7 @@ public class Values {
     public static double MUTATION_PROBABILITY = 0.01;
 
 
-    public static int POPULATION_SIZE = 300;
+    public static int POPULATION_SIZE = 20;
     public static int MAX_ADULT_SIZE = POPULATION_SIZE / 2;
     public static int MAX_PARENT_SIZE = POPULATION_SIZE / 2;
     public static int NUMBER_OF_ELITES = (int) (POPULATION_SIZE * 0.05);

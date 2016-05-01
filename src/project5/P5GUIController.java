@@ -3,15 +3,13 @@ package project5;
 import enums.EAdultSelection;
 import enums.EParentSelection;
 import general.Values;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import project4.BeerTrackerHypothesis;
-import project4.CTRNN;
 
 import java.util.List;
 
@@ -39,10 +37,31 @@ public class P5GUIController {
     final NumberAxis yAxis4 = new NumberAxis();
     final LineChart<Number, Number> stdFitnessLineChart = new LineChart<>(xAxis4, yAxis4);
 
+    final NumberAxis xAxis5 = new NumberAxis();
+    final NumberAxis yAxis5 = new NumberAxis();
+    final ScatterChart<Number, Number> bestWorstScatter = new ScatterChart<Number, Number>(xAxis5, yAxis5);
+
+    final NumberAxis xAxis6 = new NumberAxis();
+    final NumberAxis yAxis6 = new NumberAxis();
+    final LineChart<Number, Number> paretoFrontLineChart = new LineChart<>(xAxis6, yAxis6);
+
+    final NumberAxis xAxis7 = new NumberAxis();
+    final NumberAxis yAxis7 = new NumberAxis();
+    final LineChart<Number, Number> bestCostLineChart = new LineChart<>(xAxis7, yAxis7);
+
+    final NumberAxis xAxis8 = new NumberAxis();
+    final NumberAxis yAxis8 = new NumberAxis();
+    final LineChart<Number, Number> bestDistanceLineChart = new LineChart<>(xAxis8, yAxis8);
+
     XYChart.Series<Number, Number> populationSeries;
     XYChart.Series<Number, Number> maxFitnessSeries;
     XYChart.Series<Number, Number> avgSeries;
     XYChart.Series<Number, Number> stdSeries;
+    XYChart.Series<Number, Number> bestSeries;
+    XYChart.Series<Number, Number> worstSeries;
+    XYChart.Series<Number, Number> paretoFrontSeries;
+    XYChart.Series<Number, Number> bestCostSeries;
+    XYChart.Series<Number, Number> bestDistanceSeries;
 
     private TextArea consoleTextArea;
 
@@ -59,10 +78,6 @@ public class P5GUIController {
     private Label tournamentEpsilonLabel;
 
     private BorderPane mainPane;
-    private GridPane beerWorldGridPane;
-    private VBox beerWorldVBox;
-    private Label iterationsLabel;
-    private Label capturedLabel, avoidedLabel, failedCaptureLabel, failedAvoidedLabel;
 
     public Pane generateGUI(P5Main p5Main) {
         p5MainClass = p5Main;
@@ -279,7 +294,7 @@ public class P5GUIController {
         maxFitnessSeries = new XYChart.Series<>();
         maxFitnessLineChart.getData().add(maxFitnessSeries);
 
-        gridPane.add(maxFitnessLineChart, 1, 0);
+        //gridPane.add(maxFitnessLineChart, 1, 0);
 
         avarageFitnessLineChart.setTitle("Avarage fitness");
         avarageFitnessLineChart.setPrefSize(500, 300);
@@ -301,14 +316,60 @@ public class P5GUIController {
         stdSeries = new XYChart.Series<>();
         stdFitnessLineChart.getData().add(stdSeries);
 
-        gridPane.add(stdFitnessLineChart, 1, 1);
+//        gridPane.add(stdFitnessLineChart, 1, 1);
 
+        bestCostLineChart.setTitle("Best cost");
+        bestCostLineChart.setPrefSize(500, 300);
+        bestCostLineChart.setAnimated(false);
+        bestCostLineChart.setLegendVisible(false);
+        bestCostLineChart.setCreateSymbols(false);
+        bestCostSeries = new XYChart.Series<>();
+        bestCostLineChart.getData().add(bestCostSeries);
+
+        gridPane.add(bestCostLineChart, 1, 0);
+
+        bestDistanceLineChart.setTitle("Best distance");
+        bestDistanceLineChart.setPrefSize(500, 300);
+        bestDistanceLineChart.setAnimated(false);
+        bestDistanceLineChart.setLegendVisible(false);
+        bestDistanceLineChart.setCreateSymbols(false);
+        bestDistanceSeries = new XYChart.Series<>();
+        bestDistanceLineChart.getData().add(bestDistanceSeries);
+
+        gridPane.add(bestDistanceLineChart, 1, 1);
+
+        bestWorstScatter.setTitle("Best and worst rank");
+        bestWorstScatter.setPrefSize(500, 300);
+        bestWorstScatter.setAnimated(false);
+        bestWorstScatter.setStyle("-fx-padding: 1px;");
+        bestSeries = new XYChart.Series<>();
+        bestSeries.setName("Best");
+        bestSeries.getData().add(new XYChart.Data<>(0, 0));
+        worstSeries = new XYChart.Series<>();
+        worstSeries.setName("Worst");
+        worstSeries.getData().add(new XYChart.Data<>(0, 0));
+        bestWorstScatter.getData().add(bestSeries);
+        bestWorstScatter.getData().add(worstSeries);
+        xAxis5.setLabel("Cost");
+        yAxis5.setLabel("Distance");
+
+        gridPane.add(bestWorstScatter, 2, 0);
+
+        paretoFrontLineChart.setTitle("Pareto-front");
+        paretoFrontLineChart.setPrefSize(500, 300);
+        paretoFrontLineChart.setAnimated(false);
+        paretoFrontLineChart.setLegendVisible(false);
+        paretoFrontLineChart.setCreateSymbols(false);
+        paretoFrontSeries = new XYChart.Series<>();
+        paretoFrontLineChart.getData().add(paretoFrontSeries);
+
+        gridPane.add(paretoFrontLineChart, 2, 1);
 
 
         return gridPane;
     }
 
-    void updateLineCharts(List<MTSPHypothesis> population, double maxFitness, double avgFitness, double stdFitness, int generation, String phenoTypeString) {
+    void updateLineCharts(List<MTSPHypothesis> population, double maxFitness, double avgFitness, double stdFitness, int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis) {
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
             populationFitnessLineChart.getData().retainAll();
@@ -322,12 +383,20 @@ public class P5GUIController {
             maxFitnessSeries.getData().add(new XYChart.Data<>(generation, maxFitness));
             avgSeries.getData().add(new XYChart.Data<>(generation, avgFitness));
             stdSeries.getData().add(new XYChart.Data<>(generation, stdFitness));
+
+            bestSeries.getData().add(new XYChart.Data<>(bestHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
+            worstSeries.getData().add(new XYChart.Data<>(worstHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
+
+            bestCostSeries.getData().add(new XYChart.Data<>(generation, bestHypothesis.getCostFitness()));
+            bestDistanceSeries.getData().add(new XYChart.Data<>(generation, bestHypothesis.getDistanceFitness()));
         }
 
         consoleTextArea.appendText("Gen.:  " + String.format("%03d", generation) +
+                " \tBest cost:     " + String.format("%4.3f", (double) bestHypothesis.getCostFitness()) +
+                " \tBest distance:     " + String.format("%4.3f", (double) bestHypothesis.getDistanceFitness()) +
                 " \tBest fitness:  " + String.format("%4.3f", maxFitness) +
                 " \tAvg fitness:   " + String.format("%4.3f", avgFitness) +
-                " \tStandard deviation:  " + String.format("%.3f", stdFitness) +
+//                " \tStandard deviation:  " + String.format("%.3f", stdFitness) +
                 " \tPhenotype:  " + phenoTypeString +
                 "\n");/**/
 
@@ -393,29 +462,5 @@ public class P5GUIController {
         consoleTextArea.appendText("### RESTART ###");
         consoleTextArea.appendText("\n");
         consoleTextArea.appendText("\n");
-
-    }
-
-    public void drawMovement(int numberOfMoves) {
-
-            int[] sensorValues = Values.BEERWORLD.getSensors();
-
-            double[] moveValues = Values.CTRNN.getMove(sensorValues);
-            double moveValue = moveValues[1] - moveValues[0];
-            Values.BEERWORLD.playTimestep(BeerTrackerHypothesis.getMove(moveValue));
-
-            beerWorldVBox.getChildren().remove(beerWorldGridPane);
-            beerWorldGridPane = Values.BEERWORLD.generateBeerWorldGridPane();
-            beerWorldVBox.getChildren().add(beerWorldGridPane);
-            updateBoardValues(numberOfMoves);
-        }
-
-
-    private void updateBoardValues(int numberOfMoves) {
-        iterationsLabel.setText(String.valueOf(numberOfMoves + 1));
-        avoidedLabel.setText(String.valueOf(Values.BEERWORLD.getAvoided() + Values.BEERWORLD.getPulledAvoid()));
-        capturedLabel.setText(String.valueOf(Values.BEERWORLD.getCaptured() + Values.BEERWORLD.getPulledCapture()));
-        failedAvoidedLabel.setText(String.valueOf(Values.BEERWORLD.getFailedAvoid() + Values.BEERWORLD.getPulledFailedAvoid()));
-        failedCaptureLabel.setText(String.valueOf(Values.BEERWORLD.getFailedCapture() + Values.BEERWORLD.getPulledFailedCapture()));
     }
 }
