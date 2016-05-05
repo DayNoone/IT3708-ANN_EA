@@ -172,10 +172,10 @@ public class MTSPEAController {
 
 
     public MTSPHypothesis getBestHypothesis(List<MTSPHypothesis> hypothesises) {
-        MTSPHypothesis bestHyp = hypothesises.get(0);
         calculateRanks(hypothesises);
+        MTSPHypothesis bestHyp = hypothesises.get(0);
         for(MTSPHypothesis hyp : hypothesises) {
-            if (hyp.getRank() > bestHyp.getRank()) {
+            if (hyp.getRank() < bestHyp.getRank()) {
                 bestHyp = hyp;
             }
         }
@@ -183,10 +183,10 @@ public class MTSPEAController {
     }
 
     public MTSPHypothesis getWorstHypothesis(List<MTSPHypothesis> hypothesises) {
-        MTSPHypothesis worstHyp = hypothesises.get(0);
         calculateRanks(hypothesises);
+        MTSPHypothesis worstHyp = hypothesises.get(0);
         for(MTSPHypothesis hyp : hypothesises){
-            if (hyp.getRank() < worstHyp.getRank()){
+            if (hyp.getRank() > worstHyp.getRank()){
                 worstHyp = hyp;
             }
         }

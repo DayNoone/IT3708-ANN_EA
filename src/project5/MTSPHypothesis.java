@@ -106,9 +106,9 @@ public class MTSPHypothesis{
         /** DISPLACEMENT MUTATION **/
         for (int i = 0; i < interval.size(); i++) {
             /** ONLY INVERSION NO DISPLACEMENT **/
-            newGenotype.add(start + i, interval.get(i));
+            //newGenotype.add(start + i, interval.get(i));
             /** DISPLACEMENT **/
-            //newGenotype.add(insertionPoint + i, interval.get(i));
+            newGenotype.add(insertionPoint + i, interval.get(i));
         }
 
         int[] mutatedGenotypeArray = new int[newGenotype.size()];
