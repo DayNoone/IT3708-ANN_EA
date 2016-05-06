@@ -8,7 +8,7 @@ import java.util.*;
  * Created by dagih on 29.04.2016.
  */
 @SuppressWarnings("WeakerAccess")
-public class MTSPHypothesis{
+public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
 
     private int distanceFitness;
 
@@ -267,5 +267,23 @@ public class MTSPHypothesis{
 
     public double getFitness() {
         return getCostFitness() + getDistanceFitness();
+    }
+
+    @Override
+    public int compareTo(MTSPHypothesis o) {
+        int comparedRank = getRank() - o.getRank();
+        if (comparedRank == 0){
+            double v = o.getCrowdingDistance() - getCrowdingDistance();
+            if (v < 0){
+                return -1;
+            }else if (v > 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+        else{
+            return comparedRank;
+        }
     }
 }

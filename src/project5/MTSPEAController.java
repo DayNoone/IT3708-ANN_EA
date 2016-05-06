@@ -50,17 +50,23 @@ public class MTSPEAController {
                 adults.clear();
                 adults.addAll(tempPopulation);
                 break;
-//            case GENERATION_MIXING:
-//                List<MTSPHypothesis> allHypothesis = new ArrayList<>();
-//                allHypothesis.addAll(adults);
-//                allHypothesis.addAll(population);
-//                adults.clear();
-//                while (adults.size() < Values.MAX_ADULT_SIZE) {
-//                    MTSPHypothesis hyp = fitnessRoulette(allHypothesis);
-//                    adults.add(hyp);
-//                    allHypothesis.remove(hyp);
-//                }
-//                break;
+            case GENERATION_MIXING:
+                List<MTSPHypothesis> allHypothesis = new ArrayList<>();
+                allHypothesis.addAll(adults);
+                allHypothesis.addAll(population);
+                adults.clear();
+
+                calculateRanks(allHypothesis);
+                calculateCrowdingDistance(allHypothesis);
+
+                Collections.sort(allHypothesis);
+
+                while (adults.size() < Values.MAX_ADULT_SIZE) {
+                    MTSPHypothesis hyp = allHypothesis.remove(0);
+                    adults.add(hyp);
+                    allHypothesis.remove(hyp);
+                }
+                break;
         }
     }
 
@@ -70,8 +76,6 @@ public class MTSPEAController {
         List<MTSPHypothesis> tournamentGroup = new ArrayList<>();
 
         tempAdults.addAll(adults);
-        MTSPHypothesis parent1;
-        MTSPHypothesis parent2;
 
         while (parentPairs.size() < Values.MAX_PARENT_SIZE) {
             tempAdults.clear();
