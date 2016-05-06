@@ -14,7 +14,9 @@ public class MTSPHypothesis{
 
     private int costFitness;
 
+
     private int rank;
+    private double crowdingDistance;
 
     protected Random random = new Random();
     protected int[] genotype;
@@ -125,10 +127,11 @@ public class MTSPHypothesis{
 
         int crossOverPoint = random.nextInt(parent1.getGenotype().length);
         int crossOverLength = random.nextInt(parent1.getGenotype().length - 2) + 1;
+
         int[] newGenotype1 = instantiateIntArray(parent1.getGenotype());
         int[] newGenotype2 = instantiateIntArray(parent2.getGenotype());
         int oldValue;
-        for (int i = 0; i < parent1.getGenotype().length; i++) {
+        for (int i = 0; i < newGenotype1.length; i++) {
             if (i >= crossOverPoint && i < crossOverPoint + crossOverLength) {
                 oldValue = newGenotype1[i];
                 newGenotype1[i] = parent2.getGenotype()[i];
@@ -205,6 +208,14 @@ public class MTSPHypothesis{
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    public double getCrowdingDistance() {
+        return crowdingDistance;
+    }
+
+    public void setCrowdingDistance(double crowdingDistance) {
+        this.crowdingDistance = crowdingDistance;
     }
 
     public void setDistanceFitness(int distanceFitness) {

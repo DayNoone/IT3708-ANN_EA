@@ -4,15 +4,12 @@ import enums.EAdultSelection;
 import enums.EParentSelection;
 import enums.EProblemSelection;
 import project3.Board;
-import project4.CTRNN;
 import project4.BeerWorld;
 
 /**
  * Created by markus on 18.02.2016.
  */
 public class Values {
-
-
 
     /**
 

@@ -4,9 +4,7 @@ import general.AbstractHypothesis;
 import general.Pair;
 import general.Values;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by markus on 30.04.2016.
@@ -52,31 +50,25 @@ public class MTSPEAController {
                 adults.clear();
                 adults.addAll(tempPopulation);
                 break;
-            case OVER_PRODUCTION:
-                adults.clear();
-                while (adults.size() < Values.MAX_ADULT_SIZE) {
-                    MTSPHypothesis hyp = fitnessRoulette(tempPopulation);
-                    adults.add(hyp);
-                    tempPopulation.remove(hyp);
-                }
-                break;
-            case GENERATION_MIXING:
-                List<MTSPHypothesis> allHypothesis = new ArrayList<>();
-                allHypothesis.addAll(adults);
-                allHypothesis.addAll(population);
-                adults.clear();
-                while (adults.size() < Values.MAX_ADULT_SIZE) {
-                    MTSPHypothesis hyp = fitnessRoulette(allHypothesis);
-                    adults.add(hyp);
-                    allHypothesis.remove(hyp);
-                }
-                break;
+//            case GENERATION_MIXING:
+//                List<MTSPHypothesis> allHypothesis = new ArrayList<>();
+//                allHypothesis.addAll(adults);
+//                allHypothesis.addAll(population);
+//                adults.clear();
+//                while (adults.size() < Values.MAX_ADULT_SIZE) {
+//                    MTSPHypothesis hyp = fitnessRoulette(allHypothesis);
+//                    adults.add(hyp);
+//                    allHypothesis.remove(hyp);
+//                }
+//                break;
         }
     }
 
     public void parentSelection() {
         parentPairs.clear();
         List<MTSPHypothesis> tempAdults = new ArrayList<>();
+        List<MTSPHypothesis> tournamentGroup = new ArrayList<>();
+
         tempAdults.addAll(adults);
         MTSPHypothesis parent1;
         MTSPHypothesis parent2;
@@ -85,8 +77,9 @@ public class MTSPEAController {
             tempAdults.clear();
             tempAdults.addAll(adults);
 
+            tournamentGroup.clear();
+
             //Pick random attendants to tournament
-            List<MTSPHypothesis> tournamentGroup = new ArrayList<>();
             for (int i = 0; i < Values.TOURNAMENT_SELECTION_GROUP_SIZE; i++) {
                 int index = random.nextInt(tempAdults.size());
                 MTSPHypothesis tournamentAttendor = tempAdults.get(index);
@@ -95,6 +88,7 @@ public class MTSPEAController {
             }
 
             calculateRanks(tournamentGroup);
+            calculateCrowdingDistance(tournamentGroup);
 
             if (random.nextDouble() >= 1 - Values.TOURNAMENT_SELECTION_EPSILON) {
 
@@ -105,6 +99,12 @@ public class MTSPEAController {
                         secondBestAttendor = bestAttendor;
                         bestAttendor = tempAttendor;
                     }
+                    else if (tempAttendor.getRank() == bestAttendor.getRank()){
+                        if (tempAttendor.getCrowdingDistance() > bestAttendor.getCrowdingDistance()) {
+                            secondBestAttendor = bestAttendor;
+                            bestAttendor = tempAttendor;
+                        }
+                    }
                 }
                 parentPairs.add(new Pair<>(bestAttendor, secondBestAttendor));
             } else {
@@ -114,6 +114,57 @@ public class MTSPEAController {
                 parentPairs.add(new Pair<>(rand1, rand2));
             }
         }
+    }
+
+    private static void calculateCrowdingDistance(List<MTSPHypothesis> hyps) {
+
+        for (MTSPHypothesis hyp : hyps){
+            hyp.setCrowdingDistance(0);
+        }
+
+//        Distance
+        hyps.sort(Comparator.comparingInt(MTSPHypothesis::getDistanceFitness));
+
+        hyps.get(0).setCrowdingDistance(Double.NEGATIVE_INFINITY);
+        hyps.get(hyps.size()-1).setCrowdingDistance(Double.NEGATIVE_INFINITY);
+
+        for (int i = 1; i < hyps.size() - 1; i++) {
+            double numerator = hyps.get(i+1).getDistanceFitness() - hyps.get(i-1).getDistanceFitness();
+            double denominator = hyps.get(hyps.size() -1).getDistanceFitness() - hyps.get(0).getDistanceFitness();
+            double crowdingDistance = hyps.get(i).getCrowdingDistance() + numerator * 1.0/denominator;
+            hyps.get(i).setCrowdingDistance(crowdingDistance);
+        }
+
+
+//        Cost
+        hyps.sort(Comparator.comparingInt(MTSPHypothesis::getCostFitness));
+
+        hyps.get(0).setCrowdingDistance(Double.NEGATIVE_INFINITY);
+        hyps.get(hyps.size()-1).setCrowdingDistance(Double.NEGATIVE_INFINITY);
+
+        for (int i = 1; i < hyps.size() - 1; i++) {
+            double numerator = hyps.get(i+1).getCostFitness() - hyps.get(i-1).getCostFitness();
+            double denominator = hyps.get(hyps.size() -1).getCostFitness() - hyps.get(0).getCostFitness();
+            double crowdingDistance = hyps.get(i).getCrowdingDistance() + numerator * 1.0/denominator;
+            hyps.get(i).setCrowdingDistance(crowdingDistance);
+        }
+
+        hyps.sort(Comparator.comparingDouble(MTSPHypothesis::getCrowdingDistance));
+    }
+
+
+    public static void main(String[] args){
+        Random random = new Random();
+        List<MTSPHypothesis> tournamentGroup = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            MTSPHypothesis h1 = new MTSPHypothesis();
+            h1.setDistanceFitness(random.nextInt(100));
+            h1.setCostFitness(random.nextInt(100));
+            tournamentGroup.add(h1);
+        }
+
+        calculateCrowdingDistance(tournamentGroup);
+
     }
 
     private static void calculateRanks(List<MTSPHypothesis> tournamentGroup) {
@@ -230,34 +281,6 @@ public class MTSPEAController {
             sum += hyp.getFitness();
         }
         return sum;
-    }
-
-
-    public static void main(String[] args){
-        Random rand = new Random();
-
-        MTSPHypothesis h1 = new MTSPHypothesis();
-        MTSPHypothesis h2 = new MTSPHypothesis();
-        MTSPHypothesis h3 = new MTSPHypothesis();
-        MTSPHypothesis h4 = new MTSPHypothesis();
-        MTSPHypothesis h5 = new MTSPHypothesis();
-
-        List<MTSPHypothesis> hyps = new ArrayList<>();
-        hyps.add(h1);
-        hyps.add(h2);
-        hyps.add(h3);
-        hyps.add(h4);
-        hyps.add(h5);
-
-        for (MTSPHypothesis hypothesis : hyps){
-            hypothesis.setCostFitness(rand.nextInt(10));
-            hypothesis.setDistanceFitness(rand.nextInt(10));
-        }
-
-        List<MTSPHypothesis> hyps1 = new ArrayList<>();
-        hyps1.addAll(hyps);
-
-        calculateRanks(hyps1);
     }
 
     public double calculateStandardDeviation(List<MTSPHypothesis> population, double avgFitness) {
