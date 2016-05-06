@@ -128,48 +128,51 @@ public class MTSPEAController {
             if (hyp.getRank() == prevRank){
                 front.add(hyp);
             }else{
-                calculcateCrowdingsDistanceForRank(front);
+                calculcateCrowdingDistanceForRank(front);
                 front.clear();
                 front.add(hyp);
                 prevRank = hyp.getRank();
             }
         }
+        calculcateCrowdingDistanceForRank(front);
     }
 
-    private static void calculcateCrowdingsDistanceForRank(List<MTSPHypothesis> hyps) {
-        for (MTSPHypothesis hyp : hyps){
+    private static void calculcateCrowdingDistanceForRank(List<MTSPHypothesis> front) {
+        for (MTSPHypothesis hyp : front){
             hyp.setCrowdingDistance(0);
         }
+
+        double infinity = 1000000000;
 
         /**
          *      Distance
          */
-        hyps.sort(Comparator.comparingInt(MTSPHypothesis::getDistanceFitness));
+        front.sort(Comparator.comparingInt(MTSPHypothesis::getDistanceFitness));
 
-        hyps.get(0).setCrowdingDistance(Double.NEGATIVE_INFINITY);
-        hyps.get(hyps.size()-1).setCrowdingDistance(Double.NEGATIVE_INFINITY);
+        front.get(0).setCrowdingDistance(infinity);
+        front.get(front.size()-1).setCrowdingDistance(infinity);
 
-        for (int i = 1; i < hyps.size() - 1; i++) {
-            double numerator = hyps.get(i+1).getDistanceFitness() - hyps.get(i-1).getDistanceFitness();
-            double denominator = hyps.get(hyps.size() -1).getDistanceFitness() - hyps.get(0).getDistanceFitness();
-            double crowdingDistance = hyps.get(i).getCrowdingDistance() + numerator * 1.0/denominator;
-            hyps.get(i).setCrowdingDistance(crowdingDistance);
+        for (int i = 1; i < front.size() - 1; i++) {
+            double numerator = front.get(i+1).getDistanceFitness() - front.get(i-1).getDistanceFitness();
+            double denominator = front.get(front.size() -1).getDistanceFitness() - front.get(0).getDistanceFitness();
+            double crowdingDistance = denominator == 0 ? 0 : front.get(i).getCrowdingDistance() + numerator * 1.0/denominator;
+            front.get(i).setCrowdingDistance(crowdingDistance);
         }
 
 
         /**
          *      Cost
          */
-        hyps.sort(Comparator.comparingInt(MTSPHypothesis::getCostFitness));
+        front.sort(Comparator.comparingInt(MTSPHypothesis::getCostFitness));
 
-        hyps.get(0).setCrowdingDistance(Double.NEGATIVE_INFINITY);
-        hyps.get(hyps.size()-1).setCrowdingDistance(Double.NEGATIVE_INFINITY);
+        front.get(0).setCrowdingDistance(infinity);
+        front.get(front.size()-1).setCrowdingDistance(infinity);
 
-        for (int i = 1; i < hyps.size() - 1; i++) {
-            double numerator = hyps.get(i+1).getCostFitness() - hyps.get(i-1).getCostFitness();
-            double denominator = hyps.get(hyps.size() -1).getCostFitness() - hyps.get(0).getCostFitness();
-            double crowdingDistance = hyps.get(i).getCrowdingDistance() + numerator * 1.0/denominator;
-            hyps.get(i).setCrowdingDistance(crowdingDistance);
+        for (int i = 1; i < front.size() - 1; i++) {
+            double numerator = front.get(i+1).getCostFitness() - front.get(i-1).getCostFitness();
+            double denominator = front.get(front.size() -1).getCostFitness() - front.get(0).getCostFitness();
+            double crowdingDistance = front.get(i).getCrowdingDistance() + numerator * 1.0/denominator;
+            front.get(i).setCrowdingDistance(crowdingDistance);
         }
     }
 
@@ -190,9 +193,7 @@ public class MTSPEAController {
 
     private static void calculateRanks(List<MTSPHypothesis> tournamentGroup) {
         List<MTSPHypothesis> mtspHypothesises = new ArrayList<>();
-        for (MTSPHypothesis hyp : tournamentGroup){
-            mtspHypothesises.add((MTSPHypothesis) hyp);
-        }
+        mtspHypothesises.addAll(tournamentGroup);
 
         int[] num_solution_for_rank = new int[mtspHypothesises.size()];
 
@@ -208,6 +209,48 @@ public class MTSPEAController {
             solution_counter++;
         }
     }
+
+
+    private static void nonDominatedSort(List<MTSPHypothesis> hyps) {
+//    private static void calculateRanks(List<MTSPHypothesis> hyps) {
+        List<Set<MTSPHypothesis>> allFronts = new ArrayList<>();
+        Set<MTSPHypothesis> firstFront = new HashSet<>();
+
+        for (MTSPHypothesis hyp : hyps){
+            hyp.hypsDominated = new HashSet<>();
+            hyp.dominatedByCounter = 0;
+            for (MTSPHypothesis tempHyp : hyps){
+                if (tempHyp != hyp){
+                    if (hyp.dominates(tempHyp)){
+                        hyp.hypsDominated.add(tempHyp);
+                    }else if (tempHyp.dominates(hyp)){
+                        hyp.dominatedByCounter++;
+                    }
+                }
+            }
+            if (hyp.dominatedByCounter == 0){
+                hyp.setRank(0);
+                firstFront.add(hyp);
+            }
+        }
+        allFronts.add(firstFront);
+        int frontCounter = 0;
+        while (allFronts.get(frontCounter).size() > 0){
+            Set<MTSPHypothesis> newFront = new HashSet<>();
+            for (MTSPHypothesis hyp : allFronts.get(frontCounter)){
+                for (MTSPHypothesis dominatedByHyp : hyp.hypsDominated){
+                    dominatedByHyp.dominatedByCounter--;
+                    if (dominatedByHyp.dominatedByCounter == 0){
+                        dominatedByHyp.setRank(frontCounter + 1);
+                        newFront.add(dominatedByHyp);
+                    }
+                }
+            }
+            frontCounter++;
+            allFronts.add(newFront);
+        }
+    }
+
 
     private static int calculateNumDominates(MTSPHypothesis hyp, List<MTSPHypothesis> mtspHypothesises) {
         int counter = 0;

@@ -22,6 +22,8 @@ public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
     protected int[] genotype;
     protected double[] phenotype;
     protected double exceptedValue;
+    public HashSet<MTSPHypothesis> hypsDominated;
+    public int dominatedByCounter;
 
     public MTSPHypothesis() {
 
@@ -273,13 +275,18 @@ public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
     public int compareTo(MTSPHypothesis o) {
         int comparedRank = getRank() - o.getRank();
         if (comparedRank == 0){
+
+//            double v = o.getCrowdingDistance() - getCrowdingDistance();
+//            return (int) v;
+
             double v = o.getCrowdingDistance() - getCrowdingDistance();
-            if (v < 0){
-                return -1;
-            }else if (v > 0){
-                return 1;
-            }else{
+            if (v == 0.0){
                 return 0;
+            }
+            else if (v < 0){
+                return -1;
+            }else {
+                return 1;
             }
         }
         else{
