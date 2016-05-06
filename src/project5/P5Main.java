@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 public class P5Main extends Application {
 
 
-    private int generation;
+    private int generationCounter;
 
     private P5GUIController p5GuiController;
     private MTSPEAController eaController;
@@ -40,7 +40,7 @@ public class P5Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-//         run generation loop
+//         run generationCounter loop
         startEvolutionaryAlgorithmLoop();
     }
 
@@ -48,7 +48,7 @@ public class P5Main extends Application {
 
         eaController = new MTSPEAController();
         eaController.generateInitialPopulation(new MTSPHypothesis(), Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);
-        generation = 0;
+        generationCounter = 0;
 
         AnimationTimer mainLoop = new AnimationTimer() {
             @Override
@@ -56,7 +56,7 @@ public class P5Main extends Application {
                 if (!simulationPaused) {
 
                     if (shouldRestart) {
-                        generation = 0;
+                        generationCounter = 0;
                         p5GuiController.clearGUI();
                         shouldRestart = false;
 
@@ -65,13 +65,13 @@ public class P5Main extends Application {
 
                     }
 
-                    generation += 1;
+                    generationCounter += 1;
 
                     eaController.generatePhenotypes();
 
                     eaController.testAndUpdateFitnessOfPhenotypes();
 
-                    if (generation % Values.GENERATION_PRINT_THROTTLE == 0) {
+                    if (generationCounter % Values.GENERATION_PRINT_THROTTLE == 0) {
                         updateGUI();
                     }
 
@@ -86,14 +86,10 @@ public class P5Main extends Application {
 
     private void updateGUI() {
 
-        double avgFitness = eaController.calculateAvarageFitness(eaController.getPopulation());
         MTSPHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
         MTSPHypothesis worstHypothesis = eaController.getWorstHypothesis(eaController.getPopulation());
 
-        p5GuiController.updateLineCharts(eaController.getPopulation(), bestHypothesis.getFitness(),
-                avgFitness,
-                eaController.calculateStandardDeviation(eaController.getPopulation(), avgFitness),
-                generation, bestHypothesis.getPhenotypeString(), bestHypothesis, worstHypothesis);
+        p5GuiController.updateLineCharts(generationCounter, bestHypothesis.getPhenotypeString(), bestHypothesis, worstHypothesis);
     }
 
     void restartAlgorithm() {

@@ -126,7 +126,9 @@ public class MTSPEAController {
             hyp.setCrowdingDistance(0);
         }
 
-//        Distance
+        /**
+         *      Distance
+         */
         hyps.sort(Comparator.comparingInt(MTSPHypothesis::getDistanceFitness));
 
         hyps.get(0).setCrowdingDistance(Double.NEGATIVE_INFINITY);
@@ -140,7 +142,9 @@ public class MTSPEAController {
         }
 
 
-//        Cost
+        /**
+         *      Cost
+         */
         hyps.sort(Comparator.comparingInt(MTSPHypothesis::getCostFitness));
 
         hyps.get(0).setCrowdingDistance(Double.NEGATIVE_INFINITY);
@@ -153,7 +157,7 @@ public class MTSPEAController {
             hyps.get(i).setCrowdingDistance(crowdingDistance);
         }
 
-        hyps.sort(Comparator.comparingDouble(MTSPHypothesis::getCrowdingDistance));
+
     }
 
 
@@ -210,10 +214,11 @@ public class MTSPEAController {
             newPopulation.addAll(generateNewChildren(pair.getElement1(), pair.getElement2()));
         }
 
+        calculateRanks(population);
+        calculateCrowdingDistance(population);
+        Collections.sort(population);
         for (int i = 0; i < Values.NUMBER_OF_ELITES; i++) {
-            MTSPHypothesis elite = getBestHypothesis(population);
-            population.remove(elite);
-            newPopulation.add(elite);
+            newPopulation.add(population.remove(0));
         }
 
         population.clear();
@@ -228,24 +233,20 @@ public class MTSPEAController {
 
     public MTSPHypothesis getBestHypothesis(List<MTSPHypothesis> hypothesises) {
         calculateRanks(hypothesises);
-        MTSPHypothesis bestHyp = hypothesises.get(0);
-        for(MTSPHypothesis hyp : hypothesises) {
-            if (hyp.getRank() < bestHyp.getRank()) {
-                bestHyp = hyp;
-            }
-        }
-        return bestHyp;
+        calculateCrowdingDistance(hypothesises);
+
+        Collections.sort(hypothesises);
+
+        return hypothesises.get(0);
     }
 
     public MTSPHypothesis getWorstHypothesis(List<MTSPHypothesis> hypothesises) {
         calculateRanks(hypothesises);
-        MTSPHypothesis worstHyp = hypothesises.get(0);
-        for(MTSPHypothesis hyp : hypothesises){
-            if (hyp.getRank() > worstHyp.getRank()){
-                worstHyp = hyp;
-            }
-        }
-        return worstHyp;
+        calculateCrowdingDistance(hypothesises);
+
+        Collections.sort(hypothesises);
+
+        return hypothesises.get(hypothesises.size() - 1);
     }
 
     public List<MTSPHypothesis> getPopulation() {

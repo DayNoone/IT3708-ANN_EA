@@ -19,49 +19,27 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class P5GUIController {
 
-    NumberAxis xAxis = new NumberAxis(0, Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES - 1, 2);
-    NumberAxis yAxis = new NumberAxis(0, 1, 0.1);
+    private final NumberAxis xAxis5 = new NumberAxis();
+    private final NumberAxis yAxis5 = new NumberAxis();
+    private final ScatterChart<Number, Number> bestWorstScatter = new ScatterChart<Number, Number>(xAxis5, yAxis5);
 
-    LineChart<Number, Number> populationFitnessLineChart = new LineChart<>(xAxis, yAxis);
-    final NumberAxis xAxis2 = new NumberAxis();
-    final NumberAxis yAxis2 = new NumberAxis();
-//    final NumberAxis yAxis2 = new NumberAxis(0, 1, 0.1);
+    private final NumberAxis xAxis6 = new NumberAxis();
+    private final NumberAxis yAxis6 = new NumberAxis();
+    private final LineChart<Number, Number> paretoFrontLineChart = new LineChart<>(xAxis6, yAxis6);
 
-    final LineChart<Number, Number> maxFitnessLineChart = new LineChart<>(xAxis2, yAxis2);
-    final NumberAxis xAxis3 = new NumberAxis();
-//    final NumberAxis yAxis3 = new NumberAxis(0, 1, 0.1);
-    final NumberAxis yAxis3 = new NumberAxis();
+    private final NumberAxis xAxis7 = new NumberAxis();
+    private final NumberAxis yAxis7 = new NumberAxis();
+    private final LineChart<Number, Number> bestCostLineChart = new LineChart<>(xAxis7, yAxis7);
 
-    final LineChart<Number, Number> avarageFitnessLineChart = new LineChart<>(xAxis3, yAxis3);
-    final NumberAxis xAxis4 = new NumberAxis();
-    final NumberAxis yAxis4 = new NumberAxis();
-    final LineChart<Number, Number> stdFitnessLineChart = new LineChart<>(xAxis4, yAxis4);
+    private final NumberAxis xAxis8 = new NumberAxis();
+    private final NumberAxis yAxis8 = new NumberAxis();
+    private final LineChart<Number, Number> bestDistanceLineChart = new LineChart<>(xAxis8, yAxis8);
 
-    final NumberAxis xAxis5 = new NumberAxis();
-    final NumberAxis yAxis5 = new NumberAxis();
-    final ScatterChart<Number, Number> bestWorstScatter = new ScatterChart<Number, Number>(xAxis5, yAxis5);
-
-    final NumberAxis xAxis6 = new NumberAxis();
-    final NumberAxis yAxis6 = new NumberAxis();
-    final LineChart<Number, Number> paretoFrontLineChart = new LineChart<>(xAxis6, yAxis6);
-
-    final NumberAxis xAxis7 = new NumberAxis();
-    final NumberAxis yAxis7 = new NumberAxis();
-    final LineChart<Number, Number> bestCostLineChart = new LineChart<>(xAxis7, yAxis7);
-
-    final NumberAxis xAxis8 = new NumberAxis();
-    final NumberAxis yAxis8 = new NumberAxis();
-    final LineChart<Number, Number> bestDistanceLineChart = new LineChart<>(xAxis8, yAxis8);
-
-    XYChart.Series<Number, Number> populationSeries;
-    XYChart.Series<Number, Number> maxFitnessSeries;
-    XYChart.Series<Number, Number> avgSeries;
-    XYChart.Series<Number, Number> stdSeries;
-    XYChart.Series<Number, Number> bestSeries;
-    XYChart.Series<Number, Number> worstSeries;
-    XYChart.Series<Number, Number> paretoFrontSeries;
-    XYChart.Series<Number, Number> bestCostSeries;
-    XYChart.Series<Number, Number> bestDistanceSeries;
+    private XYChart.Series<Number, Number> bestSeries;
+    private XYChart.Series<Number, Number> worstSeries;
+    private XYChart.Series<Number, Number> paretoFrontSeries;
+    private XYChart.Series<Number, Number> bestCostSeries;
+    private XYChart.Series<Number, Number> bestDistanceSeries;
 
     private TextArea consoleTextArea;
 
@@ -74,6 +52,7 @@ public class P5GUIController {
     private TextField adultSizeTextField;
     private TextField tournamentGroupSize;
     private TextField tournamentEpsilon;
+
     private Label tournamentGroupSizeLabel;
     private Label tournamentEpsilonLabel;
 
@@ -168,10 +147,6 @@ public class P5GUIController {
         });
         vBox.getChildren().add(mutationTextField);
 
-
-
-
-
         addLabel(vBox, "Adult selection");
         ComboBox<EAdultSelection> adultSelectionComboBox = new ComboBox<>();
         adultSelectionComboBox.setValue(Values.ADULT_SELECTION);
@@ -253,14 +228,7 @@ public class P5GUIController {
         Button pauseButton = getPauseSimulationButton();
         buttonHBox.getChildren().add(pauseButton);
 
-
-
-
-
         vBox.getChildren().add(buttonHBox);
-
-
-
     }
 
     private void updateProblemSpesificGUIElementVisibilities() {
@@ -275,48 +243,6 @@ public class P5GUIController {
 
     private GridPane getCharts() {
         GridPane gridPane = new GridPane();
-
-        populationFitnessLineChart.setTitle("Population fitness");
-        populationFitnessLineChart.setLegendVisible(false);
-        populationFitnessLineChart.setPrefSize(500, 300);
-        populationFitnessLineChart.setCreateSymbols(false);
-        populationSeries = new XYChart.Series<>();
-        populationFitnessLineChart.setAnimated(false);
-
-        gridPane.add(populationFitnessLineChart, 0, 0);
-
-        maxFitnessLineChart.setTitle("Best fitness");
-        maxFitnessLineChart.setPrefSize(500, 300);
-        maxFitnessLineChart.setAnimated(false);
-        maxFitnessLineChart.setLegendVisible(false);
-        maxFitnessLineChart.setCreateSymbols(false);
-
-        maxFitnessSeries = new XYChart.Series<>();
-        maxFitnessLineChart.getData().add(maxFitnessSeries);
-
-        //gridPane.add(maxFitnessLineChart, 1, 0);
-
-        avarageFitnessLineChart.setTitle("Avarage fitness");
-        avarageFitnessLineChart.setPrefSize(500, 300);
-        avarageFitnessLineChart.setAnimated(false);
-        avarageFitnessLineChart.setLegendVisible(false);
-        avarageFitnessLineChart.setCreateSymbols(false);
-
-        avgSeries = new XYChart.Series<>();
-        avarageFitnessLineChart.getData().add(avgSeries);
-
-        gridPane.add(avarageFitnessLineChart, 0, 1);
-
-
-        stdFitnessLineChart.setTitle("Standard deviation fitness");
-        stdFitnessLineChart.setPrefSize(500, 300);
-        stdFitnessLineChart.setAnimated(false);
-        stdFitnessLineChart.setLegendVisible(false);
-        stdFitnessLineChart.setCreateSymbols(false);
-        stdSeries = new XYChart.Series<>();
-        stdFitnessLineChart.getData().add(stdSeries);
-
-//        gridPane.add(stdFitnessLineChart, 1, 1);
 
         bestCostLineChart.setTitle("Best cost");
         bestCostLineChart.setPrefSize(500, 300);
@@ -344,13 +270,16 @@ public class P5GUIController {
         bestSeries = new XYChart.Series<>();
         bestSeries.setName("Best");
         bestSeries.getData().add(new XYChart.Data<>(0, 0));
+
         worstSeries = new XYChart.Series<>();
         worstSeries.setName("Worst");
         worstSeries.getData().add(new XYChart.Data<>(0, 0));
+
         bestWorstScatter.getData().add(bestSeries);
         bestWorstScatter.getData().add(worstSeries);
-        xAxis5.setLabel("Cost");
-        yAxis5.setLabel("Distance");
+
+        xAxis5.setLabel("Distance");
+        yAxis5.setLabel("Cost");
 
         gridPane.add(bestWorstScatter, 2, 0);
 
@@ -368,21 +297,9 @@ public class P5GUIController {
         return gridPane;
     }
 
-    void updateLineCharts(List<MTSPHypothesis> population, double maxFitness, double avgFitness, double stdFitness, int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis) {
+    void updateLineCharts(int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis) {
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
-            populationFitnessLineChart.getData().retainAll();
-
-            populationSeries = new XYChart.Series<>();
-            for (int i = 0; i < population.size(); i++) {
-                populationSeries.getData().add(new XYChart.Data<>(i, (population.get(i)).getFitness()));
-            }
-            populationFitnessLineChart.getData().add(populationSeries);
-
-            maxFitnessSeries.getData().add(new XYChart.Data<>(generation, maxFitness));
-            avgSeries.getData().add(new XYChart.Data<>(generation, avgFitness));
-            stdSeries.getData().add(new XYChart.Data<>(generation, stdFitness));
-
             bestSeries.getData().add(new XYChart.Data<>(bestHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
             worstSeries.getData().add(new XYChart.Data<>(worstHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
 
@@ -391,17 +308,11 @@ public class P5GUIController {
         }
 
         consoleTextArea.appendText("Gen.:  " + String.format("%03d", generation) +
-                " \tBest cost:     " + String.format("%4.3f", (double) bestHypothesis.getCostFitness()) +
-                " \tBest distance:     " + String.format("%4.3f", (double) bestHypothesis.getDistanceFitness()) +
-//                " \tBest fitness:  " + String.format("%4.3f", maxFitness) +
-//                " \tAvg fitness:   " + String.format("%4.3f", avgFitness) +
-//                " \tStandard deviation:  " + String.format("%.3f", stdFitness) +
+                " \tBest cost:  " + String.format("%4.0f", (double) bestHypothesis.getCostFitness()) +
+                " \tBest distance:     " + String.format("%4.0f  ", (double) bestHypothesis.getDistanceFitness()) +
                 " \tPhenotype:  " + phenoTypeString +
                 "\n");/**/
 
-//        System.out.println("GENERATION " + generation);
-//        Values.CTRNN.printWeights();
-//        System.out.println("");
     }
 
     void appendTextToConsole(String s) {
@@ -442,19 +353,12 @@ public class P5GUIController {
 
 
     public void clearGUI() {
+        bestSeries.getData().retainAll();
+        worstSeries.getData().retainAll();
 
-        xAxis.setUpperBound(Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES - 1);
-        stdFitnessLineChart.getData().retainAll();
-        stdSeries = new XYChart.Series<>();
-        stdFitnessLineChart.getData().add(stdSeries);
+        bestCostSeries.getData().retainAll();
 
-        maxFitnessLineChart.getData().retainAll();
-        maxFitnessSeries = new XYChart.Series<>();
-        maxFitnessLineChart.getData().add(maxFitnessSeries);
-
-        avarageFitnessLineChart.getData().retainAll();
-        avgSeries = new XYChart.Series<>();
-        avarageFitnessLineChart.getData().add(avgSeries);
+        bestDistanceSeries.getData().retainAll();
 
         consoleTextArea.appendText("\n");
         consoleTextArea.appendText("\n");
