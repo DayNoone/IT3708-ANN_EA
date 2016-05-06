@@ -1,6 +1,5 @@
 package project5;
 
-import general.AbstractHypothesis;
 import general.Pair;
 import general.Values;
 
@@ -57,7 +56,7 @@ public class MTSPEAController {
                 adults.clear();
 
                 calculateRanks(allHypothesis);
-                calculateCrowdingDistance(allHypothesis);
+                calculateCrowdingDistancesForAllRanks(allHypothesis);
 
                 Collections.sort(allHypothesis);
 
@@ -92,7 +91,7 @@ public class MTSPEAController {
             }
 
             calculateRanks(tournamentGroup);
-            calculateCrowdingDistance(tournamentGroup);
+            calculateCrowdingDistancesForAllRanks(tournamentGroup);
 
             if (random.nextDouble() >= 1 - Values.TOURNAMENT_SELECTION_EPSILON) {
 
@@ -120,8 +119,24 @@ public class MTSPEAController {
         }
     }
 
-    private static void calculateCrowdingDistance(List<MTSPHypothesis> hyps) {
+    private static void calculateCrowdingDistancesForAllRanks(List<MTSPHypothesis> hyps) {
+        hyps.sort(Comparator.comparingDouble(MTSPHypothesis::getRank));
 
+        List<MTSPHypothesis> front = new ArrayList<>();
+        int prevRank = hyps.get(0).getRank();
+        for (MTSPHypothesis hyp : hyps){
+            if (hyp.getRank() == prevRank){
+                front.add(hyp);
+            }else{
+                calculcateCrowdingsDistanceForRank(front);
+                front.clear();
+                front.add(hyp);
+                prevRank = hyp.getRank();
+            }
+        }
+    }
+
+    private static void calculcateCrowdingsDistanceForRank(List<MTSPHypothesis> hyps) {
         for (MTSPHypothesis hyp : hyps){
             hyp.setCrowdingDistance(0);
         }
@@ -156,8 +171,6 @@ public class MTSPEAController {
             double crowdingDistance = hyps.get(i).getCrowdingDistance() + numerator * 1.0/denominator;
             hyps.get(i).setCrowdingDistance(crowdingDistance);
         }
-
-
     }
 
 
@@ -171,7 +184,7 @@ public class MTSPEAController {
             tournamentGroup.add(h1);
         }
 
-        calculateCrowdingDistance(tournamentGroup);
+        calculateCrowdingDistancesForAllRanks(tournamentGroup);
 
     }
 
@@ -215,7 +228,7 @@ public class MTSPEAController {
         }
 
         calculateRanks(population);
-        calculateCrowdingDistance(population);
+        calculateCrowdingDistancesForAllRanks(population);
         Collections.sort(population);
         for (int i = 0; i < Values.NUMBER_OF_ELITES; i++) {
             newPopulation.add(population.remove(0));
@@ -233,7 +246,7 @@ public class MTSPEAController {
 
     public MTSPHypothesis getBestHypothesis(List<MTSPHypothesis> hypothesises) {
         calculateRanks(hypothesises);
-        calculateCrowdingDistance(hypothesises);
+        calculateCrowdingDistancesForAllRanks(hypothesises);
 
         Collections.sort(hypothesises);
 
@@ -242,7 +255,7 @@ public class MTSPEAController {
 
     public MTSPHypothesis getWorstHypothesis(List<MTSPHypothesis> hypothesises) {
         calculateRanks(hypothesises);
-        calculateCrowdingDistance(hypothesises);
+        calculateCrowdingDistancesForAllRanks(hypothesises);
 
         Collections.sort(hypothesises);
 

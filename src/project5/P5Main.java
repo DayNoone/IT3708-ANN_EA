@@ -71,7 +71,7 @@ public class P5Main extends Application {
 
                     eaController.testAndUpdateFitnessOfPhenotypes();
 
-                    if (generationCounter % Values.GENERATION_PRINT_THROTTLE == 0) {
+                    if (Values.GENERATION_PRINT_THROTTLE != 0 && generationCounter % Values.GENERATION_PRINT_THROTTLE == 0) {
                         updateGUI();
                     }
 
