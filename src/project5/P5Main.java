@@ -71,11 +71,15 @@ public class P5Main extends Application {
 
                     eaController.testAndUpdateFitnessOfPhenotypes();
 
+
+
+                    eaController.adultSelection();
+
                     if (Values.GENERATION_PRINT_THROTTLE != 0 && generationCounter % Values.GENERATION_PRINT_THROTTLE == 0) {
                         updateGUI();
                     }
 
-                    eaController.adultSelection();
+
                     eaController.parentSelection();
                     eaController.generateNewPopulation();
                 }

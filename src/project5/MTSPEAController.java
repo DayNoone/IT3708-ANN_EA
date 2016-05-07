@@ -90,8 +90,8 @@ public class MTSPEAController {
                 tempAdults.remove(tournamentAttendor);
             }
 
-            calculateRanks(tournamentGroup);
-            calculateCrowdingDistancesForAllRanks(tournamentGroup);
+//            calculateRanks(tournamentGroup);
+//            calculateCrowdingDistancesForAllRanks(tournamentGroup);
 
             if (random.nextDouble() >= 1 - Values.TOURNAMENT_SELECTION_EPSILON) {
 
@@ -270,12 +270,12 @@ public class MTSPEAController {
             newPopulation.addAll(generateNewChildren(pair.getElement1(), pair.getElement2()));
         }
 
-        calculateRanks(population);
-        calculateCrowdingDistancesForAllRanks(population);
-        Collections.sort(population);
-        for (int i = 0; i < Values.NUMBER_OF_ELITES; i++) {
-            newPopulation.add(population.remove(0));
-        }
+//        calculateRanks(population);
+//        calculateCrowdingDistancesForAllRanks(population);
+//        Collections.sort(population);
+//        for (int i = 0; i < Values.NUMBER_OF_ELITES; i++) {
+//            newPopulation.add(population.remove(0));
+//        }
 
         population.clear();
         population.addAll(newPopulation);
@@ -288,25 +288,25 @@ public class MTSPEAController {
 
 
     public MTSPHypothesis getBestHypothesis(List<MTSPHypothesis> hypothesises) {
-        calculateRanks(hypothesises);
-        calculateCrowdingDistancesForAllRanks(hypothesises);
-
-        Collections.sort(hypothesises);
+//        calculateRanks(hypothesises);
+//        calculateCrowdingDistancesForAllRanks(hypothesises);
+//
+//        Collections.sort(hypothesises);
 
         return hypothesises.get(0);
     }
 
     public MTSPHypothesis getWorstHypothesis(List<MTSPHypothesis> hypothesises) {
-        calculateRanks(hypothesises);
-        calculateCrowdingDistancesForAllRanks(hypothesises);
-
-        Collections.sort(hypothesises);
+//        calculateRanks(hypothesises);
+//        calculateCrowdingDistancesForAllRanks(hypothesises);
+//
+//        Collections.sort(hypothesises);
 
         return hypothesises.get(hypothesises.size() - 1);
     }
 
     public List<MTSPHypothesis> getPopulation() {
-        return population;
+        return adults;
     }
 
     protected MTSPHypothesis fitnessRoulette(List<MTSPHypothesis> hypothesises) {
