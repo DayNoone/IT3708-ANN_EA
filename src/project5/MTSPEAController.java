@@ -53,6 +53,8 @@ public class MTSPEAController {
                 List<MTSPHypothesis> allHypothesis = new ArrayList<>();
                 allHypothesis.addAll(adults);
                 allHypothesis.addAll(population);
+                population.clear();
+                population.addAll(allHypothesis);
                 adults.clear();
 
                 calculateRanks(allHypothesis);
@@ -142,7 +144,7 @@ public class MTSPEAController {
             hyp.setCrowdingDistance(0);
         }
 
-        double infinity = Double.POSITIVE_INFINITY;
+        double infinity = Double.NEGATIVE_INFINITY;
 
         /**
          *      Distance
@@ -306,7 +308,7 @@ public class MTSPEAController {
     }
 
     public List<MTSPHypothesis> getPopulation() {
-        return adults;
+        return population;
     }
 
     protected MTSPHypothesis fitnessRoulette(List<MTSPHypothesis> hypothesises) {
