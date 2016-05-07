@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class P5Main extends Application {
 
 
@@ -93,7 +96,7 @@ public class P5Main extends Application {
         MTSPHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
         MTSPHypothesis worstHypothesis = eaController.getWorstHypothesis(eaController.getPopulation());
 
-        p5GuiController.updateLineCharts(generationCounter, bestHypothesis.getPhenotypeString(), bestHypothesis, worstHypothesis);
+        p5GuiController.updateLineCharts(generationCounter, bestHypothesis.getPhenotypeString(), bestHypothesis, worstHypothesis, eaController.getPopulation());
     }
 
     void restartAlgorithm() {

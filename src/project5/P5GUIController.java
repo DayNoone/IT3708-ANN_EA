@@ -23,9 +23,9 @@ public class P5GUIController {
     private final NumberAxis yAxis5 = new NumberAxis();
     private final ScatterChart<Number, Number> bestWorstScatter = new ScatterChart<Number, Number>(xAxis5, yAxis5);
 
-    private final NumberAxis xAxis6 = new NumberAxis();
-    private final NumberAxis yAxis6 = new NumberAxis();
-    private final LineChart<Number, Number> paretoFrontLineChart = new LineChart<>(xAxis6, yAxis6);
+    private final NumberAxis xAxis6 = new NumberAxis(0, 175000, 25000);
+    private final NumberAxis yAxis6 = new NumberAxis(0, 2000, 250);
+    private final ScatterChart<Number, Number> paretoFrontLineChart = new ScatterChart<Number, Number>(xAxis6, yAxis6);
 
     private final NumberAxis xAxis7 = new NumberAxis();
     private final NumberAxis yAxis7 = new NumberAxis();
@@ -287,7 +287,6 @@ public class P5GUIController {
         paretoFrontLineChart.setPrefSize(500, 300);
         paretoFrontLineChart.setAnimated(false);
         paretoFrontLineChart.setLegendVisible(false);
-        paretoFrontLineChart.setCreateSymbols(false);
         paretoFrontSeries = new XYChart.Series<>();
         paretoFrontLineChart.getData().add(paretoFrontSeries);
 
@@ -297,7 +296,7 @@ public class P5GUIController {
         return gridPane;
     }
 
-    void updateLineCharts(int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis) {
+    void updateLineCharts(int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis, List<MTSPHypothesis> population) {
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
             bestSeries.getData().add(new XYChart.Data<>(bestHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
@@ -305,6 +304,13 @@ public class P5GUIController {
 
             bestCostSeries.getData().add(new XYChart.Data<>(generation, bestHypothesis.getCostFitness()));
             bestDistanceSeries.getData().add(new XYChart.Data<>(generation, bestHypothesis.getDistanceFitness()));
+
+            paretoFrontSeries.getData().retainAll();
+            for(MTSPHypothesis hypothesis: population){
+                if(hypothesis.getRank() == 0){
+                    paretoFrontSeries.getData().add(new XYChart.Data<>(hypothesis.getDistanceFitness(), hypothesis.getCostFitness()));
+                }
+            }
         }
 
         consoleTextArea.appendText("Gen.:  " + String.format("%03d", generation) +

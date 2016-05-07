@@ -193,7 +193,7 @@ public class MTSPEAController {
 
     }
 
-    private static void calculateRanks2(List<MTSPHypothesis> tournamentGroup) {
+    private static void calculateRanks(List<MTSPHypothesis> tournamentGroup) {
         List<MTSPHypothesis> mtspHypothesises = new ArrayList<>();
         mtspHypothesises.addAll(tournamentGroup);
 
@@ -214,7 +214,7 @@ public class MTSPEAController {
 
 
 //    private static void nonDominatedSort(List<MTSPHypothesis> hyps) {
-    private static void calculateRanks(List<MTSPHypothesis> hyps) {
+    private static void calculateRanks2(List<MTSPHypothesis> hyps) {
         List<Set<MTSPHypothesis>> allFronts = new ArrayList<>();
         Set<MTSPHypothesis> firstFront = new HashSet<>();
 
