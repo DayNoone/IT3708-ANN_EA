@@ -280,6 +280,9 @@ public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
 //            return (int) v;
 
             double v = o.getCrowdingDistance() - getCrowdingDistance();
+            if (o.getCrowdingDistance() == Double.POSITIVE_INFINITY && getCrowdingDistance() == Double.POSITIVE_INFINITY || o.getCrowdingDistance() == Double.NEGATIVE_INFINITY && getCrowdingDistance() == Double.NEGATIVE_INFINITY){
+                return 0;
+            }
             if (v == 0.0){
                 return 0;
             }

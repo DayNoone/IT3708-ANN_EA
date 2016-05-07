@@ -142,7 +142,7 @@ public class MTSPEAController {
             hyp.setCrowdingDistance(0);
         }
 
-        double infinity = 1000000000;
+        double infinity = Double.POSITIVE_INFINITY;
 
         /**
          *      Distance
@@ -191,7 +191,7 @@ public class MTSPEAController {
 
     }
 
-    private static void calculateRanks(List<MTSPHypothesis> tournamentGroup) {
+    private static void calculateRanks2(List<MTSPHypothesis> tournamentGroup) {
         List<MTSPHypothesis> mtspHypothesises = new ArrayList<>();
         mtspHypothesises.addAll(tournamentGroup);
 
@@ -211,8 +211,8 @@ public class MTSPEAController {
     }
 
 
-    private static void nonDominatedSort(List<MTSPHypothesis> hyps) {
-//    private static void calculateRanks(List<MTSPHypothesis> hyps) {
+//    private static void nonDominatedSort(List<MTSPHypothesis> hyps) {
+    private static void calculateRanks(List<MTSPHypothesis> hyps) {
         List<Set<MTSPHypothesis>> allFronts = new ArrayList<>();
         Set<MTSPHypothesis> firstFront = new HashSet<>();
 
