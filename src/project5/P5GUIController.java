@@ -19,8 +19,8 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class P5GUIController {
 
-    private final NumberAxis xAxis5 = new NumberAxis();
-    private final NumberAxis yAxis5 = new NumberAxis();
+    private final NumberAxis xAxis5 = new NumberAxis(0, 175000, 25000);
+    private final NumberAxis yAxis5 = new NumberAxis(0, 2000, 250);
     private final ScatterChart<Number, Number> bestWorstScatter = new ScatterChart<Number, Number>(xAxis5, yAxis5);
 
     private final NumberAxis xAxis6 = new NumberAxis(0, 175000, 25000);
@@ -35,8 +35,9 @@ public class P5GUIController {
     private final NumberAxis yAxis8 = new NumberAxis();
     private final LineChart<Number, Number> bestDistanceLineChart = new LineChart<>(xAxis8, yAxis8);
 
-    private XYChart.Series<Number, Number> bestSeries;
+    private XYChart.Series<Number, Number> populationSeries;
     private XYChart.Series<Number, Number> worstSeries;
+    private XYChart.Series<Number, Number> bestSeries;
     private XYChart.Series<Number, Number> paretoFrontSeries;
     private XYChart.Series<Number, Number> bestCostSeries;
     private XYChart.Series<Number, Number> bestDistanceSeries;
@@ -267,16 +268,21 @@ public class P5GUIController {
         bestWorstScatter.setTitle("Best and worst rank");
         bestWorstScatter.setPrefSize(500, 300);
         bestWorstScatter.setAnimated(false);
-        bestSeries = new XYChart.Series<>();
-        bestSeries.setName("Best");
-        bestSeries.getData().add(new XYChart.Data<>(0, 0));
-
         worstSeries = new XYChart.Series<>();
         worstSeries.setName("Worst");
         worstSeries.getData().add(new XYChart.Data<>(0, 0));
 
-        bestWorstScatter.getData().add(bestSeries);
+        bestSeries = new XYChart.Series<>();
+        bestSeries.setName("Best");
+        bestSeries.getData().add(new XYChart.Data<>(0, 0));
+
+        populationSeries = new XYChart.Series<>();
+        populationSeries.setName("Population");
+        populationSeries.getData().add(new XYChart.Data<>(0, 0));
+
+        bestWorstScatter.getData().add(populationSeries);
         bestWorstScatter.getData().add(worstSeries);
+        bestWorstScatter.getData().add(bestSeries);
 
         xAxis5.setLabel("Distance");
         yAxis5.setLabel("Cost");
@@ -299,18 +305,45 @@ public class P5GUIController {
     void updateLineCharts(int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis, List<MTSPHypothesis> population) {
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
-            bestSeries.getData().add(new XYChart.Data<>(bestHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
-            worstSeries.getData().add(new XYChart.Data<>(worstHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
+            populationSeries.getData().retainAll();
+            paretoFrontSeries.getData().retainAll();
+            worstSeries.getData().retainAll();
+            bestSeries.getData().retainAll();
+
+
+            //worstSeries.getData().add(new XYChart.Data<>(bestHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
+            //bestSeries.getData().add(new XYChart.Data<>(worstHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
 
             bestCostSeries.getData().add(new XYChart.Data<>(generation, bestHypothesis.getCostFitness()));
             bestDistanceSeries.getData().add(new XYChart.Data<>(generation, bestHypothesis.getDistanceFitness()));
 
-            paretoFrontSeries.getData().retainAll();
+
+            MTSPHypothesis worstDistance = population.get(0);
+            MTSPHypothesis bestDistance = population.get(0);
+            MTSPHypothesis worstCost = population.get(0);
+            MTSPHypothesis bestCost = population.get(0);
             for(MTSPHypothesis hypothesis: population){
                 if(hypothesis.getRank() == 0){
                     paretoFrontSeries.getData().add(new XYChart.Data<>(hypothesis.getDistanceFitness(), hypothesis.getCostFitness()));
                 }
+                if(hypothesis.getDistanceFitness() > worstDistance.getDistanceFitness()){
+                    worstDistance = hypothesis;
+                } else if(hypothesis.getDistanceFitness() < bestDistance.getDistanceFitness()){
+                    bestDistance = hypothesis;
+                } else if(hypothesis.getCostFitness() > worstCost.getCostFitness()){
+                    worstCost = hypothesis;
+                } else if(hypothesis.getCostFitness() < bestCost.getCostFitness()){
+                    bestCost = hypothesis;
+                } else {
+                    populationSeries.getData().add(new XYChart.Data<>(hypothesis.getDistanceFitness(), hypothesis.getCostFitness()));
+                }
             }
+            worstSeries.getData().add(new XYChart.Data<>(worstDistance.getDistanceFitness(), worstDistance.getCostFitness()));
+            worstSeries.getData().add(new XYChart.Data<>(worstCost.getDistanceFitness(), worstCost.getCostFitness()));
+            bestSeries.getData().add(new XYChart.Data<>(bestDistance.getDistanceFitness(), bestDistance.getCostFitness()));
+            bestSeries.getData().add(new XYChart.Data<>(bestCost.getDistanceFitness(), bestCost.getCostFitness()));
+
+
         }
 
         consoleTextArea.appendText("Gen.:  " + String.format("%03d", generation) +
@@ -359,8 +392,8 @@ public class P5GUIController {
 
 
     public void clearGUI() {
-        bestSeries.getData().retainAll();
         worstSeries.getData().retainAll();
+        bestSeries.getData().retainAll();
 
         bestCostSeries.getData().retainAll();
 
