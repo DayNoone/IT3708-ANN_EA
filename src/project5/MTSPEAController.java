@@ -96,21 +96,9 @@ public class MTSPEAController {
 //            calculateCrowdingDistancesForAllRanks(tournamentGroup);
 
             if (random.nextDouble() >= 1 - Values.TOURNAMENT_SELECTION_EPSILON) {
-
+                tournamentGroup.sort(Comparator.comparingDouble(MTSPHypothesis::getRank));
                 MTSPHypothesis bestAttendor = tournamentGroup.get(0);
                 MTSPHypothesis secondBestAttendor = tournamentGroup.get(1);
-                for (MTSPHypothesis tempAttendor : tournamentGroup) {
-                    if (tempAttendor.getRank() > bestAttendor.getRank()) {
-                        secondBestAttendor = bestAttendor;
-                        bestAttendor = tempAttendor;
-                    }
-                    else if (tempAttendor.getRank() == bestAttendor.getRank()){
-                        if (tempAttendor.getCrowdingDistance() > bestAttendor.getCrowdingDistance()) {
-                            secondBestAttendor = bestAttendor;
-                            bestAttendor = tempAttendor;
-                        }
-                    }
-                }
                 parentPairs.add(new Pair<>(bestAttendor, secondBestAttendor));
             } else {
                 MTSPHypothesis rand1 = tournamentGroup.get(random.nextInt(tournamentGroup.size()));
@@ -144,7 +132,7 @@ public class MTSPEAController {
             hyp.setCrowdingDistance(0);
         }
 
-        double infinity = Double.NEGATIVE_INFINITY;
+        double infinity = Double.POSITIVE_INFINITY;
 
         /**
          *      Distance

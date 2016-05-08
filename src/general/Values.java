@@ -20,7 +20,7 @@ public class Values {
     public static EProblemSelection SELECTED_PROBLEM = EProblemSelection.FLATLAND;
 
     public static int TOURNAMENT_SELECTION_GROUP_SIZE = 5;
-    public static double TOURNAMENT_SELECTION_EPSILON = 0.5;
+    public static double TOURNAMENT_SELECTION_EPSILON = 0.9;
 
     public static double CROSSOVER_PROBABILITY = 0.8;
     public static double MUTATION_PROBABILITY = 0.01;
