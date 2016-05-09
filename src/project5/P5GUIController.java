@@ -38,9 +38,11 @@ public class P5GUIController {
     private XYChart.Series<Number, Number> populationSeries;
     private XYChart.Series<Number, Number> worstSeries;
     private XYChart.Series<Number, Number> bestSeries;
-    private XYChart.Series<Number, Number> paretoFrontSeries;
     private XYChart.Series<Number, Number> bestCostSeries;
     private XYChart.Series<Number, Number> bestDistanceSeries;
+    private XYChart.Series<Number, Number> paretoFrontSeries;
+    private XYChart.Series<Number, Number> bestParetoFrontSeries;
+    private XYChart.Series<Number, Number> worstParetoFrontSeries;
 
     private TextArea consoleTextArea;
 
@@ -268,6 +270,7 @@ public class P5GUIController {
         bestWorstScatter.setTitle("Best and worst rank");
         bestWorstScatter.setPrefSize(500, 300);
         bestWorstScatter.setAnimated(false);
+
         worstSeries = new XYChart.Series<>();
         worstSeries.setName("Worst");
         worstSeries.getData().add(new XYChart.Data<>(0, 0));
@@ -294,7 +297,20 @@ public class P5GUIController {
         paretoFrontLineChart.setAnimated(false);
         paretoFrontLineChart.setLegendVisible(false);
         paretoFrontSeries = new XYChart.Series<>();
+
+        bestParetoFrontSeries = new XYChart.Series<>();
+        bestParetoFrontSeries.setName("Best");
+        bestParetoFrontSeries.getData().add(new XYChart.Data<>(0, 0));
+
+        worstParetoFrontSeries = new XYChart.Series<>();
+        worstParetoFrontSeries.setName("Best");
+        worstParetoFrontSeries.getData().add(new XYChart.Data<>(0, 0));
+
         paretoFrontLineChart.getData().add(paretoFrontSeries);
+        paretoFrontLineChart.getData().add(worstParetoFrontSeries);
+        paretoFrontLineChart.getData().add(bestParetoFrontSeries);
+
+
 
         gridPane.add(paretoFrontLineChart, 2, 1);
 
@@ -306,9 +322,11 @@ public class P5GUIController {
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
             populationSeries.getData().retainAll();
-            paretoFrontSeries.getData().retainAll();
             worstSeries.getData().retainAll();
             bestSeries.getData().retainAll();
+            paretoFrontSeries.getData().retainAll();
+            worstParetoFrontSeries.getData().retainAll();
+            bestParetoFrontSeries.getData().retainAll();
 
 
             //worstSeries.getData().add(new XYChart.Data<>(bestHypothesis.getDistanceFitness(), bestHypothesis.getCostFitness()));
@@ -322,9 +340,26 @@ public class P5GUIController {
             MTSPHypothesis bestDistance = population.get(0);
             MTSPHypothesis worstCost = population.get(0);
             MTSPHypothesis bestCost = population.get(0);
+
+            MTSPHypothesis worstParetoDistance = population.get(0);
+            MTSPHypothesis bestParetoDistance = population.get(0);
+            MTSPHypothesis worstParetoCost = population.get(0);
+            MTSPHypothesis bestParetoCost = population.get(0);
+
             for(MTSPHypothesis hypothesis: population){
                 if(hypothesis.getRank() == 0){
-                    paretoFrontSeries.getData().add(new XYChart.Data<>(hypothesis.getDistanceFitness(), hypothesis.getCostFitness()));
+                    if(hypothesis.getDistanceFitness() > worstParetoDistance.getDistanceFitness()) {
+                        worstParetoDistance = hypothesis;
+                    } else if (hypothesis.getDistanceFitness() < bestParetoDistance.getDistanceFitness()) {
+                        bestParetoDistance = hypothesis;
+                    } else if (hypothesis.getCostFitness() > worstParetoCost.getCostFitness()) {
+                        worstParetoCost = hypothesis;
+                    } else if (hypothesis.getCostFitness() < bestParetoCost.getCostFitness()) {
+                        bestParetoCost = hypothesis;
+                    } else {
+                        paretoFrontSeries.getData().add(new XYChart.Data<>(hypothesis.getDistanceFitness(), hypothesis.getCostFitness()));
+                    }
+
                 }
                 if(hypothesis.getDistanceFitness() > worstDistance.getDistanceFitness()){
                     worstDistance = hypothesis;
@@ -337,13 +372,17 @@ public class P5GUIController {
                 } else {
                     populationSeries.getData().add(new XYChart.Data<>(hypothesis.getDistanceFitness(), hypothesis.getCostFitness()));
                 }
+
             }
             worstSeries.getData().add(new XYChart.Data<>(worstDistance.getDistanceFitness(), worstDistance.getCostFitness()));
             worstSeries.getData().add(new XYChart.Data<>(worstCost.getDistanceFitness(), worstCost.getCostFitness()));
             bestSeries.getData().add(new XYChart.Data<>(bestDistance.getDistanceFitness(), bestDistance.getCostFitness()));
             bestSeries.getData().add(new XYChart.Data<>(bestCost.getDistanceFitness(), bestCost.getCostFitness()));
 
-
+            worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoCost.getDistanceFitness(), worstParetoCost.getCostFitness()));
+            worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoDistance.getDistanceFitness(), worstParetoDistance.getCostFitness()));
+            bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoDistance.getDistanceFitness(), bestParetoDistance.getCostFitness()));
+            bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoCost.getDistanceFitness(), bestParetoCost.getCostFitness()));
         }
 
         consoleTextArea.appendText("Gen.:  " + String.format("%03d", generation) +

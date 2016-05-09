@@ -1,5 +1,6 @@
 package project5;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import general.Pair;
 import general.Values;
 
@@ -61,7 +62,7 @@ public class MTSPEAController {
                 calculateCrowdingDistancesForAllRanks(allHypothesis);
 
                 Collections.sort(allHypothesis);
-
+                System.out.println("Test");
                 while (adults.size() < Values.MAX_ADULT_SIZE) {
                     MTSPHypothesis hyp = allHypothesis.remove(0);
                     adults.add(hyp);
