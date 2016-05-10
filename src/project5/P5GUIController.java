@@ -324,7 +324,7 @@ public class P5GUIController {
         return gridPane;
     }
 
-    void updateLineCharts(int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis, List<MTSPHypothesis> population) {
+    void updateLineCharts(int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis, List<MTSPHypothesis> population, MTSPHypothesis bestNonInfiniteHypothesis) {
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
             populationSeries.getData().retainAll();

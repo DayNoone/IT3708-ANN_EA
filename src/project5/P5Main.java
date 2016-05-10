@@ -92,11 +92,12 @@ public class P5Main extends Application {
     }
 
     private void updateGUI() {
+        MTSPHypothesis bestNonInfiniteHypothesis = eaController.getBestNonInfiniteHypothesis(eaController.getPopulation());
 
         MTSPHypothesis bestHypothesis = eaController.getBestHypothesis(eaController.getPopulation());
         MTSPHypothesis worstHypothesis = eaController.getWorstHypothesis(eaController.getPopulation());
 
-        p5GuiController.updateLineCharts(generationCounter, bestHypothesis.getPhenotypeString(), bestHypothesis, worstHypothesis, eaController.getPopulation());
+        p5GuiController.updateLineCharts(generationCounter, bestHypothesis.getPhenotypeString(), bestHypothesis, worstHypothesis, eaController.getPopulation(), bestNonInfiniteHypothesis);
     }
 
     void restartAlgorithm() {
