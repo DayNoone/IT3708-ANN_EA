@@ -90,6 +90,21 @@ public class P5GUIController {
 
         Label EAVariablesLAbel = addLabel(vBox, "General Variables");
         EAVariablesLAbel.setFont(new Font(15));
+
+        addLabel(vBox, "Max Number of Generations:");
+        TextField max_generations = new TextField();
+        max_generations.setText(String.valueOf(Values.MAX_GENERATIONS));
+        max_generations.textProperty().addListener((observable, oldValue, newValue) -> {
+            int newProblemSize;
+            try{
+                newProblemSize = Integer.parseInt(newValue);
+            }catch (Exception E){
+                newProblemSize = Integer.parseInt(oldValue);
+            }
+            Values.MAX_GENERATIONS = newProblemSize;
+        });
+        vBox.getChildren().add(max_generations);
+
         addLabel(vBox, "Population Size");
         TextField populationSizeTextField = new TextField();
         populationSizeTextField.setText(String.valueOf(Values.POPULATION_SIZE));

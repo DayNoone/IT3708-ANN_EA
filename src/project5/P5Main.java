@@ -67,24 +67,27 @@ public class P5Main extends Application {
                         eaController.generateInitialPopulation(new MTSPHypothesis(), Values.POPULATION_SIZE + Values.NUMBER_OF_ELITES);
 
                     }
+                    if (generationCounter >= Values.MAX_GENERATIONS && Values.MAX_GENERATIONS > 0){
 
-                    generationCounter += 1;
+                    }else{
+                        generationCounter += 1;
 
-                    eaController.generatePhenotypes();
+                        eaController.generatePhenotypes();
 
-                    eaController.testAndUpdateFitnessOfPhenotypes();
+                        eaController.testAndUpdateFitnessOfPhenotypes();
 
 
 
-                    eaController.adultSelection();
+                        eaController.adultSelection();
 
-                    if (Values.GENERATION_PRINT_THROTTLE != 0 && generationCounter % Values.GENERATION_PRINT_THROTTLE == 0) {
-                        updateGUI();
+                        if (Values.GENERATION_PRINT_THROTTLE != 0 && generationCounter % Values.GENERATION_PRINT_THROTTLE == 0) {
+                            updateGUI();
+                        }
+
+
+                        eaController.parentSelection();
+                        eaController.generateNewPopulation();
                     }
-
-
-                    eaController.parentSelection();
-                    eaController.generateNewPopulation();
                 }
             }
         };

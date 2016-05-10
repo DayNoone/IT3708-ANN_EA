@@ -19,14 +19,15 @@ public class Values {
 
     public static EProblemSelection SELECTED_PROBLEM = EProblemSelection.FLATLAND;
 
-    public static int TOURNAMENT_SELECTION_GROUP_SIZE = 5;
+    public static int TOURNAMENT_SELECTION_GROUP_SIZE = 20;
     public static double TOURNAMENT_SELECTION_EPSILON = 0.9;
 
     public static double CROSSOVER_PROBABILITY = 0.8;
     public static double MUTATION_PROBABILITY = 0.01;
 
+    public static int MAX_GENERATIONS = 100;
 
-    public static int POPULATION_SIZE = 200;
+    public static int POPULATION_SIZE = 500;
     public static int MAX_ADULT_SIZE = POPULATION_SIZE / 2;
     public static int MAX_PARENT_SIZE = POPULATION_SIZE / 2;
     public static int NUMBER_OF_ELITES = (int) (POPULATION_SIZE * 0.05);
