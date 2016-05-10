@@ -66,6 +66,8 @@ public class P5GUIController {
 
     private BorderPane mainPane;
 
+    private int generation;
+
     public Pane generateGUI(P5Main p5Main) {
         p5MainClass = p5Main;
         mainPane = new BorderPane();
@@ -246,6 +248,7 @@ public class P5GUIController {
         HBox buttonHBox = new HBox();
         Button restartButton = new Button("New run");
         restartButton.setOnAction(event -> {
+            setLegendParametersText(multipleParetoFrontSeries);
             multipleParetoFrontSeries = new XYChart.Series<>();
             multipleParetoChart.getData().add(multipleParetoFrontSeries);
             p5MainClass.restartAlgorithm();
@@ -327,7 +330,7 @@ public class P5GUIController {
         bestParetoFrontSeries.getData().add(new XYChart.Data<>(0, 0));
 
         worstParetoFrontSeries = new XYChart.Series<>();
-        worstParetoFrontSeries.setName("Best");
+        worstParetoFrontSeries.setName("Worst");
         worstParetoFrontSeries.getData().add(new XYChart.Data<>(0, 0));
 
         paretoFrontLineChart.getData().add(paretoFrontSeries);
@@ -339,18 +342,29 @@ public class P5GUIController {
         multipleParetoChart.setTitle("Multiple pareto-fronts");
         multipleParetoChart.setPrefSize(500, 300);
         multipleParetoChart.setAnimated(false);
-        multipleParetoChart.setLegendVisible(false);
+        multipleParetoChart.setLegendVisible(true);
         multipleParetoFrontSeries = new XYChart.Series<>();
 
         multipleParetoChart.getData().add(multipleParetoFrontSeries);
         if(Values.MTSP_MULTIPLE_PARETO_LINES_PLOT){
-            gridPane.add(multipleParetoChart, 3, 1);
+            gridPane.add(multipleParetoChart, 3, 0, 1, 2);
         }
 
         return gridPane;
     }
 
+    private void setLegendParametersText(XYChart.Series<Number, Number> multipleParetoFrontSeries) {
+        String name = "";
+        name += "Gen: " + this.generation;
+        name += "\tPop: " + Values.POPULATION_SIZE;
+        name += "\tCro: " + Values.CROSSOVER_PROBABILITY;
+        name += "\tMut: " + Values.MUTATION_PROBABILITY;
+        name += "\tTGS: " + Values.TOURNAMENT_SELECTION_GROUP_SIZE;
+        multipleParetoFrontSeries.setName(name);
+    }
+
     void updateLineCharts(int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis, List<MTSPHypothesis> population, MTSPHypothesis bestNonInfiniteHypothesis) {
+        this.generation = generation;
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
             populationSeries.getData().retainAll();
