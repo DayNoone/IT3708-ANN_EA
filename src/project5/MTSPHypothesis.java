@@ -228,7 +228,7 @@ public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
         this.costFitness = costFitness;
     }
 
-    public boolean dominates(MTSPHypothesis hyp) {
+    public boolean isDominating(MTSPHypothesis hyp) {
         if (this.getCostFitness() > hyp.getCostFitness() || this.getDistanceFitness() > hyp.getDistanceFitness()){
             return false;
         }
