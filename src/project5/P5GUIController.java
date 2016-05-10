@@ -314,9 +314,6 @@ public class P5GUIController {
         bestWorstScatter.getData().add(worstSeries);
         bestWorstScatter.getData().add(bestSeries);
 
-        xAxis5.setLabel("Distance");
-        yAxis5.setLabel("Cost");
-
         gridPane.add(bestWorstScatter, 2, 0);
 
         paretoFrontLineChart.setTitle("Pareto-front");
@@ -344,6 +341,9 @@ public class P5GUIController {
         multipleParetoChart.setAnimated(false);
         multipleParetoChart.setLegendVisible(true);
         multipleParetoFrontSeries = new XYChart.Series<>();
+
+        xAxis9.setLabel("Distance");
+        yAxis9.setLabel("Cost");
 
         multipleParetoChart.getData().add(multipleParetoFrontSeries);
         if(Values.MTSP_MULTIPLE_PARETO_LINES_PLOT){

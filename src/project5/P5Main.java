@@ -8,9 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class P5Main extends Application {
 
 
@@ -68,7 +65,6 @@ public class P5Main extends Application {
 
                     }
                     if (generationCounter >= Values.MAX_GENERATIONS && Values.MAX_GENERATIONS > 0){
-                        p5GuiController.setLegendParametersText();
                     }else{
                         generationCounter += 1;
 
@@ -76,17 +72,16 @@ public class P5Main extends Application {
 
                         eaController.testAndUpdateFitnessOfPhenotypes();
 
-
-
                         eaController.adultSelection();
 
                         if (Values.GENERATION_PRINT_THROTTLE != 0 && generationCounter % Values.GENERATION_PRINT_THROTTLE == 0) {
                             updateGUI();
                         }
 
-
                         eaController.parentSelection();
+
                         eaController.generateNewPopulation();
+
                     }
                 }
             }
