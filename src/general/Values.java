@@ -151,5 +151,5 @@ public class Values {
     public static int[][] MTSP_COSTS;
     public static int[][] MTSP_DISTANCES;
 
-    public static final boolean MTSP_MULTIPLE_PARETO_LINES_PLOT = false;
+    public static final boolean MTSP_MULTIPLE_PARETO_LINES_PLOT = true;
 }

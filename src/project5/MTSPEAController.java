@@ -334,4 +334,23 @@ public class MTSPEAController {
     public double calculateStandardDeviation(List<MTSPHypothesis> population, double avgFitness) {
         return -1.0;
     }
+
+    public MTSPHypothesis getBestNonInfiniteHypothesis(List<MTSPHypothesis> population) {
+        List<MTSPHypothesis> paretoFront = new ArrayList<>();
+        for(MTSPHypothesis hyp : population){
+            if(hyp.getRank() == 0){
+                paretoFront.add(hyp);
+            }
+        }
+        Collections.sort(paretoFront);
+        MTSPHypothesis bestNonInfiniteHypothesis = population.get(0);
+
+        for(MTSPHypothesis paretoHyp : paretoFront){
+            if(paretoHyp.getCrowdingDistance() != Double.POSITIVE_INFINITY){
+                bestNonInfiniteHypothesis = paretoHyp;
+                break;
+            }
+        }
+        return bestNonInfiniteHypothesis;
+    }
 }
