@@ -27,6 +27,10 @@ public class P5GUIController {
     private final NumberAxis yAxis6 = new NumberAxis(0, 2000, 250);
     private final ScatterChart<Number, Number> paretoFrontLineChart = new ScatterChart<Number, Number>(xAxis6, yAxis6);
 
+    private final NumberAxis xAxis9 = new NumberAxis(0, 175000, 25000);
+    private final NumberAxis yAxis9 = new NumberAxis(0, 2000, 250);
+    private final ScatterChart<Number, Number> multipleParetoChart = new ScatterChart<Number, Number>(xAxis9, yAxis9);
+
     private final NumberAxis xAxis7 = new NumberAxis();
     private final NumberAxis yAxis7 = new NumberAxis();
     private final LineChart<Number, Number> bestCostLineChart = new LineChart<>(xAxis7, yAxis7);
@@ -41,6 +45,7 @@ public class P5GUIController {
     private XYChart.Series<Number, Number> bestCostSeries;
     private XYChart.Series<Number, Number> bestDistanceSeries;
     private XYChart.Series<Number, Number> paretoFrontSeries;
+    private XYChart.Series<Number, Number> multipleParetoFrontSeries;
     private XYChart.Series<Number, Number> bestParetoFrontSeries;
     private XYChart.Series<Number, Number> worstParetoFrontSeries;
 
@@ -226,10 +231,8 @@ public class P5GUIController {
         HBox buttonHBox = new HBox();
         Button restartButton = new Button("New run");
         restartButton.setOnAction(event -> {
-            if(Values.MTSP_MULTIPLE_PARETO_LINES_PLOT){
-                paretoFrontSeries = new XYChart.Series<>();
-                paretoFrontLineChart.getData().add(paretoFrontSeries);
-            }
+            multipleParetoFrontSeries = new XYChart.Series<>();
+            multipleParetoChart.getData().add(multipleParetoFrontSeries);
             p5MainClass.restartAlgorithm();
         });
         buttonHBox.getChildren().add(restartButton);
@@ -316,10 +319,18 @@ public class P5GUIController {
         paretoFrontLineChart.getData().add(worstParetoFrontSeries);
         paretoFrontLineChart.getData().add(bestParetoFrontSeries);
 
-
-
         gridPane.add(paretoFrontLineChart, 2, 1);
 
+        multipleParetoChart.setTitle("Multiple pareto-fronts");
+        multipleParetoChart.setPrefSize(500, 300);
+        multipleParetoChart.setAnimated(false);
+        multipleParetoChart.setLegendVisible(false);
+        multipleParetoFrontSeries = new XYChart.Series<>();
+
+        multipleParetoChart.getData().add(multipleParetoFrontSeries);
+        if(Values.MTSP_MULTIPLE_PARETO_LINES_PLOT){
+            gridPane.add(multipleParetoChart, 3, 1);
+        }
 
         return gridPane;
     }
@@ -331,6 +342,7 @@ public class P5GUIController {
             worstSeries.getData().retainAll();
             bestSeries.getData().retainAll();
             paretoFrontSeries.getData().retainAll();
+            multipleParetoFrontSeries.getData().retainAll();
             worstParetoFrontSeries.getData().retainAll();
             bestParetoFrontSeries.getData().retainAll();
 
@@ -354,6 +366,7 @@ public class P5GUIController {
 
             for(MTSPHypothesis hypothesis: population){
                 if(hypothesis.getRank() == 0){
+                    multipleParetoFrontSeries.getData().add(new XYChart.Data<>(hypothesis.getDistanceFitness(), hypothesis.getCostFitness()));
                     if(hypothesis.getDistanceFitness() > worstParetoDistance.getDistanceFitness()) {
                         worstParetoDistance = hypothesis;
                     } else if (hypothesis.getDistanceFitness() < bestParetoDistance.getDistanceFitness()) {
@@ -385,12 +398,10 @@ public class P5GUIController {
             bestSeries.getData().add(new XYChart.Data<>(bestDistance.getDistanceFitness(), bestDistance.getCostFitness()));
             bestSeries.getData().add(new XYChart.Data<>(bestCost.getDistanceFitness(), bestCost.getCostFitness()));
 
-            if(!Values.MTSP_MULTIPLE_PARETO_LINES_PLOT){
-                worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoCost.getDistanceFitness(), worstParetoCost.getCostFitness()));
-                worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoDistance.getDistanceFitness(), worstParetoDistance.getCostFitness()));
-                bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoDistance.getDistanceFitness(), bestParetoDistance.getCostFitness()));
-                bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoCost.getDistanceFitness(), bestParetoCost.getCostFitness()));
-            }
+            worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoCost.getDistanceFitness(), worstParetoCost.getCostFitness()));
+            worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoDistance.getDistanceFitness(), worstParetoDistance.getCostFitness()));
+            bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoDistance.getDistanceFitness(), bestParetoDistance.getCostFitness()));
+            bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoCost.getDistanceFitness(), bestParetoCost.getCostFitness()));
         }
 
         consoleTextArea.appendText("Gen.:  " + String.format("%03d", generation) +
