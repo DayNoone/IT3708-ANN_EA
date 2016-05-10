@@ -248,7 +248,7 @@ public class P5GUIController {
         HBox buttonHBox = new HBox();
         Button restartButton = new Button("New run");
         restartButton.setOnAction(event -> {
-            setLegendParametersText(multipleParetoFrontSeries);
+            setLegendParametersText();
             multipleParetoFrontSeries = new XYChart.Series<>();
             multipleParetoChart.getData().add(multipleParetoFrontSeries);
             p5MainClass.restartAlgorithm();
@@ -353,7 +353,7 @@ public class P5GUIController {
         return gridPane;
     }
 
-    private void setLegendParametersText(XYChart.Series<Number, Number> multipleParetoFrontSeries) {
+    public void setLegendParametersText() {
         String name = "";
         name += "Gen: " + this.generation;
         name += "\tPop: " + Values.POPULATION_SIZE;

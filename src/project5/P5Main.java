@@ -68,7 +68,7 @@ public class P5Main extends Application {
 
                     }
                     if (generationCounter >= Values.MAX_GENERATIONS && Values.MAX_GENERATIONS > 0){
-
+                        p5GuiController.setLegendParametersText();
                     }else{
                         generationCounter += 1;
 
