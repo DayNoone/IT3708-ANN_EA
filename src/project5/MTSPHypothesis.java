@@ -87,7 +87,6 @@ public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
         ArrayList<Integer> newGenotype = instansiateArrayList(getGenotype());
         ArrayList<Integer> interval = new ArrayList<>();
 
-        /** INVERSION MUTATION **/
         int start = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
         int stop = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
 
@@ -107,11 +106,7 @@ public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
             interval.add(i, interval.remove(j));
         }
 
-        /** DISPLACEMENT MUTATION **/
         for (int i = 0; i < interval.size(); i++) {
-            /** ONLY INVERSION NO DISPLACEMENT **/
-            //newGenotype.add(start + i, interval.get(i));
-            /** DISPLACEMENT **/
             newGenotype.add(insertionPoint + i, interval.get(i));
         }
 
