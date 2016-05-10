@@ -1,6 +1,5 @@
 package project5;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import general.Pair;
 import general.Values;
 
@@ -58,11 +57,10 @@ public class MTSPEAController {
                 population.addAll(allHypothesis);
                 adults.clear();
 
-                calculateRanks(allHypothesis);
+                nonDominatedSort(allHypothesis);
                 calculateCrowdingDistancesForAllRanks(allHypothesis);
 
                 Collections.sort(allHypothesis);
-                System.out.println("Test");
                 while (adults.size() < Values.MAX_ADULT_SIZE) {
                     MTSPHypothesis hyp = allHypothesis.remove(0);
                     adults.add(hyp);
@@ -93,7 +91,7 @@ public class MTSPEAController {
                 tempAdults.remove(tournamentAttendor);
             }
 
-//            calculateRanks(tournamentGroup);
+//            nonDominatedSort(tournamentGroup);
 //            calculateCrowdingDistancesForAllRanks(tournamentGroup);
 
             if (random.nextDouble() >= 1 - Values.TOURNAMENT_SELECTION_EPSILON) {
@@ -202,19 +200,18 @@ public class MTSPEAController {
     }
 
 
-//    private static void nonDominatedSort(List<MTSPHypothesis> hyps) {
-    private static void calculateRanks2(List<MTSPHypothesis> hyps) {
+    private static void nonDominatedSort(List<MTSPHypothesis> hyps) {
         List<Set<MTSPHypothesis>> allFronts = new ArrayList<>();
         Set<MTSPHypothesis> firstFront = new HashSet<>();
 
         for (MTSPHypothesis hyp : hyps){
             hyp.hypsDominated = new HashSet<>();
             hyp.dominatedByCounter = 0;
-            for (MTSPHypothesis tempHyp : hyps){
-                if (tempHyp != hyp){
-                    if (hyp.dominates(tempHyp)){
-                        hyp.hypsDominated.add(tempHyp);
-                    }else if (tempHyp.dominates(hyp)){
+            for (MTSPHypothesis otherHyp : hyps){
+                if (!hyp.equals(otherHyp)){
+                    if (hyp.isDominating(otherHyp)){
+                        hyp.hypsDominated.add(otherHyp);
+                    }else if (otherHyp.isDominating(hyp)){
                         hyp.dominatedByCounter++;
                     }
                 }
@@ -226,14 +223,14 @@ public class MTSPEAController {
         }
         allFronts.add(firstFront);
         int frontCounter = 0;
-        while (allFronts.get(frontCounter).size() > 0){
+        while (!allFronts.get(frontCounter).isEmpty()){
             Set<MTSPHypothesis> newFront = new HashSet<>();
             for (MTSPHypothesis hyp : allFronts.get(frontCounter)){
-                for (MTSPHypothesis dominatedByHyp : hyp.hypsDominated){
-                    dominatedByHyp.dominatedByCounter--;
-                    if (dominatedByHyp.dominatedByCounter == 0){
-                        dominatedByHyp.setRank(frontCounter + 1);
-                        newFront.add(dominatedByHyp);
+                for (MTSPHypothesis otherHyp : hyp.hypsDominated){
+                    otherHyp.dominatedByCounter--;
+                    if (otherHyp.dominatedByCounter == 0){
+                        otherHyp.setRank(frontCounter + 1);
+                        newFront.add(otherHyp);
                     }
                 }
             }
@@ -246,7 +243,7 @@ public class MTSPEAController {
     private static int calculateNumDominates(MTSPHypothesis hyp, List<MTSPHypothesis> mtspHypothesises) {
         int counter = 0;
         for (MTSPHypothesis possibleDominator : mtspHypothesises){
-            if (!possibleDominator.equals(hyp) && possibleDominator.dominates(hyp)){
+            if (!possibleDominator.equals(hyp) && possibleDominator.isDominating(hyp)){
                 counter++;
             }
         }
@@ -261,7 +258,7 @@ public class MTSPEAController {
             newPopulation.addAll(generateNewChildren(pair.getElement1(), pair.getElement2()));
         }
 
-//        calculateRanks(population);
+//        nonDominatedSort(population);
 //        calculateCrowdingDistancesForAllRanks(population);
 //        Collections.sort(population);
 //        for (int i = 0; i < Values.NUMBER_OF_ELITES; i++) {
@@ -279,7 +276,7 @@ public class MTSPEAController {
 
 
     public MTSPHypothesis getBestHypothesis(List<MTSPHypothesis> hypothesises) {
-//        calculateRanks(hypothesises);
+//        nonDominatedSort(hypothesises);
 //        calculateCrowdingDistancesForAllRanks(hypothesises);
 //
 //        Collections.sort(hypothesises);
@@ -288,7 +285,7 @@ public class MTSPEAController {
     }
 
     public MTSPHypothesis getWorstHypothesis(List<MTSPHypothesis> hypothesises) {
-//        calculateRanks(hypothesises);
+//        nonDominatedSort(hypothesises);
 //        calculateCrowdingDistancesForAllRanks(hypothesises);
 //
 //        Collections.sort(hypothesises);
@@ -297,7 +294,7 @@ public class MTSPEAController {
     }
 
     public List<MTSPHypothesis> getPopulation() {
-        return population;
+        return population   ;
     }
 
     protected MTSPHypothesis fitnessRoulette(List<MTSPHypothesis> hypothesises) {
