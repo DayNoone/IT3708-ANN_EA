@@ -225,7 +225,13 @@ public class P5GUIController {
     private void generateProblemSpesificGUI(VBox vBox) {
         HBox buttonHBox = new HBox();
         Button restartButton = new Button("New run");
-        restartButton.setOnAction(event -> p5MainClass.restartAlgorithm());
+        restartButton.setOnAction(event -> {
+            if(Values.MTSP_MULTIPLE_PARETO_LINES_PLOT){
+                paretoFrontSeries = new XYChart.Series<>();
+                paretoFrontLineChart.getData().add(paretoFrontSeries);
+            }
+            p5MainClass.restartAlgorithm();
+        });
         buttonHBox.getChildren().add(restartButton);
 
         Button pauseButton = getPauseSimulationButton();
@@ -379,10 +385,12 @@ public class P5GUIController {
             bestSeries.getData().add(new XYChart.Data<>(bestDistance.getDistanceFitness(), bestDistance.getCostFitness()));
             bestSeries.getData().add(new XYChart.Data<>(bestCost.getDistanceFitness(), bestCost.getCostFitness()));
 
-            worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoCost.getDistanceFitness(), worstParetoCost.getCostFitness()));
-            worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoDistance.getDistanceFitness(), worstParetoDistance.getCostFitness()));
-            bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoDistance.getDistanceFitness(), bestParetoDistance.getCostFitness()));
-            bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoCost.getDistanceFitness(), bestParetoCost.getCostFitness()));
+            if(!Values.MTSP_MULTIPLE_PARETO_LINES_PLOT){
+                worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoCost.getDistanceFitness(), worstParetoCost.getCostFitness()));
+                worstParetoFrontSeries.getData().add(new XYChart.Data<>(worstParetoDistance.getDistanceFitness(), worstParetoDistance.getCostFitness()));
+                bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoDistance.getDistanceFitness(), bestParetoDistance.getCostFitness()));
+                bestParetoFrontSeries.getData().add(new XYChart.Data<>(bestParetoCost.getDistanceFitness(), bestParetoCost.getCostFitness()));
+            }
         }
 
         consoleTextArea.appendText("Gen.:  " + String.format("%03d", generation) +
