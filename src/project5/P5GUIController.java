@@ -95,6 +95,8 @@ public class P5GUIController {
 
         generateProblemSpesificGUI(vBox);
 
+        generateShowLegend(vBox);
+
         Label EAVariablesLAbel = addLabel(vBox, "General Variables");
         EAVariablesLAbel.setFont(new Font(15));
 
@@ -244,6 +246,16 @@ public class P5GUIController {
         return vBox;
     }
 
+    private void generateShowLegend(VBox vBox){
+        HBox buttonHBox = new HBox();
+        Button button = new Button("Show legend");
+        button.setOnAction(event -> {
+            setLegendParametersText();
+        });
+        buttonHBox.getChildren().add(button);
+        vBox.getChildren().add(buttonHBox);
+    }
+
     private void generateProblemSpesificGUI(VBox vBox) {
         HBox buttonHBox = new HBox();
         Button restartButton = new Button("New run");
@@ -365,6 +377,17 @@ public class P5GUIController {
 
     void updateLineCharts(int generation, String phenoTypeString, MTSPHypothesis bestHypothesis, MTSPHypothesis worstHypothesis, List<MTSPHypothesis> population, MTSPHypothesis bestNonInfiniteHypothesis) {
         this.generation = generation;
+        int paretoFrontCounter = 0;
+
+        MTSPHypothesis worstDistance = population.get(0);
+        MTSPHypothesis bestDistance = population.get(0);
+        MTSPHypothesis worstCost = population.get(0);
+        MTSPHypothesis bestCost = population.get(0);
+
+        MTSPHypothesis worstParetoDistance = population.get(0);
+        MTSPHypothesis bestParetoDistance = population.get(0);
+        MTSPHypothesis worstParetoCost = population.get(0);
+        MTSPHypothesis bestParetoCost = population.get(0);
         //noinspection unchecked
         if (Values.UPDATE_CHARTS){
             populationSeries.getData().retainAll();
@@ -383,18 +406,11 @@ public class P5GUIController {
             bestDistanceSeries.getData().add(new XYChart.Data<>(generation, bestHypothesis.getDistanceFitness()));
 
 
-            MTSPHypothesis worstDistance = population.get(0);
-            MTSPHypothesis bestDistance = population.get(0);
-            MTSPHypothesis worstCost = population.get(0);
-            MTSPHypothesis bestCost = population.get(0);
 
-            MTSPHypothesis worstParetoDistance = population.get(0);
-            MTSPHypothesis bestParetoDistance = population.get(0);
-            MTSPHypothesis worstParetoCost = population.get(0);
-            MTSPHypothesis bestParetoCost = population.get(0);
 
             for(MTSPHypothesis hypothesis: population){
                 if(hypothesis.getRank() == 0){
+                    paretoFrontCounter++;
                     multipleParetoFrontSeries.getData().add(new XYChart.Data<>(hypothesis.getDistanceFitness(), hypothesis.getCostFitness()));
                     if(hypothesis.getDistanceFitness() > worstParetoDistance.getDistanceFitness()) {
                         worstParetoDistance = hypothesis;
@@ -434,8 +450,11 @@ public class P5GUIController {
         }
 
         consoleTextArea.appendText("Gen.:  " + String.format("%03d", generation) +
-                " \tBest cost:  " + String.format("%4.0f", (double) bestHypothesis.getCostFitness()) +
-                " \tBest distance:     " + String.format("%4.0f  ", (double) bestHypothesis.getDistanceFitness()) +
+
+                " \tBest hyp: C: " + String.format("%4.0f", (double) bestHypothesis.getCostFitness()) + " D: " + String.format("%4.0f  ", (double) bestHypothesis.getDistanceFitness()) +
+                " \tCost: B: " + bestCost.getCostFitness() + " W:" + worstCost.getCostFitness() +
+                " \tDist: B: " + bestDistance.getDistanceFitness() + " W:" + worstDistance.getDistanceFitness() +
+                " \tNoPareto:     " + String.format("%03d", paretoFrontCounter) +
                 " \tPhenotype:  " + phenoTypeString +
                 "\n");/**/
 
