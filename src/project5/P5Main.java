@@ -65,6 +65,7 @@ public class P5Main extends Application {
 
                     }
                     if (generationCounter >= Values.MAX_GENERATIONS && Values.MAX_GENERATIONS > 0){
+
                     }else{
                         generationCounter += 1;
 

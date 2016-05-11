@@ -47,6 +47,11 @@ public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
     }
 
     public void initiateRandomGenotype() {
+        int[] genotype = getRandomGenotype();
+        setGenotype(genotype);
+    }
+
+    private int[] getRandomGenotype() {
         ArrayList<Integer> pool = new ArrayList<>();
         for(int i = 0; i < Values.MTSP_NUMBER_OF_CITIES; i++){
             pool.add(i);
@@ -55,7 +60,7 @@ public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
         for(int j = 0; j < Values.MTSP_NUMBER_OF_CITIES; j++){
             genotype[j] = pool.remove(random.nextInt(pool.size()));
         }
-        setGenotype(genotype);
+        return genotype;
     }
 
     public void calculateFitness() {
@@ -84,39 +89,42 @@ public class MTSPHypothesis implements Comparable<MTSPHypothesis>{
     }
 
     public void mutate() {
-        ArrayList<Integer> newGenotype = instansiateArrayList(getGenotype());
-        ArrayList<Integer> interval = new ArrayList<>();
+        if (random.nextDouble() < Values.MUTATION_PROBABILITY) {
+            setGenotype(getRandomGenotype());
+        } else {
+            ArrayList<Integer> newGenotype = instansiateArrayList(getGenotype());
+            ArrayList<Integer> interval = new ArrayList<>();
 
-        int start = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
-        int stop = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
+            int start = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
+            int stop = random.nextInt(Values.MTSP_NUMBER_OF_CITIES);
 
-        if(start > stop){
-            int temp = start;
-            start = stop;
-            stop = temp;
+            if(start > stop){
+                int temp = start;
+                start = stop;
+                stop = temp;
+            }
+            int intervalLength = stop - start;
+            int insertionPoint = random.nextInt(Values.MTSP_NUMBER_OF_CITIES - intervalLength);
+
+            for (int i = 0; i < intervalLength; i++) {
+                interval.add(newGenotype.remove(start));
+            }
+
+            for(int i = 0, j = interval.size() - 1; i < j; i++) {
+                interval.add(i, interval.remove(j));
+            }
+
+            for (int i = 0; i < interval.size(); i++) {
+                newGenotype.add(insertionPoint + i, interval.get(i));
+            }
+
+            int[] mutatedGenotypeArray = new int[newGenotype.size()];
+            for (int i = 0; i < newGenotype.size(); i++) {
+                mutatedGenotypeArray[i] = newGenotype.get(i);
+            }
+            checkForDuplicate(mutatedGenotypeArray);
+            setGenotype(mutatedGenotypeArray);
         }
-        int intervalLength = stop - start;
-        int insertionPoint = random.nextInt(Values.MTSP_NUMBER_OF_CITIES - intervalLength);
-
-        for (int i = 0; i < intervalLength; i++) {
-            interval.add(newGenotype.remove(start));
-        }
-
-        for(int i = 0, j = interval.size() - 1; i < j; i++) {
-            interval.add(i, interval.remove(j));
-        }
-
-        for (int i = 0; i < interval.size(); i++) {
-            newGenotype.add(insertionPoint + i, interval.get(i));
-        }
-
-        int[] mutatedGenotypeArray = new int[newGenotype.size()];
-        for (int i = 0; i < newGenotype.size(); i++) {
-            mutatedGenotypeArray[i] = newGenotype.get(i);
-        }
-        checkForDuplicate(mutatedGenotypeArray);
-        setGenotype(mutatedGenotypeArray);
-
     }
 
     public List<MTSPHypothesis> crossover(MTSPHypothesis parent1, MTSPHypothesis parent2) {
